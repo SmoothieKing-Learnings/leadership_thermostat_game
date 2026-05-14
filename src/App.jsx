@@ -66,12 +66,37 @@
  * ═══════════════════════════════════════════════════════════════════════
  */
 
+import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useGameState } from './hooks/useGameState.js'
 import WelcomeScreen from './components/WelcomeScreen.jsx'
 import GameScreen from './components/GameScreen.jsx'
 import WinModal from './components/modals/WinModal.jsx'
 import LoseModal from './components/modals/LoseModal.jsx'
+import { emit, onCommand } from './utils/iframeBridge.js'
+import { useShortViewport } from './utils/useViewport.js'
+
+const MIN_PLAYABLE_HEIGHT = 520
+
+// Hide the inline splash from index.html. Idempotent.
+function hideSplash() {
+  if (typeof document === 'undefined') return
+  const el = document.getElementById('splash')
+  if (!el) return
+  el.classList.add('hide')
+  setTimeout(() => el.remove(), 350)
+}
+
+// Read deep-link params: ?autostart=1 / ?skipIntro=1 / ?parentOrigin=https://example.com
+function readLaunchParams() {
+  if (typeof window === 'undefined') return { autostart: false }
+  try {
+    const p = new URLSearchParams(window.location.search)
+    return { autostart: p.get('autostart') === '1' || p.get('skipIntro') === '1' }
+  } catch {
+    return { autostart: false }
+  }
+}
 
 // Interpolate between two hex colors. t = 0 returns a, t = 1 returns b.
 function lerpColor(a, b, t) {
@@ -107,6 +132,47 @@ export default function App() {
 
   const { screen, currentCard, selectedOption, phase, strikeBreakdown } = state
 
+  // ── iframe wiring ───────────────────────────────────────────────────────
+  const prevScreen = useRef(screen)
+  const announcedRef = useRef(false)
+  const skipIntroRef = useRef(null) // ScrollFunc to call startGame on ready
+
+  // Mount: hide splash, announce ready, honor autostart params and inbound commands.
+  useEffect(() => {
+    hideSplash()
+    emit('ready')
+    announcedRef.current = true
+
+    const { autostart } = readLaunchParams()
+    if (autostart) {
+      // Defer so the welcome screen mount/exit transition has a frame.
+      const t = setTimeout(() => startGame(), 50)
+      return () => clearTimeout(t)
+    }
+  }, [startGame])
+
+  // Listen for parent commands.
+  useEffect(() => {
+    const off = onCommand((command) => {
+      if (command === 'start') startGame()
+      else if (command === 'restart') restartGame()
+    })
+    return off
+  }, [startGame, restartGame])
+
+  // Emit screen-transition events to the parent.
+  useEffect(() => {
+    const prev = prevScreen.current
+    prevScreen.current = screen
+    if (prev === screen) return
+    if (prev === 'welcome' && screen === 'game') emit('start')
+    else if (screen === 'win') {
+      const pct = state.maxScore > 0 ? Math.round((state.score / state.maxScore) * 100) : 0
+      emit('win', { score: state.score, maxScore: state.maxScore, percent: pct })
+    } else if (screen === 'lose') emit('lose', { strikeBreakdown })
+    else if ((prev === 'win' || prev === 'lose') && screen === 'welcome') emit('restart')
+  }, [screen, state.score, state.maxScore, strikeBreakdown])
+
   // Handle "Understood" on environment card
   const handleAcknowledgeEnv = () => {
     if (!currentCard) return
@@ -121,7 +187,33 @@ export default function App() {
     applyEnergy(chosen.energyImpact)
   }
 
+  // Keyboard shortcuts: 1/A for option A, 2/B for option B, Enter for Confirm/Understood.
+  useEffect(() => {
+    if (screen !== 'game' || !currentCard) return
+    const onKey = (e) => {
+      // Don't hijack typing in form fields.
+      const tag = (e.target?.tagName || '').toLowerCase()
+      if (tag === 'input' || tag === 'textarea' || e.target?.isContentEditable) return
+
+      const k = e.key.toLowerCase()
+      if (phase === 'reading' && currentCard.type === 'choice') {
+        if (k === '1' || k === 'a') { e.preventDefault(); selectOption('A'); return }
+        if (k === '2' || k === 'b') { e.preventDefault(); selectOption('B'); return }
+        if ((e.key === 'Enter' || e.key === ' ') && selectedOption) {
+          e.preventDefault(); confirmChoice(); return
+        }
+      } else if (phase === 'revealed') {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault(); handleAcknowledgeChoice()
+        }
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [screen, phase, currentCard, selectedOption, selectOption, confirmChoice])
+
   const energyBg = getEnergyBg(displayEnergy)
+  const tooShort = useShortViewport(MIN_PLAYABLE_HEIGHT)
 
   return (
     <div
@@ -136,6 +228,38 @@ export default function App() {
         alignItems: 'center',
       }}
     >
+      {tooShort && (
+        <div
+          role="status"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 200,
+            backgroundColor: '#FFF9EF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 24,
+            textAlign: 'center',
+          }}
+        >
+          <div style={{ maxWidth: 320 }}>
+            <p style={{
+              fontFamily: '"Playfair Display", Georgia, serif',
+              fontSize: 22, fontWeight: 700, color: '#930018', marginBottom: 8,
+            }}>
+              Expand for the full experience
+            </p>
+            <p style={{
+              fontFamily: '"DM Sans", system-ui, sans-serif',
+              fontSize: 14, lineHeight: 1.55, color: '#40000F', opacity: 0.7, margin: 0,
+            }}>
+              Shift Survival needs a little more vertical room. Resize the window
+              (or expand the embed) to at least {MIN_PLAYABLE_HEIGHT}px tall.
+            </p>
+          </div>
+        </div>
+      )}
       <AnimatePresence mode="wait">
         {screen === 'welcome' && (
           <motion.div

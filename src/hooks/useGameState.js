@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { SHIFT_DECK } from '../data/cards'
 
 function shuffle(array) {
@@ -86,6 +86,24 @@ export function useGameState() {
   const [state, setState] = useState(INITIAL_STATE)
   const [displayEnergy, setDisplayEnergy] = useState(0)
   const animationTimer = useRef(null)
+  // Tracks whether the user has explicitly toggled the gauge view. If false,
+  // viewport-driven resize is allowed to override the gauge default. If true,
+  // we respect the user's manual choice across resizes.
+  const gaugeManualRef = useRef(false)
+
+  // Sync gauge view with viewport changes (iframe resize, host accordion
+  // expand/collapse, tab restore). Only auto-adjusts when the user hasn't
+  // manually toggled.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const onResize = () => {
+      if (gaugeManualRef.current) return
+      const next = defaultGaugeView()
+      setState(prev => prev.gaugeView === next ? prev : { ...prev, gaugeView: next })
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   const update = useCallback((patch) => {
     setState(prev => ({ ...prev, ...patch }))
@@ -94,6 +112,7 @@ export function useGameState() {
   // ── startGame ──────────────────────────────────────────────────────────────
   const startGame = useCallback(() => {
     const deck = buildDeck()
+    gaugeManualRef.current = false
     setState({
       ...INITIAL_STATE,
       screen: 'game',
@@ -206,12 +225,14 @@ export function useGameState() {
   // ── restartGame ────────────────────────────────────────────────────────────
   const restartGame = useCallback(() => {
     if (animationTimer.current) clearTimeout(animationTimer.current)
+    gaugeManualRef.current = false
     setDisplayEnergy(0)
     setState({ ...INITIAL_STATE, gaugeView: defaultGaugeView() })
   }, [])
 
   // ── toggleGaugeView ────────────────────────────────────────────────────────
   const toggleGaugeView = useCallback(() => {
+    gaugeManualRef.current = true
     setState(prev => ({ ...prev, gaugeView: prev.gaugeView === 'arc' ? 'bar' : 'arc' }))
   }, [])
 

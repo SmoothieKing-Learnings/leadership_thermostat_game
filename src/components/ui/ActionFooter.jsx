@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useDocumentVisible } from '../../utils/useViewport.js'
 
 const LIVES_EMOJI = ['🍓', '🫐', '🍌']
 const LIVES_LABELS = ['Strawberry', 'Blueberry', 'Banana']
@@ -57,6 +58,7 @@ export default function ActionFooter({
   onConfirm,
   onAcknowledge,
 }) {
+  const documentVisible = useDocumentVisible()
   if (!card) return null
 
   const envImpact = card.type === 'environment' ? card.energyImpact : 0
@@ -101,13 +103,14 @@ export default function ActionFooter({
           >
             {LIVES_EMOJI.map((emoji, i) => {
               const used = i >= livesRemaining
+              const shouldHop = !used && documentVisible
               return (
                 <motion.span
                   key={i}
                   role="img"
                   aria-label={LIVES_LABELS[i]}
-                  animate={used ? { y: 0 } : { y: [0, -5, 0, -1.4, 0] }}
-                  transition={used ? { duration: 0 } : {
+                  animate={shouldHop ? { y: [0, -5, 0, -1.4, 0] } : { y: 0 }}
+                  transition={!shouldHop ? { duration: 0 } : {
                     // Springy hop: decelerating rise, fast accelerating fall,
                     // tiny secondary bounce on landing, then settle.
                     duration: 0.75,

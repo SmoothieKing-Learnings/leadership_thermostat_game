@@ -384,9 +384,98 @@ npm install
 npm run dev
 ```
 
-Runs at `http://localhost:5173`. The production build deploys to the path configured in `vite.config.js`.
+Runs at `http://localhost:5173`. The production build emits with **relative asset paths**, so the same `dist/` works under any base URL.
 
 ```bash
 npm run build
 npm run preview
 ```
+
+If you need an absolute base path (e.g. GitHub Pages), set `VITE_BASE_PATH` at build time:
+
+```bash
+VITE_BASE_PATH=/thermostatgame_score/ npm run build
+```
+
+---
+
+## Iframe Integration
+
+The game is built to be embedded inside an `<iframe>` on any host (LMS, intranet, marketing page). Embedding contract below.
+
+### Embedding
+
+```html
+<iframe
+  src="https://your-host.example.com/shift-survival/?parentOrigin=https%3A%2F%2Fyour-host.example.com"
+  title="Shift Survival"
+  style="width: 100%; height: 100dvh; min-height: 520px; border: 0;"
+  allow="autoplay">
+</iframe>
+```
+
+The iframe needs a **minimum height of about 520px**. Below that the game renders a friendly "expand for the full experience" placeholder rather than clipping.
+
+### URL parameters
+
+| Param | Value | Effect |
+|---|---|---|
+| `autostart` | `1` | Skip the welcome screen and drop the player directly into the first shift |
+| `skipIntro` | `1` | Alias of `autostart=1` |
+| `parentOrigin` | URL-encoded origin | Locks `postMessage` to a specific parent origin. Without this, messages are sent to `*` and inbound messages from any origin are accepted. |
+
+### Host ↔ game postMessage contract
+
+The game emits structured events to `window.parent` on milestone transitions. Wire up a listener on the host:
+
+```js
+window.addEventListener('message', (e) => {
+  // Optional: only trust messages from your iframe origin.
+  if (e.origin !== 'https://your-iframe-host.example.com') return
+  const data = e.data
+  if (!data?.type?.startsWith('shiftSurvival:')) return
+  switch (data.type) {
+    case 'shiftSurvival:ready':   /* iframe mounted, fonts loading */ break
+    case 'shiftSurvival:start':   /* player started a game */          break
+    case 'shiftSurvival:win':     /* { score, maxScore, percent } */   break
+    case 'shiftSurvival:lose':    /* { strikeBreakdown }          */   break
+    case 'shiftSurvival:restart': /* player chose to play again */     break
+  }
+})
+```
+
+Inbound commands the host can send to the iframe:
+
+```js
+const iframe = document.querySelector('iframe')
+// Skip welcome and start immediately:
+iframe.contentWindow.postMessage({ type: 'shiftSurvival:start' }, '*')
+// Reset to welcome screen:
+iframe.contentWindow.postMessage({ type: 'shiftSurvival:restart' }, '*')
+```
+
+### CSP / framing requirements
+
+The game uses Google Fonts at runtime. If the host page enforces a strict Content-Security-Policy, allow:
+
+```
+font-src  https://fonts.gstatic.com;
+style-src https://fonts.googleapis.com 'unsafe-inline';
+```
+
+If your hosting target sets `X-Frame-Options: DENY` or `Content-Security-Policy: frame-ancestors 'none'`, the iframe will refuse to load. Configure the host to allow framing from the parent's origin (`frame-ancestors https://parent.example.com`).
+
+### Keyboard shortcuts
+
+Useful for LMS-embedded scenarios where players keyboard their way through:
+
+| Key | Action |
+|---|---|
+| `1` or `A` | Select option A |
+| `2` or `B` | Select option B |
+| `Enter` / `Space` | Confirm a selection, or acknowledge a revealed card |
+
+### Performance under embed
+
+- Background-color transitions, gauge shake, and the fruit hop loop **pause when `document.visibilityState === 'hidden'`** (tab in background, iframe collapsed in an accordion). No CPU spent off-screen.
+- Gauge view (arc vs. bar) re-evaluates on `window.resize`. If the user has tapped to override, their choice is respected through subsequent resizes.
