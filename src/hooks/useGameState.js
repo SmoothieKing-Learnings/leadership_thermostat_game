@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
-import { CARD_DECK } from '../data/cards'
+import { SHIFT_DECK } from '../data/cards'
 
 function shuffle(array) {
   const arr = [...array]
@@ -10,27 +10,26 @@ function shuffle(array) {
   return arr
 }
 
+// Build a 10-card hand from SHIFT_DECK, balanced between meltdown-leaning
+// and freeze-leaning cards so a single game can't be all heat or all cold.
 function buildDeck() {
-  const allChoices = shuffle(CARD_DECK.filter(c => c.type === 'choice'))
-  const allEnvs = shuffle(CARD_DECK.filter(c => c.type === 'environment'))
+  const meltdowns = shuffle(SHIFT_DECK.filter(c => c.balanceLean === 'meltdown'))
+  const freezes   = shuffle(SHIFT_DECK.filter(c => c.balanceLean === 'freeze'))
 
-  // First card is always a choice — placed before shuffling the rest
-  const deck = [
-    allChoices[0],
-    ...shuffle([...allChoices.slice(1, 6), ...allEnvs.slice(0, 4)]),
-  ]
+  const targetHand = 10
+  const half = Math.floor(targetHand / 2)
 
-  // Pass: No consecutive Environment cards (starts at 1 — index 0 is guaranteed choice)
-  for (let i = 1; i < deck.length - 1; i++) {
-    if (deck[i].type === 'environment' && deck[i + 1]?.type === 'environment') {
-      const swapIdx = deck.findIndex((c, idx) => idx > i + 1 && c.type === 'choice')
-      if (swapIdx !== -1) {
-        ;[deck[i + 1], deck[swapIdx]] = [deck[swapIdx], deck[i + 1]]
-      }
-    }
+  const pickMelt = meltdowns.slice(0, Math.min(half, meltdowns.length))
+  const pickFreeze = freezes.slice(0, Math.min(targetHand - pickMelt.length, freezes.length))
+
+  // Fill any remaining slots from the larger pool if one side ran short
+  let combined = [...pickMelt, ...pickFreeze]
+  if (combined.length < targetHand) {
+    const remaining = SHIFT_DECK.filter(c => !combined.includes(c))
+    combined = [...combined, ...shuffle(remaining).slice(0, targetHand - combined.length)]
   }
 
-  return deck
+  return shuffle(combined)
 }
 
 const INITIAL_STATE = {
@@ -42,12 +41,20 @@ const INITIAL_STATE = {
   currentCard: null,
   phase: 'reading',
   selectedOption: null,
-  autoplay: false,
   gaugeView: 'arc',
   historyOpen: false,
   score: 0,
   maxScore: 0,
   cardStartTime: null,
+  strikes: 0,
+  strikeBreakdown: { meltdown: 0, freeze: 0 },
+}
+
+// Default gauge view: bar on short viewports (< 800px tall), arc otherwise.
+// Short screens get the more vertically compact bar by default.
+function defaultGaugeView() {
+  if (typeof window === 'undefined') return 'arc'
+  return window.innerHeight < 800 ? 'bar' : 'arc'
 }
 
 function resolveImpact(impact, energy) {
@@ -77,7 +84,6 @@ function calcChoicePoints(card, chosenId, energy, cardStartTime) {
 
 export function useGameState() {
   const [state, setState] = useState(INITIAL_STATE)
-  // Track energy animation target separately so gauge can animate
   const [displayEnergy, setDisplayEnergy] = useState(0)
   const animationTimer = useRef(null)
 
@@ -91,18 +97,9 @@ export function useGameState() {
     setState({
       ...INITIAL_STATE,
       screen: 'game',
-      energy: 0,
-      round: 0,
       deck,
-      history: [],
       currentCard: deck[0],
-      phase: 'reading',
-      selectedOption: null,
-      autoplay: false,
-      gaugeView: 'arc',
-      historyOpen: false,
-      score: 0,
-      maxScore: 0,
+      gaugeView: defaultGaugeView(),
       cardStartTime: Date.now(),
     })
     setDisplayEnergy(0)
@@ -120,19 +117,28 @@ export function useGameState() {
   const confirmChoice = useCallback(() => {
     setState(prev => {
       if (prev.phase !== 'reading' || !prev.selectedOption) return prev
+      const chosen = prev.currentCard.options.find(o => o.id === prev.selectedOption)
       const { earned, possible } = calcChoicePoints(
         prev.currentCard, prev.selectedOption, prev.energy, prev.cardStartTime
       )
+
+      const isStrike = chosen && chosen.outcome !== 'success'
+      const breakdown = { ...prev.strikeBreakdown }
+      if (isStrike && chosen.outcome === 'meltdown') breakdown.meltdown += 1
+      if (isStrike && chosen.outcome === 'freeze')   breakdown.freeze   += 1
+
       return {
         ...prev,
         phase: 'revealed',
         score: prev.score + earned,
         maxScore: prev.maxScore + possible,
+        strikes: prev.strikes + (isStrike ? 1 : 0),
+        strikeBreakdown: breakdown,
       }
     })
   }, [])
 
-  // ── acknowledgeEnv ─────────────────────────────────────────────────────────
+  // ── acknowledgeEnv (legacy, env cards no longer in active deck) ────────────
   const acknowledgeEnv = useCallback(() => {
     setState(prev => {
       if (prev.phase !== 'reading') return prev
@@ -141,13 +147,9 @@ export function useGameState() {
   }, [])
 
   // ── applyEnergy ────────────────────────────────────────────────────────────
-  // Called after user taps "Understood".
-  // IMPORTANT: history is NOT updated synchronously here.
-  // It is pushed atomically inside the timeout — at the exact same moment
-  // currentCard changes — so the card never appears in both places at once.
   const applyEnergy = useCallback((impact) => {
     setState(prev => {
-      if (prev.phase === 'animating') return prev   // already processing — ignore extra taps
+      if (prev.phase === 'animating') return prev
       let delta = impact
       if (impact === 'balance') {
         delta = prev.energy > 0 ? -1 : prev.energy < 0 ? 1 : 0
@@ -159,8 +161,10 @@ export function useGameState() {
 
       setDisplayEnergy(newEnergy)
 
+      // New win/lose logic: lose only on 3 strikes, win on round 10.
+      // Gauge can pin at ±5 visually but doesn't end the game.
       let nextScreen = 'game'
-      if (Math.abs(newEnergy) >= 5) nextScreen = 'lose'
+      if (prev.strikes >= 3) nextScreen = 'lose'
       else if (newRound >= 10) nextScreen = 'win'
 
       const historyEntry = {
@@ -175,10 +179,6 @@ export function useGameState() {
 
       if (animationTimer.current) clearTimeout(animationTimer.current)
       animationTimer.current = setTimeout(() => {
-        // Single atomic update: advance card AND push history at the same time.
-        // This triggers the AnimatePresence key change (card exit) and history
-        // stack gain in the same render — the card visually "becomes" the top
-        // of the history stack rather than disappearing separately.
         setState(s => ({
           ...s,
           screen: nextScreen,
@@ -192,8 +192,6 @@ export function useGameState() {
         }))
       }, 650)
 
-      // Synchronous: only lock the card in animating phase.
-      // round and history stay unchanged until the timeout fires.
       return {
         ...prev,
         phase: 'animating',
@@ -203,21 +201,13 @@ export function useGameState() {
   }, [])
 
   // ── nextCard ───────────────────────────────────────────────────────────────
-  // Not needed separately — applyEnergy handles transition — kept for API completeness
   const nextCard = useCallback(() => {}, [])
 
   // ── restartGame ────────────────────────────────────────────────────────────
   const restartGame = useCallback(() => {
     if (animationTimer.current) clearTimeout(animationTimer.current)
     setDisplayEnergy(0)
-    setState({
-      ...INITIAL_STATE,
-    })
-  }, [])
-
-  // ── toggleAutoplay ─────────────────────────────────────────────────────────
-  const toggleAutoplay = useCallback(() => {
-    setState(prev => ({ ...prev, autoplay: !prev.autoplay }))
+    setState({ ...INITIAL_STATE, gaugeView: defaultGaugeView() })
   }, [])
 
   // ── toggleGaugeView ────────────────────────────────────────────────────────
@@ -239,7 +229,6 @@ export function useGameState() {
     applyEnergy,
     nextCard,
     restartGame,
-    toggleAutoplay,
     toggleGaugeView,
     openHistory,
     closeHistory,

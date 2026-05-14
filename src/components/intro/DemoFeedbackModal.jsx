@@ -29,13 +29,28 @@ export default function DemoFeedbackModal({ visible, impact, body, onNext, nextL
             style={{
               backgroundColor: '#fff',
               borderRadius: 24,
-              padding: '36px 28px 28px',
+              padding: '24px 28px 28px',
               maxWidth: 340,
               width: '100%',
               boxShadow: '0 8px 40px rgba(64,0,15,0.16)',
               textAlign: 'center',
             }}
           >
+            {/* Tutorial tag */}
+            <p
+              style={{
+                fontFamily: '"DM Sans", system-ui, sans-serif',
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'rgba(147,0,24,0.55)',
+                margin: '0 0 16px',
+              }}
+            >
+              Tutorial
+            </p>
+
             {/* Impact badge */}
             <div
               style={{

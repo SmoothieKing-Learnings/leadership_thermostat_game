@@ -5,7 +5,6 @@ import GaugeBar from './gauge/GaugeBar.jsx'
 import EnvironmentCard from './cards/EnvironmentCard.jsx'
 import ChoiceCard from './cards/ChoiceCard.jsx'
 import HistoryStack from './history/HistoryStack.jsx'
-import GaugeToggle from './ui/GaugeToggle.jsx'
 import ActionFooter from './ui/ActionFooter.jsx'
 
 import logo from '../assets/logo.png'
@@ -17,7 +16,6 @@ export default function GameScreen({
   onConfirm,
   onAcknowledgeEnv,
   onAcknowledgeChoice,
-  onToggleAutoplay,
   onToggleGaugeView,
   onOpenHistory,
   onCloseHistory,
@@ -28,11 +26,13 @@ export default function GameScreen({
     currentCard,
     phase,
     selectedOption,
-    autoplay,
     gaugeView,
     history,
     historyOpen,
+    strikes,
   } = state
+
+  const livesRemaining = Math.max(0, 3 - strikes)
 
   if (!currentCard) return null
 
@@ -45,7 +45,8 @@ export default function GameScreen({
     <div
       style={{
         height: '100%',
-        backgroundColor: '#FFF9EF',
+        backgroundColor: 'var(--bg-energy, #FFF9EF)',
+        transition: 'background-color 4000ms ease-in-out 800ms',
         display: 'flex',
         flexDirection: 'column',
         maxWidth: 480,
@@ -60,71 +61,70 @@ export default function GameScreen({
           position: 'sticky',
           top: 0,
           zIndex: 30,
-          backgroundColor: '#FFF9EF',
+          backgroundColor: 'var(--bg-energy, #FFF9EF)',
+          transition: 'background-color 4000ms ease-in-out 800ms',
           borderBottom: '1px solid rgba(147,0,24,0.1)',
           padding: '12px 16px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
         }}
       >
-        <span
-          style={{
-            fontFamily: '"DM Sans", system-ui, sans-serif',
-            fontSize: 14,
-            fontWeight: 600,
-            color: '#40000F',
-          }}
-        >
-          Round {round + 1} / 10
-        </span>
-
-        {/* Small Logo Centered */}
+        {/* Centered Logo */}
         <img
           src={logo}
           alt="Logo"
-          style={{ height: 28, width: 'auto', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}
+          style={{ height: 22, width: 'auto' }}
         />
 
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          {history.length > 0 && (
-            <button
-              onClick={handleToggleHistory}
-              aria-label="Open leadership log"
-              style={{
-                width: 32,
-                height: 32,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '50%',
-                border: '1.5px solid rgba(147,0,24,0.25)',
-                backgroundColor: 'transparent',
-                color: '#930018',
-                cursor: 'pointer',
-                flexShrink: 0,
-              }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="9" />
-                <polyline points="12 7 12 12 15 15" />
-              </svg>
-            </button>
-          )}
-          <GaugeToggle view={gaugeView} onToggle={onToggleGaugeView} />
-        </div>
+        {/* History button — absolute right */}
+        {history.length > 0 && (
+          <button
+            onClick={handleToggleHistory}
+            aria-label="Open leadership log"
+            style={{
+              position: 'absolute',
+              right: 16,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: 32,
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '50%',
+              border: '1.5px solid rgba(147,0,24,0.25)',
+              backgroundColor: 'transparent',
+              color: '#930018',
+              cursor: 'pointer',
+              flexShrink: 0,
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="9" />
+              <polyline points="12 7 12 12 15 15" />
+            </svg>
+          </button>
+        )}
       </header>
 
-      {/* Gauge Container (Flexible but smooth) */}
-      <div
+      {/* Gauge Container — tap to toggle between arc and bar views */}
+      <button
+        type="button"
+        onClick={onToggleGaugeView}
+        aria-label={`Switch to ${gaugeView === 'arc' ? 'bar' : 'arc'} view`}
         style={{
           backgroundColor: 'transparent',
-          minHeight: 160,
+          minHeight: 'var(--gauge-min-height, 130px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          transition: 'all 0.4s ease-in-out'
+          transition: 'all 0.4s ease-in-out',
+          border: 'none',
+          padding: 0,
+          width: '100%',
+          cursor: 'pointer',
         }}
       >
         <AnimatePresence mode="wait">
@@ -152,7 +152,7 @@ export default function GameScreen({
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </button>
 
       {/* Card Stack / Deck Area — fills all remaining space between gauge and fixed footer */}
       <div
@@ -211,7 +211,8 @@ export default function GameScreen({
           card={currentCard}
           phase={phase}
           selectedOption={selectedOption}
-          autoplay={autoplay}
+          round={round}
+          livesRemaining={livesRemaining}
           onConfirm={onConfirm}
           onAcknowledge={currentCard.type === 'environment' ? onAcknowledgeEnv : onAcknowledgeChoice}
         />

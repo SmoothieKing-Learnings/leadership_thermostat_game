@@ -3,20 +3,20 @@ import { motion } from 'framer-motion'
 const RULES = [
   {
     num: '1',
-    title: 'Environment cards happen to you',
-    body: "They shift the store energy — for better or worse. You can't choose them, only react.",
-    color: '#004E93',
-  },
-  {
-    num: '2',
-    title: 'Scenario cards are your move',
-    body: 'You pick how to respond. Each choice carries a different energy impact.',
+    title: 'Face the scenario',
+    body: 'Each shift presents a real moment. One option models steady leadership. The other tips the thermostat the wrong way.',
     color: '#930018',
   },
   {
+    num: '2',
+    title: 'Two ways to lose a shift',
+    body: 'Meltdown — too much stress, panic, or anger. Deep Freeze — apathy, disengagement, lack of care.',
+    color: '#004E93',
+  },
+  {
     num: '3',
-    title: 'Survive 10 rounds',
-    body: 'If your energy hits ±5, the team reaches its limit. The game ends.',
+    title: 'Three strikes and it breaks',
+    body: 'You have 3 lives. Three Meltdown or Deep Freeze moves and the thermostat is gone — team quits, reviews tank, sales plummet.',
     color: '#40000F',
   },
 ]
@@ -61,7 +61,7 @@ export default function RulesStep() {
             marginBottom: 12,
           }}
         >
-          Stay Close to 0
+          Survive 10 Shifts
         </h2>
         <p
           style={{
@@ -72,9 +72,9 @@ export default function RulesStep() {
             margin: 0,
           }}
         >
-          Because that's exactly what great managers do in real life —
-          not emotionless, but <em>regulated</em>. Steady energy is the
-          most powerful thing you bring to your team every single shift.
+          Reach the end of shift 10 with your team intact.
+          Your team doesn't need you to be perfect, but they
+          do need you to be the steady hand that keeps the team running right.
         </p>
       </motion.div>
 

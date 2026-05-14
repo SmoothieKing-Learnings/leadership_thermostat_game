@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import logo from '../../assets/logo.png'
 
-export default function LandingStep() {
+export default function LandingStep({ onStart, onTutorial }) {
   return (
     <div
       style={{
@@ -39,7 +39,7 @@ export default function LandingStep() {
           marginBottom: 20,
         }}
       >
-        The Thermostat<br />Challenge
+        Shift<br />Survival
       </motion.h1>
 
       {/* Divider */}
@@ -68,14 +68,59 @@ export default function LandingStep() {
           lineHeight: 1.75,
           opacity: 0.7,
           maxWidth: 300,
-          margin: 0,
+          margin: '0 0 36px',
         }}
       >
-        Your team reads your energy every shift.
-        This simulation puts you through real store moments
-        to practice the skill that shapes everything —
-        staying regulated when it counts.
+        At Smoothie King, leaders don't just read the room —
+        they set it. Step into 10 real shifts and practice
+        being the steady hand that keeps your team running right.
       </motion.p>
+
+      {/* Primary + Secondary CTAs */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.4 }}
+        style={{ width: '100%', maxWidth: 320, display: 'flex', flexDirection: 'column', gap: 12 }}
+      >
+        <motion.button
+          onClick={onTutorial}
+          whileTap={{ scale: 0.97 }}
+          style={{
+            width: '100%',
+            padding: '15px',
+            borderRadius: 16,
+            border: '1.5px solid rgba(147,0,24,0.35)',
+            backgroundColor: 'transparent',
+            color: '#930018',
+            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontSize: 15,
+            fontWeight: 700,
+            cursor: 'pointer',
+          }}
+        >
+          Tutorial
+        </motion.button>
+        <motion.button
+          onClick={onStart}
+          whileTap={{ scale: 0.97 }}
+          style={{
+            width: '100%',
+            padding: '17px',
+            borderRadius: 16,
+            border: 'none',
+            backgroundColor: '#930018',
+            color: '#fff',
+            fontFamily: '"Playfair Display", Georgia, serif',
+            fontSize: 19,
+            fontWeight: 700,
+            cursor: 'pointer',
+            boxShadow: '0 4px 20px rgba(147,0,24,0.28)',
+          }}
+        >
+          Start Shift
+        </motion.button>
+      </motion.div>
     </div>
   )
 }

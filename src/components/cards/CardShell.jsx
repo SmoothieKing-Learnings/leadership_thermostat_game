@@ -8,7 +8,7 @@ import skCrown from '../../assets/SKcrown.svg'
 export const CARD_RADIUS = 20
 export const CARD_BORDER = '2px solid #930018'
 export const CARD_HEIGHT = 'var(--card-height)'
-export const CARD_PADDING = '24px 22px'
+export const CARD_PADDING = 'var(--card-padding, 24px 22px)'
 export const CARD_SHADOW = '0 4px 10px rgba(64, 0, 15, 0.18), 0 12px 28px rgba(64, 0, 15, 0.13)'
 
 // ── Crown + type label ────────────────────────────────────────────────────────
@@ -19,7 +19,13 @@ export function TypeHeader({ label, subtitle }) {
       <img
         src={skCrown}
         alt=""
-        style={{ width: 22, height: 'auto', display: 'block', marginInline: 'auto', marginBottom: 8 }}
+        style={{
+          width: 'var(--type-header-crown-size, 22px)',
+          height: 'auto',
+          display: 'block',
+          marginInline: 'auto',
+          marginBottom: 'var(--type-header-margin-bottom, 8px)',
+        }}
       />
       <p style={{
         fontFamily: '"DM Sans", system-ui, sans-serif',
@@ -50,11 +56,11 @@ export function TypeHeader({ label, subtitle }) {
 
 // ── Title ─────────────────────────────────────────────────────────────────────
 
-export function CardTitle({ children, color = '#930018', size = 34 }) {
+export function CardTitle({ children, color = '#930018', size }) {
   return (
     <h2 style={{
       fontFamily: '"Playfair Display", Georgia, serif',
-      fontSize: size,
+      fontSize: size ?? 'var(--card-title-size, 30px)',
       fontWeight: 700,
       color,
       lineHeight: 1.15,
@@ -73,7 +79,7 @@ export function CardDescription({ children, color = '#930018', opacity = 0.75 })
   return (
     <p style={{
       fontFamily: '"DM Sans", system-ui, sans-serif',
-      fontSize: 12,
+      fontSize: 'var(--card-desc-size, 12px)',
       lineHeight: 1.65,
       color,
       opacity,

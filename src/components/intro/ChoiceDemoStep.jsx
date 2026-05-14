@@ -7,28 +7,30 @@ import DemoFeedbackModal from './DemoFeedbackModal'
 const MOCK_CHOICE = {
   id: 'demo-choice',
   type: 'choice',
-  title: 'The $40 Mistake',
+  title: 'The $80 Mistake',
   description:
-    'A team member just remade a large order wrong. The guest is annoyed. Everyone saw it.',
+    'A new team member just dropped a full container of expensive collagen. They look like they\'re about to cry.',
   options: [
     {
       id: 'a',
-      text: 'Address it calmly after the rush',
-      energyImpact: -1,
+      text: 'Help clean it and share a mistake you made.',
+      energyImpact: 0,
+      outcome: 'success',
       educationalMessage:
-        'Calm, private correction keeps the team steady and builds trust over time.',
+        'You lowered the pressure. You prioritized the person over the product, making it safe for them to keep learning.',
     },
     {
       id: 'b',
-      text: 'Correct them publicly right now',
-      energyImpact: 2,
+      text: 'Sigh and add it to the next order.',
+      energyImpact: 1,
+      outcome: 'meltdown',
       educationalMessage:
-        'Public correction spikes team anxiety and signals instability to everyone watching.',
+        'Your visible frustration spiked their anxiety. The team member goes home crying. Helping clean would have lowered the tension and built trust.',
     },
   ],
 }
 
-export default function ChoiceDemoStep({ onNext, onEnergyChange }) {
+export default function ChoiceDemoStep({ onNext }) {
   const [selectedOption, setSelectedOption] = useState(null)
   const [phase, setPhase] = useState('reading')
   const [energy, setEnergy] = useState(0)
@@ -48,9 +50,12 @@ export default function ChoiceDemoStep({ onNext, onEnergyChange }) {
 
     setPhase('revealed')
     setEnergy(newEnergy)
-    onEnergyChange?.(newEnergy)
 
-    const impactLabel = delta > 0 ? `+${delta} Store Energy` : `${delta} Store Energy`
+    let impactLabel
+    if (opt.outcome === 'meltdown') impactLabel = 'Meltdown move · +1 Heat'
+    else if (opt.outcome === 'freeze') impactLabel = 'Deep Freeze move · −1 Energy'
+    else impactLabel = 'Steady · You set it'
+
     setModalImpact(impactLabel)
     setModalBody(opt.educationalMessage)
 
@@ -80,7 +85,7 @@ export default function ChoiceDemoStep({ onNext, onEnergyChange }) {
           marginBottom: 10,
         }}
       >
-        Demo · Round 1 — Scenario Card
+        Demo · Shift 1 — Your Move
       </p>
 
       {/* Gauge — starts at 0 */}
@@ -98,8 +103,8 @@ export default function ChoiceDemoStep({ onNext, onEnergyChange }) {
         }}
       >
         {isRevealed
-          ? 'Your choice moved the gauge — you set the temperature.'
-          : 'You go first. Pick a response and set the store temperature.'}
+          ? 'Your choice set the temperature. See the consequence below.'
+          : 'Pick a response. One sets the thermostat — the other tips it.'}
       </p>
 
       {/* Card */}

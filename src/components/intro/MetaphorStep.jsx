@@ -122,40 +122,40 @@ export default function MetaphorStep() {
         opacity: 0.8,
       }}>
         A thermometer only <em>reads</em> the room. A thermostat <strong>sets</strong> it.
-        The environment will throw things at you — but your response is what shapes the energy of your team.
+        Your team scans you every shift — the temperature you choose becomes the temperature they work in.
       </p>
 
-      {/* ── Three card-type legend ── */}
+      {/* ── Three outcome legend ── */}
       <div style={{ display: 'flex', gap: 10, alignItems: 'stretch', marginBottom: 20 }}>
-        {/* Blue — energy drains */}
-        <MiniCard
-          bg="#D6E0FF"
-          borderColor="rgba(0,78,147,0.35)"
-          label="Environment"
-          title="AC is Acting Up"
-          pillText="−1 Deepfreeze"
-          pillColor="#004E93"
-          pillBg="#fff"
-          delay={0.05}
-        />
-        {/* Pink — stress rises */}
+        {/* Pink — meltdown move */}
         <MiniCard
           bg="#FFDEE5"
           borderColor="rgba(147,0,24,0.35)"
-          label="Environment"
-          title="Understaffed Rush"
-          pillText="+2 Meltdown"
+          label="Meltdown"
+          title="Stress, anger, panic"
+          pillText="Heat rises"
           pillColor="#930018"
+          pillBg="#fff"
+          delay={0.05}
+        />
+        {/* Blue — deep freeze move */}
+        <MiniCard
+          bg="#D6E0FF"
+          borderColor="rgba(0,78,147,0.35)"
+          label="Deep Freeze"
+          title="Apathy, disengagement"
+          pillText="Energy drops"
+          pillColor="#004E93"
           pillBg="#fff"
           delay={0.12}
         />
-        {/* Cream — scenario card */}
+        {/* Cream — success move */}
         <MiniCard
           bg="#FFF9EF"
           borderColor="rgba(147,0,24,0.35)"
-          label="Scenario"
-          title="Guest Goes Off"
-          pillText="Your call"
+          label="Steady"
+          title="Calm, care, clarity"
+          pillText="You set it"
           pillColor="#930018"
           pillBg="#FFDEE5"
           delay={0.19}
@@ -164,9 +164,9 @@ export default function MetaphorStep() {
 
       {/* Caption rows */}
       {[
-        { dot: '#004E93', dotBg: '#D6E0FF', text: 'Sometimes the energy tanks and you don\'t have any control.' },
-        { dot: '#930018', dotBg: '#FFDEE5', text: 'Sometimes the stress rises and you don\'t have any control.' },
-        { dot: '#930018', dotBg: '#FFF9EF', text: 'But in most situations, you can shape the energy of the store.' },
+        { dot: '#930018', dotBg: '#FFDEE5', text: 'Walk in tense and the whole crew rises to match it.' },
+        { dot: '#004E93', dotBg: '#D6E0FF', text: 'Show up checked-out and the team freezes and stops caring.' },
+        { dot: '#930018', dotBg: '#FFF9EF', text: 'Stay steady and you give them confidence to win the shift.' },
       ].map(({ dot, dotBg, text }, i) => (
         <motion.div
           key={i}

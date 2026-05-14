@@ -4,10 +4,10 @@ import confetti from 'canvas-confetti'
 import logo from '../../assets/logo.png'
 
 function getTier(pct) {
-  if (pct >= 90) return 'You owned the room!'
-  if (pct >= 70) return 'Locked in and leading!'
-  if (pct >= 50) return 'Building real momentum!'
-  return 'Every rep makes you sharper!'
+  if (pct >= 90) return 'Steady hand. You set the temperature.'
+  if (pct >= 70) return 'You kept the thermostat humming.'
+  if (pct >= 50) return 'Solid shifts. Keep blending.'
+  return 'Every shift teaches you the dial.'
 }
 
 // Eased count-up: fast start, slows into the final number
@@ -127,7 +127,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0 }) {
             marginBottom: 20,
           }}
         >
-          You crushed it!
+          Shift 10 survived.
         </h2>
 
         {/* Score */}
@@ -184,7 +184,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0 }) {
             opacity: 0.8,
           }}
         >
-          10 rounds. Steady energy. A team that felt supported. That's what great leadership looks like — and you just lived it.
+          10 shifts. Team intact. You were the thermostat — the steady hand that kept the room running right.
         </p>
 
         {/* CTA */}

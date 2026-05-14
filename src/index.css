@@ -17,7 +17,7 @@
   --card-height: clamp(320px, 46dvh, 500px);
 
   /* Footer height token — used to pad content so it never hides behind the fixed footer */
-  --footer-height: 88px;
+  --footer-height: 120px;
 
   /*
    * Card area positioning tokens.
@@ -26,6 +26,32 @@
    */
   --card-area-px: 16px;   /* horizontal inset from screen edge */
   --card-area-pt: 16px;   /* top offset inside the card area */
+
+  /*
+   * Responsive card typography & spacing.
+   * Defaults target tall screens (>= 800px).
+   * Short-viewport overrides live in the @media block below.
+   */
+  --card-title-size: 30px;
+  --card-desc-size: 12px;
+  --card-padding: 24px 22px;
+  --card-option-padding: 14px 20px;
+  --card-option-fontsize: 13px;
+  --card-option-gap: 10px;
+  --card-revealed-title-size: 24px;
+  --card-revealed-padding: 28px 20px;
+  --card-revealed-title-mb: 20px;
+  --card-revealed-gap: 12px;
+  --revealed-option-padding: 14px 16px;
+  --revealed-option-gap: 7px;
+  --revealed-option-fontsize: 12px;
+  --revealed-message-fontsize: 11px;
+  --revealed-pill-padding: 4px 14px;
+  --revealed-pill-fontsize: 12px;
+  --type-header-crown-size: 22px;
+  --type-header-margin-bottom: 8px;
+  --gauge-min-height: 130px;
+
   --color-bg-primary: #FFF9EF;
   --color-bg-light: #FFDEE5;
   --color-bg-soft-blue: #D6E0FF;
@@ -40,6 +66,35 @@
   --color-green-mid: #B7EB7F;
   --color-text-primary: #930018;
   --color-text-secondary: #40000F;
+}
+
+/*
+ * Short-viewport overrides — collapse card chrome so the scenario fits
+ * without forcing the action buttons smaller than the touch target.
+ */
+@media (max-height: 800px) {
+  :root {
+    --card-title-size: 22px;
+    --card-desc-size: 11px;
+    --card-padding: 14px 16px;
+    --card-option-padding: 11px 16px;
+    --card-option-fontsize: 13px;
+    --card-option-gap: 7px;
+    --card-revealed-title-size: 17px;
+    --card-revealed-padding: 14px 14px;
+    --card-revealed-title-mb: 8px;
+    --card-revealed-gap: 7px;
+    --revealed-option-padding: 9px 12px;
+    --revealed-option-gap: 4px;
+    --revealed-option-fontsize: 11px;
+    --revealed-message-fontsize: 10.5px;
+    --revealed-pill-padding: 3px 10px;
+    --revealed-pill-fontsize: 10px;
+    --type-header-crown-size: 16px;
+    --type-header-margin-bottom: 4px;
+    --gauge-min-height: 100px;
+    --footer-height: 112px;
+  }
 }
 
 *, *::before, *::after {

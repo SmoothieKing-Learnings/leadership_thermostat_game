@@ -1,14 +1,15 @@
 // src/data/cards.js
 // ─────────────────────────────────────────────────────────────────────────────
-// HOW TO EDIT THIS FILE:
-// - Add a new card object to the CARD_DECK array below.
-// - "type" must be either "environment" or "choice".
-// - For environment cards, "energyImpact" is a number (positive raises energy,
-//   negative lowers it). Keep values between -3 and +3.
-// - For choice cards, each option has its own "energyImpact" and
-//   "educationalMessage" shown after the player confirms their pick.
-// - The game randomly selects 10 cards per session, so you can have more than
-//   10 cards in this file for replayability.
+// ACTIVE DECK: SHIFT_DECK (bottom of file). 21 choice cards used by the game.
+// Each option has an `outcome` of "success" | "meltdown" | "freeze":
+//   - meltdown  → energyImpact +1, counts as a strike
+//   - freeze    → energyImpact -1, counts as a strike
+//   - success   → energyImpact "balance" (pulls toward 0), no strike
+// Each card has a `balanceLean` of "meltdown" | "freeze" so the deck builder
+// can mix the 10-card hand evenly.
+//
+// LEGACY: CARD_DECK below is preserved for future use (mixed env + choice
+// cards). It is NOT drawn from by the live game.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const CARD_DECK = [
@@ -372,6 +373,517 @@ export const CARD_DECK = [
         text: "Gather for 60 seconds.",
         energyImpact: "balance",
         educationalMessage: "\"That was hard. You didn't fold. I noticed.\" They leave as a team.",
+      },
+    ],
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SHIFT_DECK — 21 choice cards for the live "Shift Survival" game.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const SHIFT_DECK = [
+  {
+    id: "shift-01",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Heavy Rain Slowdown",
+    description: "It's been pouring for hours. The store is empty and the team is slumped over staring at their phones.",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "Use the quiet to schedule next week.",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "Energy was low and you bailed to the back room. Everyone went home bored and disengaged. Running a tasting challenge would have kept the team's energy alive.",
+      },
+      {
+        id: "B",
+        text: "Run a \"tasting challenge.\"",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You sparked interest during a slump. This keeps the team's energy up so they don't check out mentally.",
+      },
+    ],
+  },
+  {
+    id: "shift-02",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The $80 Mistake",
+    description: "A new team member just dropped a full container of expensive collagen. They look like they're about to cry.",
+    balanceLean: "meltdown",
+    options: [
+      {
+        id: "A",
+        text: "Sigh and add it to the next order.",
+        energyImpact: +1,
+        outcome: "meltdown",
+        educationalMessage: "Your visible frustration spiked their anxiety and added unnecessary heat to the room. The team member goes home crying. Helping them clean would have lowered the tension and built trust.",
+      },
+      {
+        id: "B",
+        text: "Help clean it and share a mistake you made.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You lowered the pressure. You prioritized the person over the product, making it safe for them to keep learning.",
+      },
+    ],
+  },
+  {
+    id: "shift-03",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Gossip Spiral",
+    description: "You overhear two team members complaining about a third person's habits in a nasty way.",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "Join in to show you understand.",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "Joining in kills the team's soul and freezes trust. Setting a professional standard would have protected the team's dignity and focus.",
+      },
+      {
+        id: "B",
+        text: "Interrupt and set a standard for respect.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You injected a \"stern but kind\" boundary. Clear is caring, and you keep the energy professional.",
+      },
+    ],
+  },
+  {
+    id: "shift-04",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Bad Day Spillover",
+    description: "You're exhausted and find yourself snapping at a team member for a small mistake.",
+    balanceLean: "meltdown",
+    options: [
+      {
+        id: "A",
+        text: "Ignore it and move on.",
+        energyImpact: +1,
+        outcome: "meltdown",
+        educationalMessage: "You just set a \"high-tension\" thermostat. The team is now on edge. A quick apology would have cleared the air and modeled accountability.",
+      },
+      {
+        id: "B",
+        text: "Pull them aside and apologize.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You de-escalated the tension you created. Owning your mood shows them it's okay to be human.",
+      },
+    ],
+  },
+  {
+    id: "shift-05",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "Surprise Soccer Team",
+    description: "A 20 person soccer team just walked in.",
+    balanceLean: "meltdown",
+    options: [
+      {
+        id: "A",
+        text: "Jump on the blenders and lead.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "Servant leadership pulls the panic down. When you're in the trenches, they feel supported.",
+      },
+      {
+        id: "B",
+        text: "Stand back and \"manage\" their speed.",
+        energyImpact: +1,
+        outcome: "meltdown",
+        educationalMessage: "Coaching from the sidelines during a rush feels like barking and spikes stress. Jumping on the line would have calmed the crew.",
+      },
+    ],
+  },
+  {
+    id: "shift-06",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Broken Blender",
+    description: "Your best blender just smoked out in a rush. You only have two left.",
+    balanceLean: "meltdown",
+    options: [
+      {
+        id: "A",
+        text: "Make a joke and reorganize the flow.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You stayed steady. The team learned how to pivot under pressure without losing their cool.",
+      },
+      {
+        id: "B",
+        text: "Complain about the equipment to the team.",
+        energyImpact: +1,
+        outcome: "meltdown",
+        educationalMessage: "You added your own frustration to a stressful situation. Keeping a level head would have prevented the team from spiraling.",
+      },
+    ],
+  },
+  {
+    id: "shift-07",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The \"Good Enough\" Shift Lead",
+    description: "Your Shift Lead is letting people slide on the guest greeting because they're \"busy.\"",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "Let it go to keep the vibe.",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "You allowed the energy to drop. \"Good enough\" eventually turns into a cold, disengaged team. Reminding the Lead of our standards would have kept the energy high.",
+      },
+      {
+        id: "B",
+        text: "Remind the Lead why the greeting matters.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "High standards are a form of care. You kept the thermostat set to Excellent.",
+      },
+    ],
+  },
+  {
+    id: "shift-08",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "App Frustration",
+    description: "A team member is struggling to explain the app. The line is growing.",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "Take the phone and do it for them.",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "You zapped their confidence. They now feel like they don't need to try because you'll take over. Standing by them would have empowered them.",
+      },
+      {
+        id: "B",
+        text: "Offer a tip and let them finish.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You kept them in the game. It takes a little more effort, but it keeps the \"learning energy\" high.",
+      },
+    ],
+  },
+  {
+    id: "shift-09",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Feedback Talk",
+    description: "You need to tell a team member their speed is down, but you know they've been stressed at school.",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "Soften the blow to spare feelings.",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "You let the standard slide. Without clear feedback, the team stays in a \"fog\" of average performance. Being direct would have given them the spark they need.",
+      },
+      {
+        id: "B",
+        text: "Be direct but kind about the standard.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You raised the bar. Direct feedback is a form of care that keeps the team moving forward.",
+      },
+    ],
+  },
+  {
+    id: "shift-10",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Early Truck",
+    description: "The delivery truck shows up early. Everything is in the way.",
+    balanceLean: "meltdown",
+    options: [
+      {
+        id: "A",
+        text: "Grab the team for a 10-minute sprint.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You turned a disruption into a focused, organized win.",
+      },
+      {
+        id: "B",
+        text: "Vent to the team about the driver.",
+        energyImpact: +1,
+        outcome: "meltdown",
+        educationalMessage: "You increased the stress. Now the team is venting instead of working. Leading a quick sprint would have kept the room calm.",
+      },
+    ],
+  },
+  {
+    id: "shift-11",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Regular Guest Complaint",
+    description: "A regular says their smoothie tastes different and is being a bit rude.",
+    balanceLean: "meltdown",
+    options: [
+      {
+        id: "A",
+        text: "Defend the team member's work.",
+        energyImpact: +1,
+        outcome: "meltdown",
+        educationalMessage: "You added defensive heat to the situation. Apologizing would have lowered the temperature and modeled de-escalation.",
+      },
+      {
+        id: "B",
+        text: "Apologize and remake it personally.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You de-escalated the guest and the room. You showed the team that we don't have to fight every complaint.",
+      },
+    ],
+  },
+  {
+    id: "shift-12",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The No-Show",
+    description: "Someone didn't show up. You have to stay late and you're missing dinner.",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "Complain about your missed plans.",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "Your negative energy is zapping motivation. They feel like a burden. Telling the team you're happy to support them even when you're upset would have made them feel valued.",
+      },
+      {
+        id: "B",
+        text: "Tell the team \"I've got your back.\"",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You modeled commitment. You chose to be the thermostat that stays warm even when the situation is cold.",
+      },
+    ],
+  },
+  {
+    id: "shift-13",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Shift Change Hand-off",
+    description: "You walk in to find trash cans overflowing. The team is complaining about the mess.",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "\"I'll talk to the morning lead.\"",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "You validated the complaining, which created a \"Divide and Conquer\" vibe within your teams. Jumping in to help instead would have modeled teamwork and kept the energy from freezing into resentment.",
+      },
+      {
+        id: "B",
+        text: "\"I've got this. You guys get settled.\"",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You absorbed the frustration. By taking the \"dirty job\" yourself, you showed the new crew that we solve problems instead of just pointing at them.",
+      },
+    ],
+  },
+  {
+    id: "shift-14",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Winter Freeze",
+    description: "It's 20 degrees outside. You've had 4 guests in 3 hours.",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "Let the team hang out in the back.",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "Total Deep Freeze. The team has mentally checked out. Using a checklist would have kept their engagement up.",
+      },
+      {
+        id: "B",
+        text: "Start a deep clean checklist.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You kept the shift productive. Keeping them busy prevents the slump that comes with slow days.",
+      },
+    ],
+  },
+  {
+    id: "shift-15",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Favorite Leaves",
+    description: "The \"heart\" of the team—the person everyone loves—is moving away.",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "Keep it strictly professional.",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "You missed the human element. The vibe feels cold and corporate. Organizing a goodbye shows you value people.",
+      },
+      {
+        id: "B",
+        text: "Organize a small \"send-off.\"",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You acknowledged the emotion. It builds a \"warm\" culture of appreciation.",
+      },
+    ],
+  },
+  {
+    id: "shift-16",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Broken A/C",
+    description: "It's 85 degrees inside. Everyone is sweating and irritable.",
+    balanceLean: "meltdown",
+    options: [
+      {
+        id: "A",
+        text: "Get cold waters and take breathers.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You lowered the team's discomfort. You can't fix the air, but you can lower the emotional heat.",
+      },
+      {
+        id: "B",
+        text: "Complain about the landlord.",
+        energyImpact: +1,
+        outcome: "meltdown",
+        educationalMessage: "You added anger to physical heat. Focusing on their comfort would have kept the mood much cooler.",
+      },
+    ],
+  },
+  {
+    id: "shift-17",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The New LTO Launch",
+    description: "A new product launches today. Recipes are complex and the team is nervous.",
+    balanceLean: "meltdown",
+    options: [
+      {
+        id: "A",
+        text: "Post the cards and say \"read carefully.\"",
+        energyImpact: +1,
+        outcome: "meltdown",
+        educationalMessage: "You left them in a high-anxiety state. Leading with a \"learning\" mindset would have built their confidence.",
+      },
+      {
+        id: "B",
+        text: "Make the first one and laugh off errors.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You modeled vulnerability over perfection. They're confident because you gave them permission to learn.",
+      },
+    ],
+  },
+  {
+    id: "shift-18",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Drive-Thru Speaker is Dead",
+    description: "The speaker is broken. Someone has to take orders outside in the heat.",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "Rotate every 20 mins; take a turn yourself.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "Servant leadership. They see you doing the hard job, so they don't mind doing it either.",
+      },
+      {
+        id: "B",
+        text: "Send the newest person out there.",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "You zapped the morale of your newest person. Sharing the load would have kept the team's motivation high.",
+      },
+    ],
+  },
+  {
+    id: "shift-19",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "Short Staffed",
+    description: "You're running a 2-person floor on a 4-person day.",
+    balanceLean: "meltdown",
+    options: [
+      {
+        id: "A",
+        text: "Set \"mini-goals\" and order lunch.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You lowered the \"overwhelmed\" feeling. You gave them a reason to keep pushing without panicking.",
+      },
+      {
+        id: "B",
+        text: "Push for normal drive-thru times anyways.",
+        energyImpact: +1,
+        outcome: "meltdown",
+        educationalMessage: "Pushing for impossible standards with half the team creates explosive stress. Setting realistic goals would have kept them from burning out.",
+      },
+    ],
+  },
+  {
+    id: "shift-20",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The Equipment \"Glitch\"",
+    description: "The POS system is lagging. It takes 10 seconds to process every touch.",
+    balanceLean: "meltdown",
+    options: [
+      {
+        id: "A",
+        text: "Join in the frustration. \"This is garbage!\"",
+        energyImpact: +1,
+        outcome: "meltdown",
+        educationalMessage: "You spiked the irritation in the room. Choosing to connect with the guest would have kept the energy calm.",
+      },
+      {
+        id: "B",
+        text: "Chat with the guests while you do a restart.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You modeled resilience and calm. If you aren't stressed, they aren't stressed.",
+      },
+    ],
+  },
+  {
+    id: "shift-21",
+    type: "choice",
+    label: "Shift Scenario",
+    title: "The \"Just a Job\" Vibe",
+    description: "A team member says, \"I'm just here for the paycheck, I don't care.\"",
+    balanceLean: "freeze",
+    options: [
+      {
+        id: "A",
+        text: "Talk to them later in private.",
+        energyImpact: "balance",
+        outcome: "success",
+        educationalMessage: "You added a \"spark\" of purpose. It's an accountability move that keeps the culture from freezing over.",
+      },
+      {
+        id: "B",
+        text: "Laugh it off. \"I get it.\"",
+        energyImpact: -1,
+        outcome: "freeze",
+        educationalMessage: "Total Deep Freeze. If the manager doesn't care about the mission, the team has no reason to try.",
       },
     ],
   },

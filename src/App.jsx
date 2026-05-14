@@ -73,6 +73,23 @@ import GameScreen from './components/GameScreen.jsx'
 import WinModal from './components/modals/WinModal.jsx'
 import LoseModal from './components/modals/LoseModal.jsx'
 
+// Interpolate between two hex colors. t = 0 returns a, t = 1 returns b.
+function lerpColor(a, b, t) {
+  const tt = Math.max(0, Math.min(1, t))
+  const parse = (hex) => [hex.slice(1, 3), hex.slice(3, 5), hex.slice(5, 7)].map(c => parseInt(c, 16))
+  const [r1, g1, b1] = parse(a)
+  const [r2, g2, b2] = parse(b)
+  return `rgb(${Math.round(r1 + (r2 - r1) * tt)}, ${Math.round(g1 + (g2 - g1) * tt)}, ${Math.round(b1 + (b2 - b1) * tt)})`
+}
+
+// Cream base; tints warm (pink) toward meltdown, cool (blue) toward deep freeze.
+// Saturated endpoints so the shift is clearly visible even at energy ±1.
+function getEnergyBg(energy) {
+  if (energy === 0) return '#FFF9EF'
+  if (energy > 0) return lerpColor('#FFF9EF', '#FF95A8', energy / 5)
+  return lerpColor('#FFF9EF', '#8FA8FF', -energy / 5)
+}
+
 export default function App() {
   const {
     state,
@@ -83,13 +100,12 @@ export default function App() {
     acknowledgeEnv,
     applyEnergy,
     restartGame,
-    toggleAutoplay,
     toggleGaugeView,
     openHistory,
     closeHistory,
   } = useGameState()
 
-  const { screen, currentCard, selectedOption, phase, energy } = state
+  const { screen, currentCard, selectedOption, phase, strikeBreakdown } = state
 
   // Handle "Understood" on environment card
   const handleAcknowledgeEnv = () => {
@@ -105,12 +121,16 @@ export default function App() {
     applyEnergy(chosen.energyImpact)
   }
 
+  const energyBg = getEnergyBg(displayEnergy)
+
   return (
     <div
       style={{
         height: '100dvh',
         overflow: 'hidden',
-        backgroundColor: '#FFF9EF',
+        backgroundColor: energyBg,
+        ['--bg-energy']: energyBg,
+        transition: 'background-color 4000ms ease-in-out 800ms',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -146,7 +166,6 @@ export default function App() {
               onConfirm={confirmChoice}
               onAcknowledgeEnv={handleAcknowledgeEnv}
               onAcknowledgeChoice={handleAcknowledgeChoice}
-              onToggleAutoplay={toggleAutoplay}
               onToggleGaugeView={toggleGaugeView}
               onOpenHistory={openHistory}
               onCloseHistory={closeHistory}
@@ -158,7 +177,7 @@ export default function App() {
                 <WinModal key="win" onRestart={restartGame} score={state.score} maxScore={state.maxScore} />
               )}
               {screen === 'lose' && (
-                <LoseModal key="lose" energy={energy} onRestart={restartGame} />
+                <LoseModal key="lose" strikeBreakdown={strikeBreakdown} onRestart={restartGame} />
               )}
             </AnimatePresence>
           </motion.div>

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 const LIVES_EMOJI = ['🍓', '🫐', '🍌']
 const LIVES_LABELS = ['Strawberry', 'Blueberry', 'Banana']
 // Stagger per fruit so they hop at different times and don't sync up.
-const HOP_DELAYS = [0, 3.2, 6.4]
+const HOP_DELAYS = [0, 1.6, 3.2]
 
 const statusLabelStyle = {
   fontFamily: '"DM Sans", system-ui, sans-serif',
@@ -23,7 +23,7 @@ function ShiftProgress({ round, total = 10 }) {
       aria-valuemax={total}
       aria-valuenow={round}
       aria-label={`Shift ${Math.min(round + 1, total)} of ${total}`}
-      style={{ display: 'flex', gap: 2, alignItems: 'center', height: 26, width: '100%' }}
+      style={{ display: 'inline-flex', gap: 4, alignItems: 'center', height: 26 }}
     >
       {Array.from({ length: total }).map((_, i) => {
         const status = i < round ? 'done' : i === round ? 'active' : 'upcoming'
@@ -31,13 +31,12 @@ function ShiftProgress({ round, total = 10 }) {
           <span
             key={i}
             style={{
-              flex: 1,
-              maxWidth: 28,
+              width: 12,
               height: 18,
               borderRadius: 4,
               backgroundColor:
                 status === 'done' ? '#930018' :
-                status === 'active' ? '#E31F26' :
+                status === 'active' ? 'rgba(147,0,24,0.55)' :
                 'rgba(147,0,24,0.15)',
               transition: 'background-color 350ms ease',
             }}
@@ -87,9 +86,9 @@ export default function ActionFooter({
           gap: 12,
         }}
       >
-        <div style={{ flex: 1, minWidth: 0, marginRight: 14, display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-start' }}>
-          <span style={statusLabelStyle}>Shift {Math.min(round + 1, 10)}</span>
-          <div style={{ height: 26, width: '100%', display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-start' }}>
+          <span style={statusLabelStyle}>Shifts</span>
+          <div style={{ height: 26, display: 'flex', alignItems: 'center' }}>
             <ShiftProgress round={round} />
           </div>
         </div>
@@ -106,16 +105,14 @@ export default function ActionFooter({
                   key={i}
                   role="img"
                   aria-label={LIVES_LABELS[i]}
-                  animate={used ? { y: 0 } : { y: [0, -5, 0, -1.4, 0] }}
+                  animate={used ? { y: 0 } : { y: [0, -6, 0] }}
                   transition={used ? { duration: 0 } : {
-                    // Springy hop: decelerating rise, fast accelerating fall,
-                    // tiny secondary bounce on landing, then settle.
-                    duration: 0.75,
-                    times: [0, 0.42, 0.66, 0.84, 1],
-                    ease: ['easeOut', 'easeIn', 'easeOut', 'easeIn'],
+                    duration: 0.55,
+                    times: [0, 0.45, 1],
                     repeat: Infinity,
-                    repeatDelay: 9,
+                    repeatDelay: 4.5,
                     delay: HOP_DELAYS[i],
+                    ease: 'easeOut',
                   }}
                   style={{
                     display: 'inline-block',

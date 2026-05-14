@@ -1,10 +1,15 @@
 import { motion } from 'framer-motion'
 import logoLight from '../../assets/logo-light.png'
 
-export default function LoseModal({ energy, onRestart }) {
-  const isFrozen = energy <= -5
-  const icon = isFrozen ? '❄️' : '🔥'
-  const title = 'The Team Felt It'
+function formatBreakdown({ meltdown = 0, freeze = 0 }) {
+  const parts = []
+  if (meltdown > 0) parts.push(`${meltdown} Meltdown${meltdown > 1 ? 's' : ''}`)
+  if (freeze   > 0) parts.push(`${freeze} Deep Freeze${freeze > 1 ? 's' : ''}`)
+  return parts.join(' · ')
+}
+
+export default function LoseModal({ strikeBreakdown = { meltdown: 0, freeze: 0 }, onRestart }) {
+  const summary = formatBreakdown(strikeBreakdown)
 
   return (
     <div
@@ -47,11 +52,28 @@ export default function LoseModal({ energy, onRestart }) {
             fontSize: 28,
             fontWeight: 700,
             color: '#fff',
-            marginBottom: 16,
+            marginBottom: 12,
           }}
         >
-          {title}
+          Tough shifts.
         </h2>
+
+        {/* Strike breakdown */}
+        {summary && (
+          <p
+            style={{
+              fontFamily: '"DM Sans", system-ui, sans-serif',
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,222,229,0.65)',
+              marginBottom: 18,
+            }}
+          >
+            {summary}
+          </p>
+        )}
 
         {/* Body */}
         <p
@@ -63,8 +85,9 @@ export default function LoseModal({ energy, onRestart }) {
             marginBottom: 32,
           }}
         >
-          The energy got away from you this time — and that&apos;s okay. Every great manager has been here.
-          What matters is you noticed. Try again and find your balance.
+          Some stretches feel like that — and even the best managers have lived
+          through one. Take a breath, reset your dial, and step back in.
+          The next shift is yours.
         </p>
 
         {/* CTA */}

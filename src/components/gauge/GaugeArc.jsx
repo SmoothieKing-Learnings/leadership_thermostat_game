@@ -28,7 +28,7 @@ export default function GaugeArc({ energy }) {
   const TICKS = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
 
   const absEnergy = Math.abs(energy)
-  const shakeKey = absEnergy >= 4 ? 'danger' : absEnergy >= 3 ? 'warn' : 'calm'
+  const shakeKey = absEnergy >= 2 ? 'danger' : absEnergy >= 1 ? 'warn' : 'calm'
 
   // Imperative animation controls — no key-based remount needed
   const controls = useAnimation()
@@ -66,7 +66,7 @@ export default function GaugeArc({ energy }) {
       <svg
         viewBox="0 0 280 185"
         width="100%"
-        style={{ maxWidth: 360, display: 'block', overflow: 'visible' }}
+        style={{ maxWidth: 290, display: 'block', overflow: 'visible' }}
         aria-label={`Store Energy: ${energy}`}
       >
         <defs>
@@ -177,20 +177,6 @@ export default function GaugeArc({ energy }) {
         <circle cx={CX} cy={CY} r="6"  fill="#40000F" />
         <circle cx={CX} cy={CY} r="2"  fill="#FFF9EF" />
       </svg>
-
-      {/* Energy value below arc (numeric feedback) */}
-      <div
-        style={{
-          fontFamily: '"DM Sans", system-ui, sans-serif',
-          fontSize: 36,
-          fontWeight: 800,
-          color: energy === 0 ? '#40000F' : (energy > 0 ? '#930018' : '#004E93'),
-          lineHeight: 1,
-          transition: 'all 600ms ease-in-out',
-        }}
-      >
-        {energy > 0 ? `+${energy}` : energy}
-      </div>
     </motion.div>
   )
 }

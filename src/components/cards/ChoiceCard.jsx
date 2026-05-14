@@ -18,14 +18,14 @@ function OptionButton({ opt, isSelected, onSelect }) {
       transition={{ duration: 0.15 }}
       style={{
         width: '100%',
-        padding: '14px 20px',
+        padding: 'var(--card-option-padding, 14px 20px)',
         borderRadius: 14,
         border: `2px solid ${isSelected ? '#930018' : 'rgba(147,0,24,0.35)'}`,
         backgroundColor: isSelected ? 'rgba(147,0,24,0.06)' : 'transparent',
         textAlign: 'center',
         cursor: 'pointer',
         fontFamily: '"DM Sans", system-ui, sans-serif',
-        fontSize: 13,
+        fontSize: 'var(--card-option-fontsize, 13px)',
         fontWeight: 600,
         color: '#930018',
         lineHeight: 1.5,
@@ -43,28 +43,28 @@ function RevealedOption({ opt, isChosen }) {
     <div style={{
       border: `1.5px solid ${isChosen ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)'}`,
       borderRadius: 14,
-      padding: '14px 16px',
+      padding: 'var(--revealed-option-padding, 14px 16px)',
       opacity: isChosen ? 1 : 0.5,
       display: 'flex',
       flexDirection: 'column',
-      gap: 7,
+      gap: 'var(--revealed-option-gap, 7px)',
       textAlign: 'center',
     }}>
       <p style={{
         fontFamily: '"DM Sans", system-ui, sans-serif',
-        fontSize: 12,
+        fontSize: 'var(--revealed-option-fontsize, 12px)',
         fontWeight: 700,
         color: '#fff',
-        lineHeight: 1.45,
+        lineHeight: 1.4,
         margin: 0,
       }}>
         "{opt.text}"
       </p>
       <p style={{
         fontFamily: '"DM Sans", system-ui, sans-serif',
-        fontSize: 11,
+        fontSize: 'var(--revealed-message-fontsize, 11px)',
         color: 'rgba(255,222,229,0.9)',
-        lineHeight: 1.55,
+        lineHeight: 1.5,
         margin: 0,
       }}>
         {opt.educationalMessage}
@@ -74,9 +74,9 @@ function RevealedOption({ opt, isChosen }) {
           display: 'inline-block',
           border: '1.5px solid rgba(255,255,255,0.5)',
           borderRadius: 999,
-          padding: '4px 14px',
+          padding: 'var(--revealed-pill-padding, 4px 14px)',
           fontFamily: '"DM Sans", system-ui, sans-serif',
-          fontSize: 12,
+          fontSize: 'var(--revealed-pill-fontsize, 12px)',
           fontWeight: 600,
           color: '#fff',
         }}>
@@ -135,7 +135,7 @@ export default function ChoiceCard({ card, selectedOption, phase, onSelectOption
             </div>
 
             {/* Bottom: option buttons */}
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 'var(--card-option-gap, 10px)' }}>
               {card.options.map(opt => (
                 <OptionButton
                   key={opt.id}
@@ -165,23 +165,23 @@ export default function ChoiceCard({ card, selectedOption, phase, onSelectOption
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            padding: '28px 20px',
+            padding: 'var(--card-revealed-padding, 28px 20px)',
             overflowY: 'auto',
             boxSizing: 'border-box',
             boxShadow: CARD_SHADOW,
           }}>
             <h2 style={{
               fontFamily: '"Playfair Display", Georgia, serif',
-              fontSize: 24,
+              fontSize: 'var(--card-revealed-title-size, 24px)',
               fontWeight: 700,
               color: '#fff',
-              lineHeight: 1.25,
-              marginBottom: 20,
+              lineHeight: 1.2,
+              marginBottom: 'var(--card-revealed-title-mb, 20px)',
               textAlign: 'center',
             }}>
               {card.title}
             </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--card-revealed-gap, 12px)' }}>
               {card.options.map(opt => (
                 <RevealedOption
                   key={opt.id}

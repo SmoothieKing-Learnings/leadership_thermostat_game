@@ -1,19 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import LandingStep from './intro/LandingStep'
 import MetaphorStep from './intro/MetaphorStep'
-import EnvDemoStep from './intro/EnvDemoStep'
 import ChoiceDemoStep from './intro/ChoiceDemoStep'
 import RulesStep from './intro/RulesStep'
 
 // Steps that manage their own action button (no container Next button)
-const SELF_NAVIGATING = new Set([2, 3])
+const SELF_NAVIGATING = new Set([0, 2])
 
-const TOTAL_STEPS = 5
+const TOTAL_STEPS = 4
 
 export default function WelcomeScreen({ onStart }) {
   const [step, setStep] = useState(0)
-  const [demoEnergy, setDemoEnergy] = useState(0)
+  const scrollRef = useRef(null)
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0
+  }, [step])
 
   const goNext = () => {
     if (step < TOTAL_STEPS - 1) setStep(s => s + 1)
@@ -35,56 +38,62 @@ export default function WelcomeScreen({ onStart }) {
         width: '100%',
       }}
     >
-      {/* ── Top bar ── */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '16px 22px 8px',
-          flexShrink: 0,
-        }}
-      >
-        {/* Progress dots */}
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-          {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
-            <motion.div
-              key={i}
-              animate={{
-                width: i === step ? 20 : 6,
-                backgroundColor:
-                  i < step
-                    ? 'rgba(147,0,24,0.45)'
-                    : i === step
-                    ? '#930018'
-                    : 'rgba(147,0,24,0.18)',
-              }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-              style={{ height: 6, borderRadius: 99 }}
-            />
-          ))}
-        </div>
-
-        {/* Skip intro */}
-        <button
-          onClick={onStart}
+      {/* ── Top bar — hidden on landing (step 0) ── */}
+      {step > 0 && (
+        <div
           style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            fontFamily: '"DM Sans", system-ui, sans-serif',
-            fontSize: 13,
-            color: 'rgba(147,0,24,0.5)',
-            fontWeight: 600,
-            padding: '4px 2px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '16px 22px 8px',
+            flexShrink: 0,
           }}
         >
-          Skip Intro →
-        </button>
-      </div>
+          {/* Progress dots (excludes landing step 0) */}
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            {Array.from({ length: TOTAL_STEPS - 1 }).map((_, i) => {
+              const tutorialStep = step - 1
+              return (
+                <motion.div
+                  key={i}
+                  animate={{
+                    width: i === tutorialStep ? 20 : 6,
+                    backgroundColor:
+                      i < tutorialStep
+                        ? 'rgba(147,0,24,0.45)'
+                        : i === tutorialStep
+                        ? '#930018'
+                        : 'rgba(147,0,24,0.18)',
+                  }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  style={{ height: 6, borderRadius: 99 }}
+                />
+              )
+            })}
+          </div>
+
+          {/* Skip intro */}
+          <button
+            onClick={onStart}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontFamily: '"DM Sans", system-ui, sans-serif',
+              fontSize: 13,
+              color: 'rgba(147,0,24,0.5)',
+              fontWeight: 600,
+              padding: '4px 2px',
+            }}
+          >
+            Skip Intro →
+          </button>
+        </div>
+      )}
 
       {/* ── Step content ── */}
       <div
+        ref={scrollRef}
         style={{
           flex: 1,
           overflowY: 'auto',
@@ -105,11 +114,10 @@ export default function WelcomeScreen({ onStart }) {
             transition={{ duration: 0.22, ease: 'easeOut' }}
             style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
           >
-            {step === 0 && <LandingStep />}
+            {step === 0 && <LandingStep onStart={onStart} onTutorial={goNext} />}
             {step === 1 && <MetaphorStep />}
-            {step === 2 && <ChoiceDemoStep onNext={goNext} onEnergyChange={setDemoEnergy} />}
-            {step === 3 && <EnvDemoStep onNext={goNext} startEnergy={demoEnergy} />}
-            {step === 4 && <RulesStep />}
+            {step === 2 && <ChoiceDemoStep onNext={goNext} />}
+            {step === 3 && <RulesStep />}
           </motion.div>
         </AnimatePresence>
       </div>
