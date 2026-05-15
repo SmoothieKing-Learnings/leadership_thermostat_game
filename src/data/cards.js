@@ -396,7 +396,7 @@ export const SHIFT_DECK = [
         text: "Use the quiet to schedule next week.",
         energyImpact: -1,
         outcome: "freeze",
-        educationalMessage: "Energy was low and you bailed to the back room. Everyone went home bored and disengaged. Running a tasting challenge would have kept the team's energy alive.",
+        educationalMessage: "Energy was low and you bailed to the back room. Everyone went home bored and disengaged. By running a tasting challenge, you would have kept the team's energy alive.",
       },
       {
         id: "B",
@@ -420,7 +420,7 @@ export const SHIFT_DECK = [
         text: "Sigh and add it to the next order.",
         energyImpact: +1,
         outcome: "meltdown",
-        educationalMessage: "Your visible frustration spiked their anxiety and added unnecessary heat to the room. The team member goes home crying. Helping them clean would have lowered the tension and built trust.",
+        educationalMessage: "Your visible frustration spiked their anxiety and added unnecessary heat to the room. The team member goes home crying. By helping them clean, you would have lowered the tension and built trust.",
       },
       {
         id: "B",
@@ -444,7 +444,7 @@ export const SHIFT_DECK = [
         text: "Join in to show you understand.",
         energyImpact: -1,
         outcome: "freeze",
-        educationalMessage: "Joining in kills the team's soul and freezes trust. Setting a professional standard would have protected the team's dignity and focus.",
+        educationalMessage: "Joining in kills the team's soul and freezes trust. By setting a professional standard, you would have protected the team's dignity and focus.",
       },
       {
         id: "B",
@@ -660,7 +660,7 @@ export const SHIFT_DECK = [
         text: "Complain about your missed plans.",
         energyImpact: -1,
         outcome: "freeze",
-        educationalMessage: "Your negative energy is zapping motivation. They feel like a burden. Telling the team you're happy to support them even when you're upset would have made them feel valued.",
+        educationalMessage: "Your negative energy is zapping motivation. They feel like a burden. Telling the team you're happy to support them even when you are upset would have made them feel valued.",
       },
       {
         id: "B",
@@ -684,7 +684,7 @@ export const SHIFT_DECK = [
         text: "\"I'll talk to the morning lead.\"",
         energyImpact: -1,
         outcome: "freeze",
-        educationalMessage: "You validated the complaining, which created a \"Divide and Conquer\" vibe within your teams. Jumping in to help instead would have modeled teamwork and kept the energy from freezing into resentment.",
+        educationalMessage: "You validated the complaining, which created a \"Divide and Conquer\" vibe within your teams. By jumping in to help instead, you would have modeled teamwork and kept the energy from freezing into resentment.",
       },
       {
         id: "B",
@@ -787,7 +787,7 @@ export const SHIFT_DECK = [
         text: "Make the first one and laugh off errors.",
         energyImpact: "balance",
         outcome: "success",
-        educationalMessage: "You modeled vulnerability over perfection. They're confident because you gave them permission to learn.",
+        educationalMessage: "You modeled Vulnerability over Perfection. They're confident because you gave them permission to learn.",
       },
     ],
   },

@@ -107,12 +107,15 @@ function lerpColor(a, b, t) {
   return `rgb(${Math.round(r1 + (r2 - r1) * tt)}, ${Math.round(g1 + (g2 - g1) * tt)}, ${Math.round(b1 + (b2 - b1) * tt)})`
 }
 
-// Cream base; tints warm (pink) toward meltdown, cool (blue) toward deep freeze.
-// Saturated endpoints so the shift is clearly visible even at energy ±1.
+// Cream base; tints warm (pink) at Meltdown, cool (blue) at Deep Freeze.
+// Softer endpoints — the previous saturated tints felt overpowering. These
+// land roughly halfway between cream and the old endpoints so the temperature
+// signal is still clear without dominating the screen.
 function getEnergyBg(energy) {
   if (energy === 0) return '#FFF9EF'
-  if (energy > 0) return lerpColor('#FFF9EF', '#FF95A8', energy / 5)
-  return lerpColor('#FFF9EF', '#8FA8FF', -energy / 5)
+  const t = Math.min(Math.abs(energy) / 2.5, 1)
+  if (energy > 0) return lerpColor('#FFF9EF', '#FFC7CB', t)
+  return lerpColor('#FFF9EF', '#C7D0F7', t)
 }
 
 export default function App() {
@@ -124,6 +127,7 @@ export default function App() {
     confirmChoice,
     acknowledgeEnv,
     applyEnergy,
+    applyOutcome,
     restartGame,
     toggleGaugeView,
     openHistory,
@@ -179,12 +183,13 @@ export default function App() {
     applyEnergy(currentCard.energyImpact)
   }
 
-  // Handle "Understood" on choice card (post-reveal)
+  // Handle "Understood" on choice card (post-reveal). Drives the 3-state
+  // temperature machine directly from the chosen option's outcome.
   const handleAcknowledgeChoice = () => {
     if (!currentCard || !selectedOption) return
     const chosen = currentCard.options.find(o => o.id === selectedOption)
     if (!chosen) return
-    applyEnergy(chosen.energyImpact)
+    applyOutcome(chosen.outcome)
   }
 
   // Keyboard shortcuts: 1/A for option A, 2/B for option B, Enter for Confirm/Understood.
@@ -298,7 +303,7 @@ export default function App() {
             {/* Win/Lose modals — overlay on top of game screen */}
             <AnimatePresence>
               {screen === 'win' && (
-                <WinModal key="win" onRestart={restartGame} score={state.score} maxScore={state.maxScore} />
+                <WinModal key="win" onRestart={restartGame} score={state.score} maxScore={state.maxScore} shiftsCompleted={Math.min(state.round, 10)} />
               )}
               {screen === 'lose' && (
                 <LoseModal key="lose" strikeBreakdown={strikeBreakdown} onRestart={restartGame} />

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import GaugeArc from '../gauge/GaugeArc'
-import skCrown from '../../assets/SKcrown.svg'
 
 // Oscillating sequence to show the gauge "alive"
 const DEMO_SEQUENCE = [0, 2, 3, 1, -1, -3, -1, 1, 0]
@@ -28,31 +27,30 @@ function MiniCard({ bg, borderColor, label, title, pillText, pillColor, pillBg, 
         boxShadow: '0 4px 10px rgba(64,0,15,0.14), 0 12px 28px rgba(64,0,15,0.10)',
       }}
     >
-      {/* Crown + label */}
-      <div style={{ textAlign: 'center' }}>
-        <img src={skCrown} alt="" style={{ width: 14, height: 'auto', marginBottom: 5, display: 'block', marginInline: 'auto' }} />
-        <p style={{
-          fontFamily: '"DM Sans", system-ui, sans-serif',
-          fontSize: 8,
-          fontWeight: 700,
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          color: '#930018',
-          margin: 0,
-        }}>
-          {label}
-        </p>
-      </div>
+      {/* Concept label — the key takeaway */}
+      <p style={{
+        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontSize: 13,
+        fontWeight: 800,
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase',
+        color: '#930018',
+        margin: 0,
+        textAlign: 'center',
+      }}>
+        {label}
+      </p>
 
-      {/* Title */}
+      {/* Detail title */}
       <p style={{
         fontFamily: '"Playfair Display", Georgia, serif',
-        fontSize: 12,
-        fontWeight: 800,
+        fontSize: 10,
+        fontWeight: 700,
         color: '#40000F',
         lineHeight: 1.3,
         textAlign: 'center',
-        margin: '8px 0',
+        margin: '6px 0',
+        opacity: 0.75,
         flex: 1,
         display: 'flex',
         alignItems: 'center',
@@ -60,14 +58,14 @@ function MiniCard({ bg, borderColor, label, title, pillText, pillColor, pillBg, 
         {title}
       </p>
 
-      {/* Impact pill */}
+      {/* Detail pill */}
       <div style={{
         backgroundColor: pillBg,
         color: pillColor,
         border: `1.5px solid ${pillColor}33`,
         borderRadius: 99,
-        padding: '4px 10px',
-        fontSize: 9,
+        padding: '3px 9px',
+        fontSize: 8,
         fontFamily: '"DM Sans", system-ui, sans-serif',
         fontWeight: 700,
         whiteSpace: 'nowrap',
@@ -111,33 +109,37 @@ export default function MetaphorStep() {
         You Are the Thermostat
       </h2>
 
-      {/* Short copy */}
+      {/* Body — moved from welcome landing so the tutorial leads with how the team responds */}
       <p style={{
         fontFamily: '"DM Sans", system-ui, sans-serif',
-        fontSize: 14,
+        fontSize: 13.5,
         color: '#40000F',
-        lineHeight: 1.75,
-        textAlign: 'center',
-        marginBottom: 24,
-        opacity: 0.8,
+        lineHeight: 1.7,
+        textAlign: 'left',
+        marginBottom: 14,
+        opacity: 0.85,
       }}>
-        A thermometer only <em>reads</em> the room. A thermostat <strong>sets</strong> it.
-        Your team scans you every shift — the temperature you choose becomes the temperature they work in.
+        Your team is constantly scanning you. If you walk in with high tension or
+        frustration, the energy of the entire crew will rise to match that stress.
+        If you're disengaged or "checked out," the team will freeze and stop caring.
+      </p>
+      <p style={{
+        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontSize: 13.5,
+        color: '#40000F',
+        lineHeight: 1.7,
+        textAlign: 'left',
+        marginBottom: 24,
+        opacity: 0.85,
+      }}>
+        By staying steady and leading through care, you model the emotional
+        resilience your team needs to perform their best. When you set a
+        temperature of calm and encouragement, you give your team the confidence
+        to win the shift.
       </p>
 
-      {/* ── Three outcome legend ── */}
-      <div style={{ display: 'flex', gap: 10, alignItems: 'stretch', marginBottom: 20 }}>
-        {/* Pink — meltdown move */}
-        <MiniCard
-          bg="#FFDEE5"
-          borderColor="rgba(147,0,24,0.35)"
-          label="Meltdown"
-          title="Stress, anger, panic"
-          pillText="Heat rises"
-          pillColor="#930018"
-          pillBg="#fff"
-          delay={0.05}
-        />
+      {/* ── Three outcome legend — Deep Freeze · Steady · Meltdown ── */}
+      <div style={{ display: 'flex', gap: 5, alignItems: 'stretch', marginBottom: 20 }}>
         {/* Blue — deep freeze move */}
         <MiniCard
           bg="#D6E0FF"
@@ -147,9 +149,9 @@ export default function MetaphorStep() {
           pillText="Energy drops"
           pillColor="#004E93"
           pillBg="#fff"
-          delay={0.12}
+          delay={0.05}
         />
-        {/* Cream — success move */}
+        {/* Cream — steady / balance */}
         <MiniCard
           bg="#FFF9EF"
           borderColor="rgba(147,0,24,0.35)"
@@ -158,15 +160,26 @@ export default function MetaphorStep() {
           pillText="You set it"
           pillColor="#930018"
           pillBg="#FFDEE5"
+          delay={0.12}
+        />
+        {/* Pink — meltdown move */}
+        <MiniCard
+          bg="#FFDEE5"
+          borderColor="rgba(147,0,24,0.35)"
+          label="Meltdown"
+          title="Stress, anger, panic"
+          pillText="Heat rises"
+          pillColor="#930018"
+          pillBg="#fff"
           delay={0.19}
         />
       </div>
 
-      {/* Caption rows */}
+      {/* Caption rows — match legend order (Deep Freeze · Steady · Meltdown) */}
       {[
-        { dot: '#930018', dotBg: '#FFDEE5', text: 'Walk in tense and the whole crew rises to match it.' },
         { dot: '#004E93', dotBg: '#D6E0FF', text: 'Show up checked-out and the team freezes and stops caring.' },
         { dot: '#930018', dotBg: '#FFF9EF', text: 'Stay steady and you give them confidence to win the shift.' },
+        { dot: '#930018', dotBg: '#FFDEE5', text: 'Walk in tense and the whole crew rises to match it.' },
       ].map(({ dot, dotBg, text }, i) => (
         <motion.div
           key={i}

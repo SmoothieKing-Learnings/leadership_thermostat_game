@@ -57,28 +57,23 @@ function defaultGaugeView() {
   return window.innerHeight < 800 ? 'bar' : 'arc'
 }
 
-function resolveImpact(impact, energy) {
-  if (impact === 'balance') return energy > 0 ? -1 : energy < 0 ? 1 : 0
-  return impact
+// Pin position for each temperature state. The gauge visual extents remain
+// at ±5, but the pin only ever lives in the narrower ±2.5 band.
+const PIN_BY_OUTCOME = { success: 0, meltdown: 2.5, freeze: -2.5 }
+
+function energyForOutcome(outcome) {
+  return PIN_BY_OUTCOME[outcome] ?? 0
 }
 
-function calcChoicePoints(card, chosenId, energy, cardStartTime) {
+// Score model under the 3-state system: success picks earn 2 base points,
+// off-balance picks earn 0. Timing bonus is only granted on success picks
+// (fast, accurate leadership). Drives the win-modal tier copy.
+function calcChoicePoints(card, chosenId, cardStartTime) {
   const chosen = card.options.find(o => o.id === chosenId)
-  const other  = card.options.find(o => o.id !== chosenId)
-  if (!chosen || !other) return { earned: 0, possible: 3 }
-
-  const chosenResolved = resolveImpact(chosen.energyImpact, energy)
-  const otherResolved  = resolveImpact(other.energyImpact,  energy)
-
-  const chosenDist = Math.abs(energy + chosenResolved)
-  const otherDist  = Math.abs(energy + otherResolved)
-
-  let base = 0
-  if (chosenDist < otherDist)       base = 2
-  else if (chosenDist === otherDist) base = 1
-
-  const timingBonus = cardStartTime && (Date.now() - cardStartTime) < 6000 ? 1 : 0
-
+  if (!chosen) return { earned: 0, possible: 2 }
+  const isSuccess = chosen.outcome === 'success'
+  const base = isSuccess ? 2 : 0
+  const timingBonus = isSuccess && cardStartTime && (Date.now() - cardStartTime) < 6000 ? 1 : 0
   return { earned: base + timingBonus, possible: 2 }
 }
 
@@ -138,7 +133,7 @@ export function useGameState() {
       if (prev.phase !== 'reading' || !prev.selectedOption) return prev
       const chosen = prev.currentCard.options.find(o => o.id === prev.selectedOption)
       const { earned, possible } = calcChoicePoints(
-        prev.currentCard, prev.selectedOption, prev.energy, prev.cardStartTime
+        prev.currentCard, prev.selectedOption, prev.cardStartTime
       )
 
       const isStrike = chosen && chosen.outcome !== 'success'
@@ -165,23 +160,23 @@ export function useGameState() {
     })
   }, [])
 
-  // ── applyEnergy ────────────────────────────────────────────────────────────
-  const applyEnergy = useCallback((impact) => {
+  // ── applyOutcome ───────────────────────────────────────────────────────────
+  // 3-state temperature model: the pin snaps directly to the position dictated
+  // by the chosen option's outcome — no accumulation, no in-between values.
+  //   outcome === 'meltdown' → energy = +2.5
+  //   outcome === 'freeze'   → energy = -2.5
+  //   outcome === 'success'  → energy =  0
+  // The pin persists between rounds. Strikes are tracked separately in
+  // confirmChoice; this function only handles state advancement.
+  const applyOutcome = useCallback((outcome) => {
     setState(prev => {
       if (prev.phase === 'animating') return prev
-      let delta = impact
-      if (impact === 'balance') {
-        delta = prev.energy > 0 ? -1 : prev.energy < 0 ? 1 : 0
-      }
 
-      const rawNext = prev.energy + delta
-      const newEnergy = Math.max(-5, Math.min(5, rawNext))
+      const newEnergy = energyForOutcome(outcome)
       const newRound = prev.round + 1
 
       setDisplayEnergy(newEnergy)
 
-      // New win/lose logic: lose only on 3 strikes, win on round 10.
-      // Gauge can pin at ±5 visually but doesn't end the game.
       let nextScreen = 'game'
       if (prev.strikes >= 3) nextScreen = 'lose'
       else if (newRound >= 10) nextScreen = 'win'
@@ -190,7 +185,7 @@ export function useGameState() {
         ...prev.currentCard,
         roundNumber: prev.round + 1,
         appliedEnergy: newEnergy,
-        energyDelta: delta,
+        energyDelta: newEnergy - prev.energy,
         chosenOptionId: prev.selectedOption,
       }
 
@@ -218,6 +213,17 @@ export function useGameState() {
       }
     })
   }, [])
+
+  // Backward-compatible shim — the (unused) env-card path still calls
+  // applyEnergy(card.energyImpact). Translate that to an outcome so the
+  // 3-state machine handles it uniformly.
+  const applyEnergy = useCallback((impact) => {
+    let outcome = 'success'
+    if (impact === 'balance' || impact === 0) outcome = 'success'
+    else if (typeof impact === 'number' && impact > 0) outcome = 'meltdown'
+    else if (typeof impact === 'number' && impact < 0) outcome = 'freeze'
+    applyOutcome(outcome)
+  }, [applyOutcome])
 
   // ── nextCard ───────────────────────────────────────────────────────────────
   const nextCard = useCallback(() => {}, [])
@@ -248,6 +254,7 @@ export function useGameState() {
     confirmChoice,
     acknowledgeEnv,
     applyEnergy,
+    applyOutcome,
     nextCard,
     restartGame,
     toggleGaugeView,

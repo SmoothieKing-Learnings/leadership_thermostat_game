@@ -9,8 +9,8 @@ export default function LandingStep({ onStart, onTutorial }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        padding: '40px 28px 24px',
+        justifyContent: 'flex-start',
+        padding: '32px 28px 24px',
         textAlign: 'center',
         gap: 0,
       }}
@@ -22,7 +22,7 @@ export default function LandingStep({ onStart, onTutorial }) {
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.45, ease: 'easeOut' }}
-        style={{ width: 120, height: 'auto', display: 'block', marginBottom: 40 }}
+        style={{ width: 96, height: 'auto', display: 'block', marginBottom: 20 }}
       />
 
       {/* Headline */}
@@ -32,14 +32,14 @@ export default function LandingStep({ onStart, onTutorial }) {
         transition={{ delay: 0.2, duration: 0.45 }}
         style={{
           fontFamily: '"Playfair Display", Georgia, serif',
-          fontSize: 40,
+          fontSize: 34,
           fontWeight: 800,
           color: '#930018',
           lineHeight: 1.1,
-          marginBottom: 20,
+          marginBottom: 16,
         }}
       >
-        Shift<br />Survival
+        Setting<br />the Thermostat
       </motion.h1>
 
       {/* Divider */}
@@ -52,7 +52,7 @@ export default function LandingStep({ onStart, onTutorial }) {
           height: 2,
           backgroundColor: 'rgba(147,0,24,0.25)',
           borderRadius: 99,
-          marginBottom: 20,
+          marginBottom: 16,
         }}
       />
 
@@ -63,17 +63,18 @@ export default function LandingStep({ onStart, onTutorial }) {
         transition={{ delay: 0.38, duration: 0.4 }}
         style={{
           fontFamily: '"DM Sans", system-ui, sans-serif',
-          fontSize: 15,
+          fontSize: 13,
           color: '#40000F',
-          lineHeight: 1.75,
-          opacity: 0.7,
-          maxWidth: 300,
-          margin: '0 0 36px',
+          lineHeight: 1.65,
+          opacity: 0.78,
+          maxWidth: 340,
+          margin: '0 0 24px',
+          textAlign: 'left',
         }}
       >
-        At Smoothie King, leaders don't just read the room —
-        they set it. Step into 10 real shifts and practice
-        being the steady hand that keeps your team running right.
+        At Smoothie King, leaders aren't just a thermometer. A thermometer only
+        tells you the temperature. It just shows you how hot or cold it is. As
+        a leader, you are the Thermostat. You have the power to set the temperature.
       </motion.p>
 
       {/* Primary + Secondary CTAs */}
@@ -88,10 +89,9 @@ export default function LandingStep({ onStart, onTutorial }) {
           whileTap={{ scale: 0.97 }}
           style={{
             width: '100%',
-            padding: '15px',
-            borderRadius: 16,
-            border: '1.5px solid rgba(147,0,24,0.35)',
-            backgroundColor: 'transparent',
+            padding: '8px',
+            border: 'none',
+            background: 'transparent',
             color: '#930018',
             fontFamily: '"DM Sans", system-ui, sans-serif',
             fontSize: 15,
@@ -99,7 +99,7 @@ export default function LandingStep({ onStart, onTutorial }) {
             cursor: 'pointer',
           }}
         >
-          Tutorial
+          Learn more &rarr;
         </motion.button>
         <motion.button
           onClick={onStart}

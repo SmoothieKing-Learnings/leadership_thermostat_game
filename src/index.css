@@ -33,7 +33,7 @@
    * Short-viewport overrides live in the @media block below.
    */
   --card-title-size: 30px;
-  --card-desc-size: 12px;
+  --card-desc-size: 16px;
   --card-padding: 24px 22px;
   --card-option-padding: 14px 20px;
   --card-option-fontsize: 13px;
@@ -75,7 +75,7 @@
 @media (max-height: 800px) {
   :root {
     --card-title-size: 22px;
-    --card-desc-size: 11px;
+    --card-desc-size: 15px;
     --card-padding: 14px 16px;
     --card-option-padding: 11px 16px;
     --card-option-fontsize: 13px;

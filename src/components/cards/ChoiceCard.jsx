@@ -1,11 +1,12 @@
 import { motion } from 'framer-motion'
 import CardShell, { TypeHeader, CardTitle, CardDescription, CARD_SHADOW } from './CardShell.jsx'
 
-export function getChoiceImpactLabel(impact) {
-  if (impact === 'balance') return '1 Back to Balance'
-  if (impact > 0) return `+${impact} (Meltdown)`
-  if (impact < 0) return `${impact} (Deepfreeze)`
-  return 'No Impact'
+// 3-state outcome label for the revealed option pill — no numbers, just the
+// temperature state that the chosen option drives the gauge to.
+export function getChoiceOutcomeLabel(outcome) {
+  if (outcome === 'meltdown') return 'Meltdown'
+  if (outcome === 'freeze')   return 'Deep Freeze'
+  return 'Balance'
 }
 
 // ── Option button (reading phase) ─────────────────────────────────────────────
@@ -80,7 +81,7 @@ function RevealedOption({ opt, isChosen }) {
           fontWeight: 600,
           color: '#fff',
         }}>
-          {getChoiceImpactLabel(opt.energyImpact)}
+          {getChoiceOutcomeLabel(opt.outcome)}
         </span>
       </div>
     </div>

@@ -16,8 +16,11 @@ const shakeVariants = {
 const SLOTS = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
 
 export default function GaugeBar({ energy }) {
+  // 3-state gauge: shake at the strong "danger" level any time the pin is
+  // off Balance. The pin doesn't escalate within a state, so this is the only
+  // shake level that fires.
   const absEnergy = Math.abs(energy)
-  const shakeKey = absEnergy >= 2 ? 'danger' : absEnergy >= 1 ? 'warn' : 'calm'
+  const shakeKey = absEnergy > 0.01 ? 'danger' : 'calm'
 
   const controls = useAnimation()
   const timerRef = useRef(null)

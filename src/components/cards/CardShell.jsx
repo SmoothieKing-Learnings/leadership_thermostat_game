@@ -75,12 +75,12 @@ export function CardTitle({ children, color = '#930018', size }) {
 
 // ── Description ───────────────────────────────────────────────────────────────
 
-export function CardDescription({ children, color = '#930018', opacity = 0.75 }) {
+export function CardDescription({ children, color = '#930018', opacity = 0.78 }) {
   return (
     <p style={{
       fontFamily: '"DM Sans", system-ui, sans-serif',
       fontSize: 'var(--card-desc-size, 12px)',
-      lineHeight: 1.65,
+      lineHeight: 1.5,
       color,
       opacity,
       margin: 0,

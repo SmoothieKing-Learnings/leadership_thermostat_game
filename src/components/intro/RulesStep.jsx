@@ -3,20 +3,32 @@ import { motion } from 'framer-motion'
 const RULES = [
   {
     num: '1',
-    title: 'Face the scenario',
-    body: 'Each shift presents a real moment. One option models steady leadership. The other tips the thermostat the wrong way.',
+    title: 'Face the Scenario',
+    body: "Each round presents a real-world situation. You'll have two options. One choice models stable leadership. The other choice will tip the thermostat in the wrong direction.",
     color: '#930018',
   },
   {
     num: '2',
-    title: 'Two ways to lose a shift',
-    body: 'Meltdown — too much stress, panic, or anger. Deep Freeze — apathy, disengagement, lack of care.',
+    title: 'Watch the Thermostat',
+    body: 'There are two ways to lose a shift:',
+    bullets: [
+      {
+        label: 'The Meltdown',
+        text: 'Choose a path that adds too much stress, panic, or anger and the shift will end in a meltdown.',
+        color: '#930018',
+      },
+      {
+        label: 'The Deep Freeze',
+        text: 'Choose a path that leads to apathy, disengagement, or a lack of care and the shift will end in a deep freeze.',
+        color: '#004E93',
+      },
+    ],
     color: '#004E93',
   },
   {
     num: '3',
-    title: 'Three strikes and it breaks',
-    body: 'You have 3 lives. Three Meltdown or Deep Freeze moves and the thermostat is gone — team quits, reviews tank, sales plummet.',
+    title: 'Three Strikes and Our Culture is Lost',
+    body: 'You have 3 lives. If you make three "Meltdown" or "Deep Freeze" moves within the 10 shifts, the thermostat breaks. Team members will quit, reviews tank, and sales plummet.',
     color: '#40000F',
   },
 ]
@@ -72,9 +84,8 @@ export default function RulesStep() {
             margin: 0,
           }}
         >
-          Reach the end of shift 10 with your team intact.
-          Your team doesn't need you to be perfect, but they
-          do need you to be the steady hand that keeps the team running right.
+          Survive 10 shifts by role-modeling choices that keep the team's
+          energy balanced.
         </p>
       </motion.div>
 
@@ -141,7 +152,7 @@ export default function RulesStep() {
                     fontSize: 14,
                     fontWeight: 700,
                     color: '#40000F',
-                    marginBottom: 4,
+                    marginBottom: rule.bullets ? 6 : 4,
                     lineHeight: 1.35,
                   }}
                 >
@@ -151,18 +162,80 @@ export default function RulesStep() {
                   style={{
                     fontFamily: '"DM Sans", system-ui, sans-serif',
                     fontSize: 13,
-                    color: 'rgba(64,0,15,0.58)',
+                    color: 'rgba(64,0,15,0.65)',
                     lineHeight: 1.65,
                     margin: 0,
                   }}
                 >
                   {rule.body}
                 </p>
+                {rule.bullets && (
+                  <ul style={{ listStyle: 'none', padding: 0, margin: '8px 0 0', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {rule.bullets.map((b) => (
+                      <li
+                        key={b.label}
+                        style={{
+                          fontFamily: '"DM Sans", system-ui, sans-serif',
+                          fontSize: 13,
+                          color: 'rgba(64,0,15,0.65)',
+                          lineHeight: 1.55,
+                        }}
+                      >
+                        <span style={{ color: b.color, fontWeight: 800 }}>{b.label}:</span> {b.text}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
           </motion.div>
         ))}
       </div>
+
+      {/* Closing reminder */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.45, duration: 0.35 }}
+        style={{
+          marginTop: 12,
+          padding: '18px 18px 20px',
+          borderRadius: 16,
+          border: '1.5px solid rgba(147,0,24,0.18)',
+          backgroundColor: 'rgba(147,0,24,0.04)',
+        }}
+      >
+        <p
+          style={{
+            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontSize: 13,
+            color: '#40000F',
+            lineHeight: 1.65,
+            margin: 0,
+          }}
+        >
+          Reach the end of shift 10 with your team intact and the energy balanced.
+          Your team doesn't need you to be perfect — they need you to be the
+          <strong> steady hand</strong> that keeps the team running right.
+        </p>
+      </motion.div>
+
+      {/* Section teaser */}
+      <p
+        style={{
+          fontFamily: '"DM Sans", system-ui, sans-serif',
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: '0.14em',
+          color: 'rgba(147,0,24,0.55)',
+          textTransform: 'uppercase',
+          marginTop: 22,
+          marginBottom: 0,
+          textAlign: 'center',
+        }}
+      >
+        Next · The Role Model Scenarios
+      </p>
     </div>
   )
 }

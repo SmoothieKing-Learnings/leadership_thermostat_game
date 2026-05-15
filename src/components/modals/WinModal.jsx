@@ -73,10 +73,13 @@ function fireConfetti() {
   }, 200)
 }
 
-export default function WinModal({ onRestart, score = 0, maxScore = 0 }) {
+const TOTAL_SHIFTS = 10
+
+export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCompleted = TOTAL_SHIFTS }) {
   const pct      = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0
-  const animated = useCountUp(pct)
+  // Tier is still derived from score percent — the math runs, we just don't show it.
   const tier     = getTier(pct)
+  const animated = useCountUp(shiftsCompleted)
 
   useEffect(() => {
     const timeout = setTimeout(fireConfetti, 200)
@@ -130,7 +133,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0 }) {
           Shift 10 survived.
         </h2>
 
-        {/* Score */}
+        {/* Shifts survived meter */}
         <div style={{ marginBottom: 20 }}>
           <p style={{
             fontFamily: '"DM Sans", system-ui, sans-serif',
@@ -141,7 +144,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0 }) {
             color: 'rgba(147,0,24,0.5)',
             marginBottom: 4,
           }}>
-            Thermostat Score
+            Shifts Survived
           </p>
           <motion.p
             initial={{ opacity: 0, y: 10 }}
@@ -149,24 +152,25 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0 }) {
             transition={{ delay: 0.5, duration: 0.4, ease: 'easeOut' }}
             style={{
               fontFamily: '"Playfair Display", Georgia, serif',
-              fontSize: 64,
+              fontSize: 56,
               fontWeight: 800,
               color: '#930018',
               lineHeight: 1,
               marginBottom: 6,
             }}
           >
-            {animated}
+            <span>{animated}</span>
+            <span style={{ fontSize: 30, color: 'rgba(147,0,24,0.45)', fontWeight: 700 }}> / {TOTAL_SHIFTS}</span>
           </motion.p>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.8, duration: 0.4 }}
+            transition={{ delay: 1.6, duration: 0.4 }}
             style={{
               fontFamily: '"DM Sans", system-ui, sans-serif',
               fontSize: 13,
               fontWeight: 600,
-              color: 'rgba(64,0,15,0.45)',
+              color: 'rgba(64,0,15,0.55)',
             }}
           >
             {tier}

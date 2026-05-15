@@ -27,8 +27,11 @@ export default function GaugeArc({ energy }) {
   // Tick marks and labels positions
   const TICKS = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
 
+  // 3-state gauge: shake at the strong "danger" level any time the pin is
+  // off Balance. The pin doesn't escalate within a state, so this is the only
+  // shake level that fires.
   const absEnergy = Math.abs(energy)
-  const shakeKey = absEnergy >= 2 ? 'danger' : absEnergy >= 1 ? 'warn' : 'calm'
+  const shakeKey = absEnergy > 0.01 ? 'danger' : 'calm'
 
   // Imperative animation controls — no key-based remount needed
   const controls = useAnimation()
@@ -95,39 +98,22 @@ export default function GaugeArc({ energy }) {
         {/* Main colored gauge */}
         <path d={semicircle} fill="url(#gaugeGrad)" mask="url(#gaugeMask)" />
 
-        {/* Radial lines and numeric labels */}
+        {/* Radial tick lines (no numeric labels) */}
         {TICKS.map((val) => {
-          const a = (val / 5) * 90 - 90 
+          const a = (val / 5) * 90 - 90
           const rad = (a * Math.PI) / 180
           const x2 = CX + R * Math.cos(rad)
           const y2 = CY + R * Math.sin(rad)
-          const x1 = CX + 24 * Math.cos(rad) 
+          const x1 = CX + 24 * Math.cos(rad)
           const y1 = CY + 24 * Math.sin(rad)
-          
           return (
-            <g key={val}>
-              <line
-                x1={x1} y1={y1}
-                x2={x2} y2={y2}
-                stroke="rgba(147,0,24,0.12)"
-                strokeWidth="1"
-              />
-              {/* Labels above ticks */}
-              <text
-                x={CX + (R + 20) * Math.cos(rad)}
-                y={CY + (R + 20) * Math.sin(rad)}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                style={{
-                  fontFamily: '"DM Sans", sans-serif',
-                  fontSize: val === 0 || val === 5 || val === -5 ? 8 : 6,
-                  fontWeight: val === 0 || val === 5 || val === -5 ? 800 : 700,
-                  fill: val === 0 ? '#40000F' : (val > 0 ? '#930018' : '#004E93')
-                }}
-              >
-                {val === 0 ? 'Balance' : (Math.abs(val) === 5 ? 'Lost' : (val > 0 ? `+${val}` : val))}
-              </text>
-            </g>
+            <line
+              key={val}
+              x1={x1} y1={y1}
+              x2={x2} y2={y2}
+              stroke="rgba(147,0,24,0.12)"
+              strokeWidth="1"
+            />
           )
         })}
 

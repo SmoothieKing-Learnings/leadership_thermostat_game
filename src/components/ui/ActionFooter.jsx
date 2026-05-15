@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion'
 import { useDocumentVisible } from '../../utils/useViewport.js'
+import heartIcon from '../../assets/SMOOTHIEKING_HEART.svg'
 
-const LIVES_EMOJI = ['🍓', '🫐', '🍌']
-const LIVES_LABELS = ['Strawberry', 'Blueberry', 'Banana']
-// Stagger per fruit so they hop at different times and don't sync up.
+const LIVES_COUNT = 3
+const LIFE_LABEL = 'Life'
+// Stagger per life so they hop at different times and don't sync up.
 const HOP_DELAYS = [0, 3.2, 6.4]
 
 const statusLabelStyle = {
@@ -101,14 +102,15 @@ export default function ActionFooter({
             aria-label={`${livesRemaining} lives remaining`}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 26 }}
           >
-            {LIVES_EMOJI.map((emoji, i) => {
+            {Array.from({ length: LIVES_COUNT }).map((_, i) => {
               const used = i >= livesRemaining
               const shouldHop = !used && documentVisible
               return (
-                <motion.span
+                <motion.img
                   key={i}
-                  role="img"
-                  aria-label={LIVES_LABELS[i]}
+                  src={heartIcon}
+                  alt={LIFE_LABEL}
+                  draggable={false}
                   animate={shouldHop ? { y: [0, -5, 0, -1.4, 0] } : { y: 0 }}
                   transition={!shouldHop ? { duration: 0 } : {
                     // Springy hop: decelerating rise, fast accelerating fall,
@@ -122,16 +124,15 @@ export default function ActionFooter({
                   }}
                   style={{
                     display: 'inline-block',
-                    fontSize: 22,
-                    lineHeight: 1,
-                    opacity: used ? 0.3 : 1,
-                    filter: used ? 'grayscale(100%)' : 'none',
+                    width: 24,
+                    height: 22,
+                    opacity: used ? 0.25 : 1,
+                    filter: used ? 'grayscale(100%) brightness(1.4)' : 'none',
                     transition: 'opacity 250ms ease, filter 250ms ease',
                     transformOrigin: 'bottom center',
+                    userSelect: 'none',
                   }}
-                >
-                  {emoji}
-                </motion.span>
+                />
               )
             })}
           </span>
