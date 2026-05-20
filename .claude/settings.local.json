@@ -25,7 +25,9 @@
       "Read(//Users/daechan/**)",
       "Bash(command -v node)",
       "Bash(/usr/local/lib/node_modules/npm/bin/npm-cli.js install:*)",
-      "Bash(/System/Volumes/Data/usr/local/bin/node /usr/local/lib/node_modules/npm/bin/npm-cli.js install canvas-confetti)"
+      "Bash(/System/Volumes/Data/usr/local/bin/node /usr/local/lib/node_modules/npm/bin/npm-cli.js install canvas-confetti)",
+      "WebFetch(domain:community.articulate.com)",
+      "Bash(curl -sI \"https://daechan-ot.github.io/thermostatgame_score/\")"
     ]
   }
 }

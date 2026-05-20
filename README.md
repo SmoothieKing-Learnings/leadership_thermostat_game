@@ -440,6 +440,7 @@ window.addEventListener('message', (e) => {
     case 'shiftSurvival:win':     /* { score, maxScore, percent } */   break
     case 'shiftSurvival:lose':    /* { strikeBreakdown }          */   break
     case 'shiftSurvival:restart': /* player chose to play again */     break
+    case 'shiftSurvival:resize':  /* { width, height, desiredHeight } — resize wrapper to desiredHeight */ break
   }
 })
 ```

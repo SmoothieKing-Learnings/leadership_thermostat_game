@@ -73,7 +73,7 @@ import WelcomeScreen from './components/WelcomeScreen.jsx'
 import GameScreen from './components/GameScreen.jsx'
 import WinModal from './components/modals/WinModal.jsx'
 import LoseModal from './components/modals/LoseModal.jsx'
-import { emit, onCommand } from './utils/iframeBridge.js'
+import { emit, onCommand, reportSize, emitComplete } from './utils/iframeBridge.js'
 import { useShortViewport } from './utils/useViewport.js'
 
 const MIN_PLAYABLE_HEIGHT = 520
@@ -145,6 +145,7 @@ export default function App() {
   useEffect(() => {
     hideSplash()
     emit('ready')
+    reportSize()
     announcedRef.current = true
 
     const { autostart } = readLaunchParams()
@@ -154,6 +155,25 @@ export default function App() {
       return () => clearTimeout(t)
     }
   }, [startGame])
+
+  // Report viewport size to the parent on resize / orientation change so an
+  // embedding host (e.g. Rise 360 code block) can resize its wrapper.
+  // Debounced to one emit per ~150ms of quiet, with a final emit on cleanup.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    let timer = null
+    const schedule = () => {
+      if (timer) clearTimeout(timer)
+      timer = setTimeout(() => { timer = null; reportSize() }, 150)
+    }
+    window.addEventListener('resize', schedule)
+    window.addEventListener('orientationchange', schedule)
+    return () => {
+      window.removeEventListener('resize', schedule)
+      window.removeEventListener('orientationchange', schedule)
+      if (timer) clearTimeout(timer)
+    }
+  }, [])
 
   // Listen for parent commands.
   useEffect(() => {
@@ -173,7 +193,11 @@ export default function App() {
     else if (screen === 'win') {
       const pct = state.maxScore > 0 ? Math.round((state.score / state.maxScore) * 100) : 0
       emit('win', { score: state.score, maxScore: state.maxScore, percent: pct })
-    } else if (screen === 'lose') emit('lose', { strikeBreakdown })
+      emitComplete()
+    } else if (screen === 'lose') {
+      emit('lose', { strikeBreakdown })
+      emitComplete()
+    }
     else if ((prev === 'win' || prev === 'lose') && screen === 'welcome') emit('restart')
   }, [screen, state.score, state.maxScore, strikeBreakdown])
 
