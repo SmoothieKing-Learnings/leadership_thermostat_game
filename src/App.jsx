@@ -175,6 +175,28 @@ export default function App() {
     }
   }, [])
 
+  // Forward wheel events to the parent so an embedding host (e.g. Rise 360)
+  // can pass scroll through to the lesson page instead of trapping it inside
+  // the iframe. rAF-throttled so we never emit more than once per frame.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    let frame = 0
+    let lastDelta = 0
+    const onWheel = (e) => {
+      lastDelta = e.deltaY
+      if (frame) return
+      frame = requestAnimationFrame(() => {
+        frame = 0
+        emit('wheel', { deltaY: lastDelta })
+      })
+    }
+    window.addEventListener('wheel', onWheel, { passive: true })
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      if (frame) cancelAnimationFrame(frame)
+    }
+  }, [])
+
   // Listen for parent commands.
   useEffect(() => {
     const off = onCommand((command) => {

@@ -18,6 +18,11 @@
  *       emitComplete(); this lives outside the shiftSurvival namespace because
  *       Rise listens for the bare 'complete' type.
  *
+ *   { type: 'shiftSurvival:wheel', deltaY }
+ *       fired on every wheel event inside the iframe so an embedding host
+ *       (e.g. Rise 360) can briefly drop the iframe's pointer-events and let
+ *       the parent page continue native scroll. Throttled by rAF.
+ *
  * Inbound commands (parent → game):
  *   { type: 'shiftSurvival:start'   }   start a game (skips welcome)
  *   { type: 'shiftSurvival:restart' }   restart from welcome (same as user pressing Try Again then Skip Intro)
