@@ -18,8 +18,11 @@ const CARD_STYLE = {
   width: '100%',
   maxWidth: 448,
   minHeight: 480, /* universal floor matching the quiz LayoutWrapper */
-  height: '100%',
-  maxHeight: 'min(720px, calc(100% - 24px))',
+  maxHeight: 'min(720px, calc(100% - 24px))', /* safety cap so tall tutorial steps trigger internal scroll instead of clipping */
+  /* No `height: 100%` — the card sizes to content like the quiz cards, with the
+     480px floor and the 720px ceiling. Short landings hug their content
+     (~500px) instead of filling the viewport, which is what made the game
+     card render taller than the quiz cards. */
   backgroundColor: 'rgba(255, 255, 255, 0.5)',
   backdropFilter: 'blur(4px)',
   WebkitBackdropFilter: 'blur(4px)',
