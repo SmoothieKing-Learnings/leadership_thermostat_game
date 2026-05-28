@@ -9,8 +9,8 @@ export default function LandingStep({ onStart, onTutorial }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'flex-start',
-        padding: 24, /* matches the quiz LayoutWrapper's p-6 card padding */
+        justifyContent: 'center', /* center content vertically inside the 480px-min card */
+        padding: 24,              /* matches the quiz LayoutWrapper's p-6 card padding */
         textAlign: 'center',
         gap: 0,
       }}

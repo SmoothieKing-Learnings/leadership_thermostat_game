@@ -17,6 +17,7 @@ const TOTAL_STEPS = 4
 const CARD_STYLE = {
   width: '100%',
   maxWidth: 448,
+  minHeight: 480, /* universal floor matching the quiz LayoutWrapper */
   height: '100%',
   maxHeight: 'min(720px, calc(100% - 24px))',
   backgroundColor: 'rgba(255, 255, 255, 0.5)',
