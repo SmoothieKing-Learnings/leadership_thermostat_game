@@ -1,44 +1,49 @@
 /**
- * iframeBridge — minimal postMessage contract between the game and its parent.
+ * iframeBridge — SmoothieKing Learnings universal LMS embed utility.
  *
- * Outbound events (game → parent):
- *   { type: 'shiftSurvival:ready'        }              fired once after mount
- *   { type: 'shiftSurvival:start'        }              player started a game
- *   { type: 'shiftSurvival:win',  score, maxScore, percent } reached shift 10
- *   { type: 'shiftSurvival:lose', strikeBreakdown }           3 strikes
- *   { type: 'shiftSurvival:restart' }                          player chose Play Again / Try Again
- *   { type: 'shiftSurvival:resize', width, height, desiredHeight }
- *       fired on mount and whenever the iframe's viewport changes (e.g. device
- *       rotate, container resize). `desiredHeight` is a 9:16-ish recommendation
- *       clamped to [520, 900] — hosts (e.g. Rise 360 code block) can resize
- *       their wrapper to this value for a responsive fit.
+ * One file, identical across every project in the sk-learning repo. The only
+ * value that should differ per project is `NAMESPACE` (see below). Drop a copy
+ * into `src/utils/iframeBridge.js` of any new project, change the namespace,
+ * and you have:
  *
- *   { type: 'complete' }   (Rise 360 Code Block completion contract — NOT namespaced)
- *       fired on win or lose so Rise marks the block complete. Sent via
- *       emitComplete(); this lives outside the shiftSurvival namespace because
- *       Rise listens for the bare 'complete' type.
+ *   • `?embed=1`     — explicit embed mode (strips chrome via LayoutWrapper).
+ *   • `?autostart=1` — skip the welcome screen.
+ *   • `?parentOrigin=<encoded>` — lock postMessage delivery to a single origin.
  *
- *   { type: 'shiftSurvival:wheel', deltaY }
- *       fired on every wheel event inside the iframe so an embedding host
- *       (e.g. Rise 360) can briefly drop the iframe's pointer-events and let
- *       the parent page continue native scroll. Throttled by rAF.
+ * Outbound (app → host):
+ *   { type: '<ns>:ready' }
+ *   { type: '<ns>:start' } / win / lose / results / restart  (your domain events)
+ *   { type: '<ns>:resize', width, height, desiredHeight }
+ *   { type: '<ns>:wheel',  deltaY }
+ *   { type: 'complete' }   <-- NOT namespaced; Rise's completion listener key.
  *
- * Inbound commands (parent → game):
- *   { type: 'shiftSurvival:start'   }   start a game (skips welcome)
- *   { type: 'shiftSurvival:restart' }   restart from welcome (same as user pressing Try Again then Skip Intro)
+ * Inbound (host → app):
+ *   { type: '<ns>:start' }
+ *   { type: '<ns>:restart' }
  *
- * Security: pass `targetOrigin` if you know the parent's origin to avoid leaking
- * events to other embedders. Otherwise events go to '*'.
+ * Public API:
+ *   isEmbedded()         — true when running in iframe or with ?embed=1.
+ *   emit(event, payload) — fire a namespaced event to the host.
+ *   emitComplete()       — fire Rise's bare { type: 'complete' } signal.
+ *   reportSize()         — emit current viewport + a recommended height.
+ *   onCommand(handler)   — subscribe to inbound host commands.
+ *   useIframeBridge(opts)— React hook that wires ready/resize/wheel/commands.
  */
 
+// ─── per-project config — change NAMESPACE in each project ─────────────────
 const NAMESPACE = 'shiftSurvival'
+const ASPECT_RATIO = 1.6        // height = width × this (portrait-phone band)
+const MIN_DESIRED_HEIGHT = 520
+const MAX_DESIRED_HEIGHT = 900
+// ───────────────────────────────────────────────────────────────────────────
 
-// Read once at load. Parent can set ?parentOrigin=https://example.com (encoded).
+import { useEffect, useRef } from 'react'
+
 function readTargetOrigin() {
   if (typeof window === 'undefined') return '*'
   try {
-    const params = new URLSearchParams(window.location.search)
-    const explicit = params.get('parentOrigin')
+    const p = new URLSearchParams(window.location.search)
+    const explicit = p.get('parentOrigin')
     if (explicit) return decodeURIComponent(explicit)
   } catch {}
   return '*'
@@ -47,51 +52,69 @@ function readTargetOrigin() {
 const targetOrigin = readTargetOrigin()
 
 function inIframe() {
-  try {
-    return typeof window !== 'undefined' && window.parent !== window
-  } catch {
-    return true // cross-origin access throws; assume iframe
-  }
+  try { return typeof window !== 'undefined' && window.parent !== window }
+  catch { return true }
 }
 
+function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)) }
+
+/** True when the app is running inside an iframe OR with ?embed=1. */
+export function isEmbedded() {
+  if (typeof window === 'undefined') return false
+  try {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('embed') === '1') return true
+  } catch {}
+  return inIframe()
+}
+
+/** Send a namespaced event to the host. No-op when not embedded. */
 export function emit(event, payload = {}) {
   if (typeof window === 'undefined' || !inIframe()) return
   try {
-    window.parent.postMessage({ type: `${NAMESPACE}:${event}`, ...payload }, targetOrigin)
-  } catch (err) {
-    // No-op on errors — never let the bridge break the game.
-  }
+    window.parent.postMessage(
+      { type: `${NAMESPACE}:${event}`, ...payload },
+      targetOrigin
+    )
+  } catch {}
 }
 
 /**
- * Rise 360 Code Block completion signal. Rise listens for a bare
- * { type: 'complete' } message (no namespace) and marks the block — and
- * therefore the lesson — complete. Idempotent: Rise ignores repeat fires.
+ * Rise 360's completion field listens for a bare { type: 'complete' } —
+ * no namespace. Idempotent: Rise ignores repeat fires.
  */
 export function emitComplete() {
   if (typeof window === 'undefined' || !inIframe()) return
-  try {
-    window.parent.postMessage({ type: 'complete' }, targetOrigin)
-  } catch (err) {
-    // No-op.
-  }
+  try { window.parent.postMessage({ type: 'complete' }, targetOrigin) } catch {}
 }
 
 /**
- * Subscribe to inbound commands. Returns an unsubscribe function.
- * The handler is called with the bare event name (e.g. "start").
+ * Emit current viewport size + a recommended iframe height clamped to a
+ * portrait-phone band. Hosts can use desiredHeight to size their wrapper.
+ */
+export function reportSize() {
+  if (typeof window === 'undefined' || !inIframe()) return
+  const width = window.innerWidth
+  const height = window.innerHeight
+  const desiredHeight = Math.round(
+    clamp(width * ASPECT_RATIO, MIN_DESIRED_HEIGHT, MAX_DESIRED_HEIGHT)
+  )
+  emit('resize', { width, height, desiredHeight })
+}
+
+/**
+ * Subscribe to inbound commands from the host. Handler is called with the
+ * bare command name (e.g. "start", "restart") and the full data payload.
+ * Returns an unsubscribe function.
  */
 export function onCommand(handler) {
   if (typeof window === 'undefined') return () => {}
   const listener = (e) => {
     const data = e.data
-    if (!data || typeof data !== 'object') return
-    if (typeof data.type !== 'string') return
+    if (!data || typeof data !== 'object' || typeof data.type !== 'string') return
     if (!data.type.startsWith(`${NAMESPACE}:`)) return
-    // If we know the parent origin, only accept messages from it.
     if (targetOrigin !== '*' && e.origin !== targetOrigin) return
-    const command = data.type.slice(NAMESPACE.length + 1)
-    handler(command, data)
+    handler(data.type.slice(NAMESPACE.length + 1), data)
   }
   window.addEventListener('message', listener)
   return () => window.removeEventListener('message', listener)
@@ -99,25 +122,108 @@ export function onCommand(handler) {
 
 export const NAMESPACE_PREFIX = NAMESPACE
 
-// Aspect-ratio target (9:16-ish) and clamp bounds for the desired-height signal.
-// MIN matches MIN_PLAYABLE_HEIGHT in App.jsx — below this the game shows the
-// "expand for the full experience" placeholder.
-const ASPECT_RATIO = 1.6
-const MIN_DESIRED_HEIGHT = 520
-const MAX_DESIRED_HEIGHT = 900
-
-function clamp(n, lo, hi) {
-  return Math.max(lo, Math.min(hi, n))
+/**
+ * Read deep-link launch params: ?autostart=1 (or ?skipIntro=1).
+ */
+export function readLaunchParams() {
+  if (typeof window === 'undefined') return { autostart: false }
+  try {
+    const p = new URLSearchParams(window.location.search)
+    return { autostart: p.get('autostart') === '1' || p.get('skipIntro') === '1' }
+  } catch {
+    return { autostart: false }
+  }
 }
 
 /**
- * Emit the current iframe viewport size plus a recommended height.
- * Safe to call repeatedly — no-op when not embedded.
+ * Wire the full bridge into a React app in one call. Returns void — the hook
+ * sets up listeners on mount and cleans up on unmount.
+ *
+ *   useIframeBridge({
+ *     onStart:   () => startQuiz(),       // host → "<ns>:start"   or ?autostart=1
+ *     onRestart: () => restartQuiz(),     // host → "<ns>:restart"
+ *     screen,                             // current screen name
+ *     screenEvents: {                     // optional outbound events per screen
+ *       quiz:    { event: 'start'                                    },
+ *       results: { event: 'results', payload: {...}, complete: true  },
+ *       welcome: { whenFrom: ['results'], event: 'restart'           },
+ *     },
+ *   })
  */
-export function reportSize() {
-  if (typeof window === 'undefined' || !inIframe()) return
-  const width = window.innerWidth
-  const height = window.innerHeight
-  const desiredHeight = Math.round(clamp(width * ASPECT_RATIO, MIN_DESIRED_HEIGHT, MAX_DESIRED_HEIGHT))
-  emit('resize', { width, height, desiredHeight })
+export function useIframeBridge({
+  onStart,
+  onRestart,
+  screen,
+  screenEvents,
+} = {}) {
+  // Mount: announce ready, report size, honor ?autostart.
+  useEffect(() => {
+    emit('ready')
+    reportSize()
+    const { autostart } = readLaunchParams()
+    if (autostart && typeof onStart === 'function') {
+      const t = setTimeout(() => onStart(), 50)
+      return () => clearTimeout(t)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Debounced resize / orientation change → re-emit size.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    let timer = null
+    const schedule = () => {
+      if (timer) clearTimeout(timer)
+      timer = setTimeout(() => { timer = null; reportSize() }, 150)
+    }
+    window.addEventListener('resize', schedule)
+    window.addEventListener('orientationchange', schedule)
+    return () => {
+      window.removeEventListener('resize', schedule)
+      window.removeEventListener('orientationchange', schedule)
+      if (timer) clearTimeout(timer)
+    }
+  }, [])
+
+  // rAF-throttled wheel forwarding (best-effort scroll-passthrough hint).
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    let frame = 0
+    let lastDelta = 0
+    const onWheel = (e) => {
+      lastDelta = e.deltaY
+      if (frame) return
+      frame = requestAnimationFrame(() => {
+        frame = 0
+        emit('wheel', { deltaY: lastDelta })
+      })
+    }
+    window.addEventListener('wheel', onWheel, { passive: true })
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      if (frame) cancelAnimationFrame(frame)
+    }
+  }, [])
+
+  // Inbound host commands.
+  useEffect(() => {
+    const off = onCommand((command) => {
+      if (command === 'start'   && typeof onStart   === 'function') onStart()
+      if (command === 'restart' && typeof onRestart === 'function') onRestart()
+    })
+    return off
+  }, [onStart, onRestart])
+
+  // Outbound screen-transition events + completion.
+  const prevRef = useRef(screen)
+  useEffect(() => {
+    const prev = prevRef.current
+    prevRef.current = screen
+    if (prev === screen || !screenEvents) return
+    const rule = screenEvents[screen]
+    if (!rule) return
+    if (Array.isArray(rule.whenFrom) && !rule.whenFrom.includes(prev)) return
+    if (rule.event) emit(rule.event, rule.payload || {})
+    if (rule.complete) emitComplete()
+  }, [screen, screenEvents])
 }

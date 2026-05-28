@@ -27,7 +27,12 @@
       "Bash(/usr/local/lib/node_modules/npm/bin/npm-cli.js install:*)",
       "Bash(/System/Volumes/Data/usr/local/bin/node /usr/local/lib/node_modules/npm/bin/npm-cli.js install canvas-confetti)",
       "WebFetch(domain:community.articulate.com)",
-      "Bash(curl -sI \"https://daechan-ot.github.io/thermostatgame_score/\")"
+      "Bash(curl -sI \"https://daechan-ot.github.io/thermostatgame_score/\")",
+      "Bash(VITE_BASE_PATH=/leadership_thermostat_game/ npm run build)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }

@@ -1,10 +1,12 @@
 # Shift Survival
 
-A mobile-first leadership simulation from **SmoothieKing Learnings**, designed for our store managers. Players navigate 10 shifts of real workplace scenarios, choosing how to lead under pressure. The core insight we wanted to teach: a great manager doesn't just read the room — they set it.
+A mobile-first leadership simulation from the **SmoothieKing Learnings** team, designed for store managers. Players navigate 10 shifts of real workplace scenarios, choosing how to lead under pressure. The core insight we wanted to teach: a great manager doesn't just read the room — they set it.
+
+**Live experience:** https://smoothieking-learnings.github.io/leadership_thermostat_game/
 
 ---
 
-## The Concept
+## About the Experience
 
 The game is grounded in a single metaphor:
 
@@ -16,15 +18,69 @@ Every scenario presents a moment with two options: one models steady leadership,
 
 ---
 
+## Player Experience
+
+- **Welcome.** A 4-step intro (landing + 3 tutorial steps) or a direct **Start Shift** that skips the tutorial.
+- **Game.** 10 shift cards drawn from a balanced 21-card deck, with an energy gauge (arc or bar view), an oscillating background tint, history stack, and three "lives" 🍓 🫐 🍌 in the footer.
+- **Win / Lose.** Win surfaces a tiered score and confetti; Lose stays warm and supportive, with a strike breakdown but no score.
+
+Keyboard shortcuts: `1` / `A` selects option A, `2` / `B` selects option B, `Enter` / `Space` confirms or acknowledges a revealed card.
+
+---
+
+## Design System
+
+This project ships with the **SmoothieKing Learnings unified design system**, identical across every experience in the `sk-learning` repo. The tokens live in [`tailwind.config.js`](./tailwind.config.js).
+
+### Color tokens
+
+| Token | Hex | Usage |
+| --- | --- | --- |
+| `brand` | `#930018` | Primary actions, completed shifts, meltdown text |
+| `brand-deep` | `#40000F` | Body copy, secondary text |
+| `brand-bright` | `#E31F26` | Active shift segment, "you are here" |
+| `bg-primary` | `#FFF9EF` | Cream base background |
+| `bg-light` / `pink-light` | `#FFDEE5` | Win modal accent, demo pill backgrounds |
+| `pink-mid` | `#FFADB0` | Warm pink tint at full meltdown |
+| `bg-soft-blue` / `blue-light` | `#D6E0FF` | Deep freeze states, freeze labels |
+| `blue-mid` | `#9BB4FF` | Cool blue tint at full freeze |
+| `green-light` / `green-mid` | `#D0FCA1` / `#B7EB7F` | Energy / success accents |
+| `accent-amber`, `accent-coral`, `accent-teal`, `accent-gold`, `accent-violet` | shared style palette | Reserved for cross-project consistency |
+
+Background-color tinting between cream → warm pink → cool blue is computed in [`src/App.jsx`](./src/App.jsx) via `getEnergyBg(displayEnergy)`.
+
+### Typography
+
+| Token | Family | Usage |
+| --- | --- | --- |
+| `font-display` / `font-heading` | **Playfair Display**, Georgia, serif | Hero titles, card titles, modal headlines |
+| `font-body` | **DM Sans**, system-ui, sans-serif | All body copy, buttons, labels |
+
+Both families are loaded from Google Fonts in [`index.html`](./index.html) and declared as `--font-display` / `--font-body` CSS custom properties in [`src/index.css`](./src/index.css).
+
+### Iframe / LMS workflow
+
+Embed mode is shared across the system. The universal utility lives at [`src/utils/iframeBridge.js`](./src/utils/iframeBridge.js) and offers:
+
+- `?embed=1` — explicit embed mode.
+- `?autostart=1` / `?skipIntro=1` — drops the player directly into the first shift.
+- `?parentOrigin=<encoded>` — locks `postMessage` delivery to one host origin.
+- A namespaced `postMessage` contract (`shiftSurvival:*`) for `ready`, `start`, `win`, `lose`, `restart`, `resize`, `wheel`.
+- A bare `{ type: 'complete' }` fire on win or lose so a Rise 360 Code Block can mark the lesson complete.
+
+Full embed snippets, sizing guidance, scroll-passthrough patterns, and Rise 360 gotchas live in [IFRAME_EMBED.md](./IFRAME_EMBED.md).
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
-|---|---|
+| --- | --- |
 | Framework | React 18 + Vite 5 |
 | Animation | Framer Motion 11 |
-| Styling | Tailwind CSS 3 + inline CSS-in-JS + CSS custom properties |
+| Styling | Tailwind CSS 3 + CSS custom properties |
 | Confetti | canvas-confetti |
-| Fonts | Playfair Display (headings), DM Sans (body) |
+| Fonts | Playfair Display (display), DM Sans (body) |
 | Build target | Mobile browser (480px max-width, 100dvh) |
 
 ---
@@ -36,42 +92,28 @@ src/
 ├── App.jsx                      # Root — screen routing, modal orchestration, energy-driven bg tint
 ├── main.jsx                     # React entry point
 ├── data/
-│   └── cards.js                 # SHIFT_DECK (21 active choice cards) + an earlier CARD_DECK kept for reference
+│   └── cards.js                 # SHIFT_DECK (21 active choice cards) + earlier CARD_DECK kept for reference
 ├── hooks/
 │   └── useGameState.js          # All game logic, state machine, scoring, strike tracking
+├── utils/
+│   ├── iframeBridge.js          # Universal LMS embed contract (postMessage + hook)
+│   └── useViewport.js           # Short-viewport detection
 └── components/
-    ├── WelcomeScreen.jsx         # 4-step intro flow shell (landing + 3 tutorial steps)
-    ├── GameScreen.jsx            # Active gameplay layout (tap gauge to toggle view)
-    ├── intro/
-    │   ├── LandingStep.jsx       # Step 0: Start Shift + Tutorial CTAs
-    │   ├── MetaphorStep.jsx      # Step 1: thermostat metaphor + outcome legend
-    │   ├── ChoiceDemoStep.jsx    # Step 2: interactive demo card walkthrough
-    │   ├── RulesStep.jsx         # Step 3: goal + 3-strikes rules
-    │   └── DemoFeedbackModal.jsx # Tutorial feedback overlay
-    ├── cards/
-    │   ├── CardShell.jsx         # Shared card template (responsive padding/typography)
-    │   ├── ChoiceCard.jsx        # Interactive card with 3D flip reveal
-    │   └── EnvironmentCard.jsx   # Static env card (not drawn in the active deck)
-    ├── gauge/
-    │   ├── GaugeArc.jsx          # SVG semicircle gauge with animated needle
-    │   └── GaugeBar.jsx          # Horizontal segment bar (default on short viewports)
-    ├── history/
-    │   └── HistoryStack.jsx      # Fanned card stack + full-screen carousel
-    ├── modals/
-    │   ├── WinModal.jsx          # Win screen with confetti, score, count-up
-    │   └── LoseModal.jsx         # Lose screen — "Tough shifts." + strike breakdown
-    └── ui/
-        ├── ActionFooter.jsx      # Fixed bottom: progress bar + fruit lives + CTA
-        ├── GaugeToggle.jsx       # Unused — the gauge view is toggled by tapping the gauge directly
-        ├── AutoplayButton.jsx    # Unused — autoplay is not part of the active flow
-        └── Pill.jsx              # Reusable impact badge
+    ├── WelcomeScreen.jsx         # 4-step intro flow shell
+    ├── GameScreen.jsx            # Active gameplay layout
+    ├── intro/                    # 4 tutorial steps + demo feedback modal
+    ├── cards/                    # CardShell, ChoiceCard, EnvironmentCard
+    ├── gauge/                    # GaugeArc (SVG semicircle) + GaugeBar (horizontal segments)
+    ├── history/                  # HistoryStack — collapsed fan + full-screen carousel
+    ├── modals/                   # WinModal, LoseModal
+    └── ui/                       # ActionFooter, Pill (+ a few unused legacy components)
 ```
 
 ---
 
 ## Game State Machine
 
-All game logic lives in `useGameState.js`. State is managed with `useState` and `useCallback` — no external state libraries.
+All game logic lives in [`src/hooks/useGameState.js`](./src/hooks/useGameState.js). State is managed with `useState` / `useCallback` — no external state libraries.
 
 ### Screens
 
@@ -85,19 +127,17 @@ welcome  →  game  →  win
 - **win**: Player reached the end of shift 10 with fewer than 3 strikes
 - **lose**: Player accumulated 3 strikes (energy ±5 does not end the game)
 
-### Card Phases (within `game` screen)
+### Card phases (within `game`)
 
 ```
 reading  →  revealed  →  animating  →  (next card / reading)
 ```
 
 | Phase | Description |
-|---|---|
+| --- | --- |
 | `reading` | Card is visible and interactive |
 | `revealed` | Choice card has flipped; feedback + impact pill are showing |
 | `animating` | Locked — gauge animating, card exiting (650ms) |
-
-The atomic state update (card swap + history push) fires at the end of the 650ms timeout so the active card visually becomes the top of the history stack rather than disappearing independently.
 
 ---
 
@@ -105,9 +145,9 @@ The atomic state update (card swap + history push) fires at the end of the 650ms
 
 Every choice option carries an `outcome` of `"success"`, `"meltdown"`, or `"freeze"`.
 
-- **Success** options pull energy back toward 0 (`energyImpact: "balance"`) and cost no lives.
-- **Meltdown** options push energy `+1` and **cost one life** (a strike).
-- **Freeze** options push energy `-1` and **cost one life** (a strike).
+- **Success** options pull energy back toward 0 and cost no lives.
+- **Meltdown** options push energy `+1` and cost one life (a strike).
+- **Freeze** options push energy `-1` and cost one life (a strike).
 
 You start with 3 lives, visualized as 🍓 🫐 🍌 in the footer. On a strike, the rightmost surviving fruit dims to grayscale. Three strikes ends the game.
 
@@ -115,110 +155,37 @@ The energy gauge is a **visual feedback signal only** — it can pin at ±5 with
 
 ---
 
-## Card Data
-
-Active cards live in `SHIFT_DECK` in `src/data/cards.js` — 21 choice cards drawn from for every game. An earlier `CARD_DECK` (12 environment + 12 prior choice cards) sits at the top of the file as a content reference and is not drawn from in live play.
-
-### Shift Card Schema
-
-```js
-{
-  id: "shift-01",
-  type: "choice",
-  label: "Shift Scenario",
-  title: "The Heavy Rain Slowdown",
-  description: "It's been pouring for hours. The store is empty…",
-  balanceLean: "freeze",                // which side the wrong option leans toward
-  options: [
-    {
-      id: "A",
-      text: "Use the quiet to schedule next week.",
-      energyImpact: -1,                 // -1 freeze, +1 meltdown, "balance" success
-      outcome: "freeze",                // "success" | "meltdown" | "freeze"
-      educationalMessage: "Energy was low and you bailed…",
-    },
-    {
-      id: "B",
-      text: "Run a \"tasting challenge.\"",
-      energyImpact: "balance",
-      outcome: "success",
-      educationalMessage: "You sparked interest during a slump…",
-    },
-  ],
-}
-```
-
-The special value `"balance"` resolves dynamically at play time:
-- `+1` if current energy is negative (pulls toward 0)
-- `-1` if current energy is positive (pulls toward 0)
-- `0` if already at 0
-
-### History Entry
-
-When a shift completes, the card is pushed to the history array with metadata:
-
-```js
-{
-  ...card,
-  roundNumber: 1–10,
-  appliedEnergy: -5 to +5,
-  energyDelta: actual change applied,
-  chosenOptionId: "A" | "B" | null,
-}
-```
-
----
-
-## Deck Building
-
-`buildDeck()` in `useGameState.js`:
-
-1. Partitions the 21 shift cards by `balanceLean` (meltdown-leaning vs. freeze-leaning)
-2. Shuffles each pool, picks ~5 from each side
-3. If one side has fewer than half, fills the gap from the other pool
-4. Final shuffle so the lean order is random
-
-This guarantees variety in every game — no run is all heat or all cold.
-
----
-
 ## Scoring System
 
-Scoring math is computed in `calcChoicePoints()`.
+Scoring math is computed in `calcChoicePoints()` inside `useGameState.js`.
 
 ### Base points (0–2 per choice)
 
-Compares what actually happened to what would have happened with the other option:
-
 | Outcome | Points |
-|---|---|
+| --- | --- |
 | Chosen option moved energy closer to 0 than the alternative | 2 |
 | Both options were equally close to 0 (tie) | 1 |
 | Chosen option moved energy further from 0 | 0 |
 
 ### Timing bonus
 
-Rewards decisive leadership under pressure:
-
 | Decision time | Bonus |
-|---|---|
+| --- | --- |
 | Under 6 seconds | +1 |
 | 6 seconds or more | +0 |
 
-### Final Score
+### Final score
 
 ```
 score % = (total points earned ÷ total base points possible) × 100
 ```
 
-`total base points possible = choice card count × 2`. The timing bonus is earned on top of this — fast, accurate decisions can push the score above 100%.
+`total base points possible = choice card count × 2`. The timing bonus is earned on top, so fast accurate decisions can push the score above 100%. **On a loss, the score is not shown** — the lose modal stays purely supportive and strike-focused.
 
-**On a loss, the score is not shown** — the lose modal stays purely supportive and strike-focused.
-
-### Score Tiers (Win Modal)
+### Score tiers (win modal)
 
 | Score | Tier |
-|---|---|
+| --- | --- |
 | 90–100+ | Steady hand. You set the temperature. |
 | 70–89 | You kept the thermostat humming. |
 | 50–69 | Solid shifts. Keep blending. |
@@ -228,18 +195,14 @@ score % = (total points earned ÷ total base points possible) × 100
 
 ## Intro Flow
 
-The intro is a 4-step sequence managed by `WelcomeScreen.jsx`. Steps 0 and 2 are "self-navigating" — they manage their own CTAs inside the component.
+The intro is a 4-step sequence managed by [`src/components/WelcomeScreen.jsx`](./src/components/WelcomeScreen.jsx). Steps 0 and 2 are "self-navigating" — they manage their own CTAs inside the component.
 
 | Step | Component | Description |
-|---|---|---|
+| --- | --- | --- |
 | 0 | `LandingStep` | Brand logo, title ("Shift Survival"), value statement, **Tutorial** + **Start Shift** CTAs |
 | 1 | `MetaphorStep` | Live oscillating gauge, outcome legend (Meltdown / Deep Freeze / Steady), "Why does this matter?" accordion |
 | 2 | `ChoiceDemoStep` | Player makes a real choice on a demo card; `DemoFeedbackModal` shows outcome with "TUTORIAL" tag |
-| 3 | `RulesStep` | "Survive 10 Shifts" goal + 3 numbered rules (face the scenario, two ways to lose, three strikes) |
-
-The top bar (progress dots + Skip Intro link) is hidden on the landing step so the two-CTA layout stays clean. The dots track only the 3 tutorial steps.
-
-A user who clicks **Start Shift** bypasses the tutorial entirely. Clicking **Tutorial** walks them through the 3 educational steps before launching the game.
+| 3 | `RulesStep` | "Survive 10 Shifts" goal + 3 numbered rules |
 
 ---
 
@@ -247,121 +210,28 @@ A user who clicks **Start Shift** bypasses the tutorial entirely. Clicking **Tut
 
 Two interchangeable views, **toggled by tapping the gauge itself** (no separate toggle button):
 
-- **Arc** (`GaugeArc.jsx`): SVG semicircle with a tapered needle, color zones (blue left, white center, red right), tick marks, and animated needle rotation (800ms CSS transition)
-- **Bar** (`GaugeBar.jsx`): Horizontal gradient bar with an overlay indicator that grows from center (700ms transition)
+- **Arc** ([`GaugeArc.jsx`](./src/components/gauge/GaugeArc.jsx)): SVG semicircle with a tapered needle, color zones, tick marks, and animated needle rotation (800ms CSS transition).
+- **Bar** ([`GaugeBar.jsx`](./src/components/gauge/GaugeBar.jsx)): Horizontal gradient bar with an overlay indicator that grows from center (700ms transition).
 
 The gauge reads as a pure emotional indicator — no numeric value appears below it and no numeric tick labels appear on the bar. The "Disengaged Deepfreeze" / "Messy Meltdown" / "Lost" semantic labels remain.
 
-**Default view**: `bar` on viewports shorter than 800px (more compact), `arc` otherwise. Decided once per `startGame()` / `restartGame()` based on `window.innerHeight`.
+**Default view**: `bar` on viewports shorter than 800px (more compact), `arc` otherwise. Decided once per `startGame()` / `restartGame()`.
 
 ### Shake warnings
 
-Both views shake when energy moves off center:
-
-- **±1**: Gentle shake (warn), ~1.2s repeat interval
-- **±2 and beyond**: Rapid shake (danger), ~0.6s repeat interval
-
-The shake is a tension cue rather than a danger warning, since the gauge itself does not end the game.
+Both views shake when energy moves off center: gentle at ±1 (warn), rapid at ±2 and beyond (danger). The shake is a tension cue rather than a danger warning, since the gauge itself does not end the game.
 
 ---
 
 ## Energy-Driven Background Tint
 
-The whole screen chrome (App outer, GameScreen wrapper, header, footer) shares a CSS custom property `--bg-energy` that interpolates between:
+The whole screen chrome shares a CSS custom property `--bg-energy` that interpolates between:
 
 - Cream `#FFF9EF` at energy 0
 - Warm pink `#FF95A8` at energy +5
 - Cool blue `#8FA8FF` at energy −5
 
-Computed in `App.jsx` via `getEnergyBg(displayEnergy)`. The transition uses `transition: background-color 4000ms ease-in-out 800ms` — an 800ms delay then a 4-second fade. The card faces stay cream/red so they pop against the shifting backdrop.
-
----
-
-## History Stack
-
-`HistoryStack.jsx` provides two modes:
-
-- **Collapsed (in-game)**: Up to 4 past cards fan out behind the active card with slight rotation and vertical offset, giving depth without obscuring gameplay
-- **Expanded (full-screen)**: A portal-based horizontal carousel with snap scrolling, dot indicators, and all played cards replayed with the chosen option frozen in the highlighted state
-
-The portal escapes the game layout's transform context to prevent clipping artifacts on the overlay.
-
----
-
-## Action Footer
-
-`ActionFooter.jsx` is fixed to the bottom of the screen. It contains a **status row** (shift progress + lives) above the CTA.
-
-### Status row
-
-| Side | Content |
-|---|---|
-| Left | Label `Shift {N}` over a 10-segment progress bar that fills the remaining horizontal space |
-| Right | Label `LIVES` over 🍓 🫐 🍌 |
-
-The progress bar segments use:
-
-- Brand red `#930018` for completed shifts
-- Bright red `#E31F26` for the active shift
-- Faded `rgba(147,0,24,0.15)` for upcoming shifts
-
-Each segment is `flex: 1` with `max-width: 28px` and a 2px gap so the bar reads as a tight stack rather than discrete tiles.
-
-### Lives
-
-The fruit emojis hop occasionally — `y: [0, -5, 0, -1.4, 0]` keyframes with mixed easing (`['easeOut', 'easeIn', 'easeOut', 'easeIn']`) and a small secondary bounce on landing. Each fruit is staggered (delays 0 / 3.2s / 6.4s) and the cycle repeats every ~10 seconds. Used fruits stop hopping, dim to `opacity: 0.3` and `grayscale(100%)`. The hop is purely a transform, so the row height is unchanged.
-
-### CTA states
-
-| State | Label | Behavior |
-|---|---|---|
-| Choice card, no selection | Confirm (disabled) | Waits for a selection |
-| Choice card, option selected | Confirm (active) | Flips card to reveal |
-| Revealed choice card | Understood | Applies energy delta, increments strike if outcome ≠ success |
-
----
-
-## Responsive Card Layout
-
-A `@media (max-height: 800px)` block in `src/index.css` overrides a set of CSS custom properties for compact viewports:
-
-| Variable | Default | Short viewport |
-|---|---|---|
-| `--card-title-size` | 30px | 22px |
-| `--card-desc-size` | 12px | 11px |
-| `--card-padding` | 24px 22px | 14px 16px |
-| `--card-option-padding` | 14px 20px | 11px 16px |
-| `--card-option-gap` | 10px | 7px |
-| `--card-revealed-padding` | 28px 20px | 14px 14px |
-| `--card-revealed-title-size` | 24px | 17px |
-| `--card-revealed-title-mb` | 20px | 8px |
-| `--card-revealed-gap` | 12px | 7px |
-| `--revealed-option-padding` | 14px 16px | 9px 12px |
-| `--revealed-option-fontsize` | 12px | 11px |
-| `--revealed-message-fontsize` | 11px | 10.5px |
-| `--revealed-pill-padding` | 4px 14px | 3px 10px |
-| `--revealed-pill-fontsize` | 12px | 10px |
-| `--type-header-crown-size` | 22px | 16px |
-| `--type-header-margin-bottom` | 8px | 4px |
-| `--gauge-min-height` | 130px | 100px |
-| `--footer-height` | 120px | 112px |
-
-Option button padding tightens but its font size stays at 13px so touch targets remain healthy.
-
----
-
-## Visual Language
-
-| Element | Color | Meaning |
-|---|---|---|
-| Deep red `#930018` | Primary actions, completed shifts, meltdown text | Energy / urgency |
-| Bright red `#E31F26` | Active shift segment | "You are here" |
-| Blue `#004E93` / `#D6E0FF` | Deep freeze states, freeze labels | Cold / disengagement |
-| Cream `#FFF9EF` | Neutral base background | Calm / balance |
-| Warm pink `#FF95A8` | Bg tint at full meltdown (energy +5) | Stress / heat |
-| Cool blue `#8FA8FF` | Bg tint at full freeze (energy −5) | Apathy / cold |
-| Pink `#FFDEE5` | Win modal accent, demo pill backgrounds | Care |
-| Gold accent | Confetti on win | Celebration |
+Computed in [`src/App.jsx`](./src/App.jsx) via `getEnergyBg(displayEnergy)`. The transition uses `transition: background-color 4000ms ease-in-out 800ms` — an 800ms delay then a 4-second fade.
 
 ---
 
@@ -375,7 +245,7 @@ No score is shown on a loss. Strike severity is intentionally not weighted — e
 
 ---
 
-## Running Locally
+## Local Development
 
 ```bash
 npm install
@@ -403,98 +273,10 @@ The public build is served from **GitHub Pages** at:
 
 > `https://smoothieking-learnings.github.io/leadership_thermostat_game/`
 
-Every push to `main` triggers `.github/workflows/deploy.yml`, which installs dependencies with `npm ci`, runs `npm run build` with `VITE_BASE_PATH` set to the repo sub-path, and publishes `dist/` via the official `actions/deploy-pages` action. No manual release step is required — merging to `main` is the release.
+Every push to `main` triggers [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml), which installs dependencies with `npm ci`, runs `npm run build` with `VITE_BASE_PATH` set to the repo sub-path, and publishes `dist/` via the official `actions/deploy-pages` action. No manual release step is required — merging to `main` is the release.
 
 The same `dist/` artifact can also be uploaded into Articulate Rise or any other LMS that accepts embedded HTML packages; in that case, build locally without `VITE_BASE_PATH` so the asset paths stay relative.
 
 ---
 
-## Iframe Integration
-
-The game is built to be embedded inside an `<iframe>` on any host (LMS, intranet, marketing page). Embedding contract below.
-
-### Embedding
-
-```html
-<iframe
-  src="https://your-host.example.com/shift-survival/?parentOrigin=https%3A%2F%2Fyour-host.example.com"
-  title="Shift Survival"
-  style="width: 100%; height: 100dvh; min-height: 520px; border: 0;"
-  allow="autoplay">
-</iframe>
-```
-
-The iframe needs a **minimum height of about 520px**. Below that the game renders a friendly "expand for the full experience" placeholder rather than clipping.
-
-### URL parameters
-
-| Param | Value | Effect |
-|---|---|---|
-| `autostart` | `1` | Skip the welcome screen and drop the player directly into the first shift |
-| `skipIntro` | `1` | Alias of `autostart=1` |
-| `parentOrigin` | URL-encoded origin | Locks `postMessage` to a specific parent origin. Without this, messages are sent to `*` and inbound messages from any origin are accepted. |
-
-### Host ↔ game postMessage contract
-
-The game emits structured events to `window.parent` on milestone transitions. Wire up a listener on the host:
-
-```js
-window.addEventListener('message', (e) => {
-  // Optional: only trust messages from your iframe origin.
-  if (e.origin !== 'https://your-iframe-host.example.com') return
-  const data = e.data
-  if (!data?.type?.startsWith('shiftSurvival:')) return
-  switch (data.type) {
-    case 'shiftSurvival:ready':   /* iframe mounted, fonts loading */ break
-    case 'shiftSurvival:start':   /* player started a game */          break
-    case 'shiftSurvival:win':     /* { score, maxScore, percent } */   break
-    case 'shiftSurvival:lose':    /* { strikeBreakdown }          */   break
-    case 'shiftSurvival:restart': /* player chose to play again */     break
-    case 'shiftSurvival:resize':  /* { width, height, desiredHeight } — resize wrapper to desiredHeight */ break
-  }
-})
-```
-
-Inbound commands the host can send to the iframe:
-
-```js
-const iframe = document.querySelector('iframe')
-// Skip welcome and start immediately:
-iframe.contentWindow.postMessage({ type: 'shiftSurvival:start' }, '*')
-// Reset to welcome screen:
-iframe.contentWindow.postMessage({ type: 'shiftSurvival:restart' }, '*')
-```
-
-### CSP / framing requirements
-
-The game uses Google Fonts at runtime. If the host page enforces a strict Content-Security-Policy, allow:
-
-```
-font-src  https://fonts.gstatic.com;
-style-src https://fonts.googleapis.com 'unsafe-inline';
-```
-
-If your hosting target sets `X-Frame-Options: DENY` or `Content-Security-Policy: frame-ancestors 'none'`, the iframe will refuse to load. Configure the host to allow framing from the parent's origin (`frame-ancestors https://parent.example.com`).
-
-### Keyboard shortcuts
-
-Useful for LMS-embedded scenarios where players keyboard their way through:
-
-| Key | Action |
-|---|---|
-| `1` or `A` | Select option A |
-| `2` or `B` | Select option B |
-| `Enter` / `Space` | Confirm a selection, or acknowledge a revealed card |
-
-### Performance under embed
-
-- Background-color transitions, gauge shake, and the fruit hop loop **pause when `document.visibilityState === 'hidden'`** (tab in background, iframe collapsed in an accordion). No CPU spent off-screen.
-- Gauge view (arc vs. bar) re-evaluates on `window.resize`. If the user has tapped to override, their choice is respected through subsequent resizes.
-
----
-
-## About
-
-**Shift Survival** is part of the **SmoothieKing Learnings** leadership curriculum, made for the people running our stores every day. The repo is published publicly so partners, hosts, and curious learners can see how the experience is built and embed it in their own training environments.
-
-For questions about the program or how to use it inside your store, reach out to the SmoothieKing Learnings team.
+Maintained by the **SmoothieKing Learnings** team.
