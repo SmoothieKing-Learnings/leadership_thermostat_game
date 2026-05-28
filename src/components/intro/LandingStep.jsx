@@ -32,7 +32,7 @@ export default function LandingStep({ onStart, onTutorial }) {
         transition={{ delay: 0.2, duration: 0.45 }}
         style={{
           fontFamily: '"Playfair Display", Georgia, serif',
-          fontSize: 44, /* matches the quiz hero scale (text-3xl mobile → ~text-5xl-ish) */
+          fontSize: 36, /* unified hero size across all four projects */
           fontWeight: 800,
           color: '#930018',
           lineHeight: 1.1,
