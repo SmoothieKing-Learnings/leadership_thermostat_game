@@ -10,12 +10,13 @@ const SELF_NAVIGATING = new Set([0, 2])
 
 const TOTAL_STEPS = 4
 
-// Card chrome matches the quiz LayoutWrapper:
-//   bg-white/50 backdrop-blur-sm rounded-2xl shadow-xl border border-orange-100
+// Card chrome matches the unified quiz LayoutWrapper:
+//   max-w-md (448px), bg-white/50, backdrop-blur-sm, rounded-2xl,
+//   shadow-xl, border border-orange-100.
 // Once the player taps Start Shift, the game canvas takes over and the card is gone.
 const CARD_STYLE = {
   width: '100%',
-  maxWidth: 480,
+  maxWidth: 448,
   height: '100%',
   maxHeight: 'min(720px, calc(100% - 24px))',
   backgroundColor: 'rgba(255, 255, 255, 0.5)',
