@@ -1,6 +1,6 @@
 # Shift Survival
 
-A mobile-first educational simulation game built for Smoothie King store managers. Players navigate 10 shifts of real workplace scenarios, choosing how to lead under pressure. The core insight: a great manager doesn't just read the room — they set it.
+A mobile-first leadership simulation from **SmoothieKing Learnings**, designed for our store managers. Players navigate 10 shifts of real workplace scenarios, choosing how to lead under pressure. The core insight we wanted to teach: a great manager doesn't just read the room — they set it.
 
 ---
 
@@ -36,7 +36,7 @@ src/
 ├── App.jsx                      # Root — screen routing, modal orchestration, energy-driven bg tint
 ├── main.jsx                     # React entry point
 ├── data/
-│   └── cards.js                 # SHIFT_DECK (21 active choice cards) + legacy CARD_DECK
+│   └── cards.js                 # SHIFT_DECK (21 active choice cards) + an earlier CARD_DECK kept for reference
 ├── hooks/
 │   └── useGameState.js          # All game logic, state machine, scoring, strike tracking
 └── components/
@@ -51,7 +51,7 @@ src/
     ├── cards/
     │   ├── CardShell.jsx         # Shared card template (responsive padding/typography)
     │   ├── ChoiceCard.jsx        # Interactive card with 3D flip reveal
-    │   └── EnvironmentCard.jsx   # Static env card (not drawn in active deck; preserved)
+    │   └── EnvironmentCard.jsx   # Static env card (not drawn in the active deck)
     ├── gauge/
     │   ├── GaugeArc.jsx          # SVG semicircle gauge with animated needle
     │   └── GaugeBar.jsx          # Horizontal segment bar (default on short viewports)
@@ -62,8 +62,8 @@ src/
     │   └── LoseModal.jsx         # Lose screen — "Tough shifts." + strike breakdown
     └── ui/
         ├── ActionFooter.jsx      # Fixed bottom: progress bar + fruit lives + CTA
-        ├── GaugeToggle.jsx       # Legacy — gauge view is now toggled by tapping the gauge
-        ├── AutoplayButton.jsx    # Legacy — autoplay removed from active flow
+        ├── GaugeToggle.jsx       # Unused — the gauge view is toggled by tapping the gauge directly
+        ├── AutoplayButton.jsx    # Unused — autoplay is not part of the active flow
         └── Pill.jsx              # Reusable impact badge
 ```
 
@@ -83,7 +83,7 @@ welcome  →  game  →  win
 - **welcome**: 4-step intro (landing + 3-step tutorial)
 - **game**: Active play (10 shifts)
 - **win**: Player reached the end of shift 10 with fewer than 3 strikes
-- **lose**: Player accumulated 3 strikes (energy ±5 no longer ends the game)
+- **lose**: Player accumulated 3 strikes (energy ±5 does not end the game)
 
 ### Card Phases (within `game` screen)
 
@@ -111,13 +111,13 @@ Every choice option carries an `outcome` of `"success"`, `"meltdown"`, or `"free
 
 You start with 3 lives, visualized as 🍓 🫐 🍌 in the footer. On a strike, the rightmost surviving fruit dims to grayscale. Three strikes ends the game.
 
-The energy gauge is now a **visual feedback signal only** — it can pin at ±5 but no longer triggers a loss. It still drives subtle background-color tinting (cool blue toward freeze, warm pink toward meltdown).
+The energy gauge is a **visual feedback signal only** — it can pin at ±5 without triggering a loss. It drives subtle background-color tinting (cool blue toward freeze, warm pink toward meltdown).
 
 ---
 
 ## Card Data
 
-Active cards live in `SHIFT_DECK` in `src/data/cards.js` — 21 choice cards drawn from for every game. A legacy `CARD_DECK` (12 environment + 12 older choice cards) is preserved at the top of the file for future updates but is not drawn from in live play.
+Active cards live in `SHIFT_DECK` in `src/data/cards.js` — 21 choice cards drawn from for every game. An earlier `CARD_DECK` (12 environment + 12 prior choice cards) sits at the top of the file as a content reference and is not drawn from in live play.
 
 ### Shift Card Schema
 
@@ -184,7 +184,7 @@ This guarantees variety in every game — no run is all heat or all cold.
 
 ## Scoring System
 
-Scoring math is unchanged from the prior version, computed in `calcChoicePoints()`.
+Scoring math is computed in `calcChoicePoints()`.
 
 ### Base points (0–2 per choice)
 
@@ -250,7 +250,7 @@ Two interchangeable views, **toggled by tapping the gauge itself** (no separate 
 - **Arc** (`GaugeArc.jsx`): SVG semicircle with a tapered needle, color zones (blue left, white center, red right), tick marks, and animated needle rotation (800ms CSS transition)
 - **Bar** (`GaugeBar.jsx`): Horizontal gradient bar with an overlay indicator that grows from center (700ms transition)
 
-The numeric value below the gauge and the numeric tick labels on the bar were removed — the gauge now reads as a pure emotional indicator. The "Disengaged Deepfreeze" / "Messy Meltdown" / "Lost" semantic labels remain.
+The gauge reads as a pure emotional indicator — no numeric value appears below it and no numeric tick labels appear on the bar. The "Disengaged Deepfreeze" / "Messy Meltdown" / "Lost" semantic labels remain.
 
 **Default view**: `bar` on viewports shorter than 800px (more compact), `arc` otherwise. Decided once per `startGame()` / `restartGame()` based on `window.innerHeight`.
 
@@ -261,7 +261,7 @@ Both views shake when energy moves off center:
 - **±1**: Gentle shake (warn), ~1.2s repeat interval
 - **±2 and beyond**: Rapid shake (danger), ~0.6s repeat interval
 
-(The thresholds were tightened from the old ±3 / ±4 because the gauge no longer ends the game — the shake is now a tension cue rather than a danger warning.)
+The shake is a tension cue rather than a danger warning, since the gauge itself does not end the game.
 
 ---
 
@@ -318,8 +318,6 @@ The fruit emojis hop occasionally — `y: [0, -5, 0, -1.4, 0]` keyframes with mi
 | Choice card, no selection | Confirm (disabled) | Waits for a selection |
 | Choice card, option selected | Confirm (active) | Flips card to reveal |
 | Revealed choice card | Understood | Applies energy delta, increments strike if outcome ≠ success |
-
-Autoplay was removed in this version.
 
 ---
 
@@ -384,18 +382,30 @@ npm install
 npm run dev
 ```
 
-Runs at `http://localhost:5173`. The production build emits with **relative asset paths**, so the same `dist/` works under any base URL.
+Runs at `http://localhost:5173`. The production build emits with **relative asset paths**, so the same `dist/` works under any base URL — root path, sub-path, CDN, or custom domain.
 
 ```bash
 npm run build
 npm run preview
 ```
 
-If you need an absolute base path (e.g. GitHub Pages), set `VITE_BASE_PATH` at build time:
+If an absolute base path is required, set `VITE_BASE_PATH` at build time:
 
 ```bash
-VITE_BASE_PATH=/thermostatgame_score/ npm run build
+VITE_BASE_PATH=/leadership_thermostat_game/ npm run build
 ```
+
+---
+
+## Deployment
+
+The public build is served from **GitHub Pages** at:
+
+> `https://smoothieking-learnings.github.io/leadership_thermostat_game/`
+
+Every push to `main` triggers `.github/workflows/deploy.yml`, which installs dependencies with `npm ci`, runs `npm run build` with `VITE_BASE_PATH` set to the repo sub-path, and publishes `dist/` via the official `actions/deploy-pages` action. No manual release step is required — merging to `main` is the release.
+
+The same `dist/` artifact can also be uploaded into Articulate Rise or any other LMS that accepts embedded HTML packages; in that case, build locally without `VITE_BASE_PATH` so the asset paths stay relative.
 
 ---
 
@@ -480,3 +490,11 @@ Useful for LMS-embedded scenarios where players keyboard their way through:
 
 - Background-color transitions, gauge shake, and the fruit hop loop **pause when `document.visibilityState === 'hidden'`** (tab in background, iframe collapsed in an accordion). No CPU spent off-screen.
 - Gauge view (arc vs. bar) re-evaluates on `window.resize`. If the user has tapped to override, their choice is respected through subsequent resizes.
+
+---
+
+## About
+
+**Shift Survival** is part of the **SmoothieKing Learnings** leadership curriculum, made for the people running our stores every day. The repo is published publicly so partners, hosts, and curious learners can see how the experience is built and embed it in their own training environments.
+
+For questions about the program or how to use it inside your store, reach out to the SmoothieKing Learnings team.
