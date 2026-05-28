@@ -32,7 +32,7 @@ export default function LandingStep({ onStart, onTutorial }) {
         transition={{ delay: 0.2, duration: 0.45 }}
         style={{
           fontFamily: '"Playfair Display", Georgia, serif',
-          fontSize: 34,
+          fontSize: 44, /* matches the quiz hero scale (text-3xl mobile → ~text-5xl-ish) */
           fontWeight: 800,
           color: '#930018',
           lineHeight: 1.1,
@@ -82,7 +82,7 @@ export default function LandingStep({ onStart, onTutorial }) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.4 }}
-        style={{ width: '100%', maxWidth: 320, display: 'flex', flexDirection: 'column', gap: 12 }}
+        style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}
       >
         <motion.button
           onClick={onTutorial}
