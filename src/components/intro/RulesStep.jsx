@@ -5,7 +5,7 @@ const RULES = [
     num: '1',
     title: 'Face the Scenario',
     body: "Each round presents a real-world situation. You'll have two options. One choice models stable leadership. The other choice will tip the thermostat in the wrong direction.",
-    color: '#930018',
+    color: 'var(--color-brand)',
   },
   {
     num: '2',
@@ -15,21 +15,21 @@ const RULES = [
       {
         label: 'The Meltdown',
         text: 'Choose a path that adds too much stress, panic, or anger and the shift will end in a meltdown.',
-        color: '#930018',
+        color: 'var(--color-brand)',
       },
       {
         label: 'The Deep Freeze',
         text: 'Choose a path that leads to apathy, disengagement, or a lack of care and the shift will end in a deep freeze.',
-        color: '#004E93',
+        color: 'var(--gauge-cold-deep)',
       },
     ],
-    color: '#004E93',
+    color: 'var(--gauge-cold-deep)',
   },
   {
     num: '3',
     title: 'Three Strikes and Our Culture is Lost',
     body: 'You have 3 lives. If you make three "Meltdown" or "Deep Freeze" moves within the 10 shifts, the thermostat breaks. Team members will quit, reviews tank, and sales plummet.',
-    color: '#40000F',
+    color: 'var(--color-brand-deep)',
   },
 ]
 
@@ -43,7 +43,7 @@ export default function RulesStep() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         style={{
-          backgroundColor: '#930018',
+          backgroundColor: 'var(--color-brand)',
           borderRadius: 20,
           padding: '24px 22px 26px',
           marginBottom: 28,
@@ -68,7 +68,7 @@ export default function RulesStep() {
             fontFamily: '"Playfair Display", Georgia, serif',
             fontSize: 30,
             fontWeight: 800,
-            color: '#fff',
+            color: 'var(--color-bg-primary)',
             lineHeight: 1.2,
             marginBottom: 12,
           }}
@@ -96,7 +96,7 @@ export default function RulesStep() {
           fontSize: 11,
           fontWeight: 700,
           letterSpacing: '0.12em',
-          color: '#930018',
+          color: 'var(--color-brand)',
           textTransform: 'uppercase',
           marginBottom: 14,
         }}
@@ -151,7 +151,7 @@ export default function RulesStep() {
                     fontFamily: '"DM Sans", system-ui, sans-serif',
                     fontSize: 14,
                     fontWeight: 700,
-                    color: '#40000F',
+                    color: 'var(--color-brand-deep)',
                     marginBottom: rule.bullets ? 6 : 4,
                     lineHeight: 1.35,
                   }}
@@ -209,7 +209,7 @@ export default function RulesStep() {
           style={{
             fontFamily: '"DM Sans", system-ui, sans-serif',
             fontSize: 13,
-            color: '#40000F',
+            color: 'var(--color-brand-deep)',
             lineHeight: 1.65,
             margin: 0,
           }}

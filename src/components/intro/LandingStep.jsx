@@ -34,7 +34,7 @@ export default function LandingStep({ onStart, onTutorial }) {
           fontFamily: '"Playfair Display", Georgia, serif',
           fontSize: 36, /* unified hero size across all four projects */
           fontWeight: 800,
-          color: '#930018',
+          color: 'var(--color-brand)',
           lineHeight: 1.1,
           marginBottom: 16,
         }}
@@ -64,7 +64,7 @@ export default function LandingStep({ onStart, onTutorial }) {
         style={{
           fontFamily: '"DM Sans", system-ui, sans-serif',
           fontSize: 13,
-          color: '#40000F',
+          color: 'var(--color-brand-deep)',
           lineHeight: 1.65,
           opacity: 0.78,
           maxWidth: 340,
@@ -92,7 +92,7 @@ export default function LandingStep({ onStart, onTutorial }) {
             padding: '8px',
             border: 'none',
             background: 'transparent',
-            color: '#930018',
+            color: 'var(--color-brand)',
             fontFamily: '"DM Sans", system-ui, sans-serif',
             fontSize: 15,
             fontWeight: 700,
@@ -109,8 +109,8 @@ export default function LandingStep({ onStart, onTutorial }) {
             padding: '17px',
             borderRadius: 16,
             border: 'none',
-            backgroundColor: '#930018',
-            color: '#fff',
+            backgroundColor: 'var(--color-brand)',
+            color: 'var(--color-bg-primary)',
             fontFamily: '"Playfair Display", Georgia, serif',
             fontSize: 19,
             fontWeight: 700,

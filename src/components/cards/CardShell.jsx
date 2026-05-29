@@ -6,7 +6,7 @@
 import skCrown from '../../assets/SKcrown.svg'
 
 export const CARD_RADIUS = 20
-export const CARD_BORDER = '2px solid #930018'
+export const CARD_BORDER = '2px solid var(--color-brand)'
 export const CARD_HEIGHT = 'var(--card-height)'
 export const CARD_PADDING = 'var(--card-padding, 24px 22px)'
 export const CARD_SHADOW = '0 4px 10px rgba(64, 0, 15, 0.18), 0 12px 28px rgba(64, 0, 15, 0.13)'
@@ -33,7 +33,7 @@ export function TypeHeader({ label, subtitle }) {
         fontWeight: 700,
         letterSpacing: '0.2em',
         textTransform: 'uppercase',
-        color: '#930018',
+        color: 'var(--color-brand)',
         margin: 0,
         marginBottom: 3,
       }}>
@@ -44,7 +44,7 @@ export function TypeHeader({ label, subtitle }) {
         fontSize: 11,
         fontWeight: 500,
         letterSpacing: '0.06em',
-        color: '#930018',
+        color: 'var(--color-brand)',
         opacity: 0.7,
         margin: 0,
       }}>
@@ -56,7 +56,7 @@ export function TypeHeader({ label, subtitle }) {
 
 // ── Title ─────────────────────────────────────────────────────────────────────
 
-export function CardTitle({ children, color = '#930018', size }) {
+export function CardTitle({ children, color = 'var(--color-brand)', size }) {
   return (
     <h2 style={{
       fontFamily: '"Playfair Display", Georgia, serif',
@@ -75,7 +75,7 @@ export function CardTitle({ children, color = '#930018', size }) {
 
 // ── Description ───────────────────────────────────────────────────────────────
 
-export function CardDescription({ children, color = '#930018', opacity = 0.78 }) {
+export function CardDescription({ children, color = 'var(--color-brand)', opacity = 0.78 }) {
   return (
     <p style={{
       fontFamily: '"DM Sans", system-ui, sans-serif',
@@ -94,7 +94,7 @@ export function CardDescription({ children, color = '#930018', opacity = 0.78 })
 
 // ── Impact pill ───────────────────────────────────────────────────────────────
 
-export function ImpactPill({ children, bgColor = 'transparent', color = '#930018', borderColor = '#930018' }) {
+export function ImpactPill({ children, bgColor = 'transparent', color = 'var(--color-brand)', borderColor = 'var(--color-brand)' }) {
   return (
     <div style={{
       width: '100%',
@@ -122,7 +122,7 @@ export function ImpactPill({ children, bgColor = 'transparent', color = '#930018
 
 // ── Shell ─────────────────────────────────────────────────────────────────────
 
-export default function CardShell({ bg = '#FFF9EF', children, style = {} }) {
+export default function CardShell({ bg = 'var(--color-bg-primary)', children, style = {} }) {
   return (
     <div style={{
       backgroundColor: bg,

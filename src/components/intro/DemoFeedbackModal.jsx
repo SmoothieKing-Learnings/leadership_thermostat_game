@@ -27,7 +27,7 @@ export default function DemoFeedbackModal({ visible, impact, body, onNext, nextL
             exit={{ scale: 0.92, opacity: 0 }}
             transition={{ duration: 0.32, ease: 'easeOut' }}
             style={{
-              backgroundColor: '#fff',
+              backgroundColor: 'var(--color-bg-primary)',
               borderRadius: 24,
               padding: '24px 28px 28px',
               maxWidth: 340,
@@ -67,7 +67,7 @@ export default function DemoFeedbackModal({ visible, impact, body, onNext, nextL
                   fontFamily: '"DM Sans", system-ui, sans-serif',
                   fontSize: 14,
                   fontWeight: 700,
-                  color: '#930018',
+                  color: 'var(--color-brand)',
                   letterSpacing: '0.02em',
                 }}
               >
@@ -81,7 +81,7 @@ export default function DemoFeedbackModal({ visible, impact, body, onNext, nextL
                 fontFamily: '"DM Sans", system-ui, sans-serif',
                 fontSize: 15,
                 lineHeight: 1.7,
-                color: '#40000F',
+                color: 'var(--color-brand-deep)',
                 marginBottom: 28,
               }}
             >
@@ -97,8 +97,8 @@ export default function DemoFeedbackModal({ visible, impact, body, onNext, nextL
                 padding: '15px',
                 borderRadius: 14,
                 border: 'none',
-                backgroundColor: '#930018',
-                color: '#fff',
+                backgroundColor: 'var(--color-brand)',
+                color: 'var(--color-bg-primary)',
                 fontFamily: '"Playfair Display", Georgia, serif',
                 fontSize: 18,
                 fontWeight: 700,

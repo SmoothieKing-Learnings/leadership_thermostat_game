@@ -9,16 +9,16 @@ export function getEnvImpactLabel(impact) {
 
 // Card background reflects impact direction — blue = drains energy, pink = raises energy
 export function getEnvBg(energyImpact) {
-  if (energyImpact > 0) return '#FFDEE5'
-  if (energyImpact < 0) return '#D6E0FF'
-  return '#FFF9EF'
+  if (energyImpact > 0) return 'var(--color-pink-light)'
+  if (energyImpact < 0) return 'var(--color-blue-light)'
+  return 'var(--color-bg-primary)'
 }
 
 // Pill uses white bg so it pops against the coloured card background
 function getEnvPill(energyImpact) {
-  if (energyImpact > 0) return { bgColor: '#FFC4D0', color: '#930018', borderColor: 'rgba(147,0,24,0.25)' }
-  if (energyImpact < 0) return { bgColor: '#B8CAFE', color: '#004E93', borderColor: 'rgba(0,78,147,0.25)' }
-  return { bgColor: '#F0EAD6', color: '#1A6B2A', borderColor: 'rgba(26,107,42,0.25)' }
+  if (energyImpact > 0) return { bgColor: 'var(--win-accent-light)', color: 'var(--color-brand)', borderColor: 'rgba(147,0,24,0.25)' }
+  if (energyImpact < 0) return { bgColor: 'var(--gauge-cold-mid)', color: 'var(--gauge-cold-deep)', borderColor: 'rgba(0,78,147,0.25)' }
+  return { bgColor: 'var(--card-aged)', color: 'var(--gauge-warm-deep)', borderColor: 'rgba(26,107,42,0.25)' }
 }
 
 export default function EnvironmentCard({ card }) {

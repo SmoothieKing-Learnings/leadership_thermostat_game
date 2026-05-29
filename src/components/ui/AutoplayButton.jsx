@@ -7,7 +7,7 @@ export default function AutoplayButton({ active, onToggle }) {
         width: 44,
         height: 24,
         borderRadius: 12,
-        backgroundColor: active ? '#930018' : 'rgba(0,0,0,0.1)',
+        backgroundColor: active ? 'var(--color-brand)' : 'rgba(0,0,0,0.1)',
         display: 'flex',
         alignItems: 'center',
         padding: '0 2px',
@@ -21,7 +21,7 @@ export default function AutoplayButton({ active, onToggle }) {
         style={{
           width: 20,
           height: 20,
-          backgroundColor: '#fff',
+          backgroundColor: 'var(--color-bg-primary)',
           borderRadius: '50%',
           boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
           display: 'flex',
@@ -32,7 +32,7 @@ export default function AutoplayButton({ active, onToggle }) {
         }}
       >
         <svg 
-           width="10" height="10" viewBox="0 0 24 24" fill={active ? '#930018' : '#999'} 
+           width="10" height="10" viewBox="0 0 24 24" fill={active ? 'var(--color-brand)' : 'var(--color-text-muted)'} 
            style={{ marginLeft: active ? 0 : 1 }}
         >
           <path d="M5 3l14 9-14 9V3z" />

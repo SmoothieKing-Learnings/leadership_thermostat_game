@@ -51,7 +51,7 @@ export default function GaugeBar({ energy }) {
         <div
           className="w-full h-6 rounded-full relative overflow-hidden"
           style={{
-            background: 'linear-gradient(to right, #AABBFF 0%, #E6ECFF 42%, #FFFFFF 50%, #FFE6E9 58%, #FF667D 100%)',
+            background: 'linear-gradient(to right, var(--gauge-cold-tick) 0%, var(--gauge-cold-light) 42%, var(--color-bg-primary) 50%, var(--win-accent-pale) 58%, var(--win-accent) 100%)',
             boxShadow: 'inset 0 0 0 1px rgba(64,0,15,0.1), inset 0 2px 4px rgba(64,0,15,0.06)',
             backgroundClip: 'padding-box'
           }}
@@ -66,8 +66,8 @@ export default function GaugeBar({ energy }) {
                 ? 'transparent' 
                 : (energy > 0 ? 'rgba(147,0,24,0.22)' : 'rgba(0,78,147,0.22)'),
               // More visible edge markers at the "current" level
-              borderLeft: energy < 0 ? '2.5px solid #004E93' : 'none',
-              borderRight: energy > 0 ? '2.5px solid #930018' : 'none',
+              borderLeft: energy < 0 ? '2.5px solid var(--gauge-cold-deep)' : 'none',
+              borderRight: energy > 0 ? '2.5px solid var(--color-brand)' : 'none',
               zIndex: 5
             }}
           />
@@ -81,7 +81,7 @@ export default function GaugeBar({ energy }) {
                   width: 1,
                   height: val === 0 ? '100%' : '50%',
                   backgroundColor: val === 0 
-                    ? '#40000F' 
+                    ? 'var(--color-brand-deep)' 
                     : (val > 0 ? 'rgba(147,0,24,0.12)' : 'rgba(0,78,147,0.12)'),
                   marginTop: 'auto',
                   marginBottom: 'auto'
@@ -98,7 +98,7 @@ export default function GaugeBar({ energy }) {
               fontFamily: '"DM Sans", sans-serif',
               fontSize: 9,
               fontWeight: 800,
-              color: '#004E93',
+              color: 'var(--gauge-cold-deep)',
               opacity: 0.8,
               lineHeight: 1.2
             }}
@@ -110,7 +110,7 @@ export default function GaugeBar({ energy }) {
               fontFamily: '"DM Sans", sans-serif',
               fontSize: 9,
               fontWeight: 800,
-              color: '#930018',
+              color: 'var(--color-brand)',
               opacity: 0.8,
               textAlign: 'right',
               lineHeight: 1.2

@@ -40,7 +40,7 @@ function fireConfetti() {
     angle: 60,
     spread: 65,
     origin: { x: 0, y: 0.75 },
-    colors: ['#930018', '#FFDEE5', '#D6E0FF', '#FFF9EF', '#FFD700'],
+    colors: ['var(--color-brand)', 'var(--color-pink-light)', 'var(--color-blue-light)', 'var(--color-bg-primary)', 'var(--win-confetti)'],
     scalar: 1.1,
   })
   // Right party popper
@@ -49,7 +49,7 @@ function fireConfetti() {
     angle: 120,
     spread: 65,
     origin: { x: 1, y: 0.75 },
-    colors: ['#930018', '#FFDEE5', '#D6E0FF', '#FFF9EF', '#FFD700'],
+    colors: ['var(--color-brand)', 'var(--color-pink-light)', 'var(--color-blue-light)', 'var(--color-bg-primary)', 'var(--win-confetti)'],
     scalar: 1.1,
   })
   // Second burst for more density
@@ -59,7 +59,7 @@ function fireConfetti() {
       angle: 70,
       spread: 50,
       origin: { x: 0.1, y: 0.6 },
-      colors: ['#930018', '#FFDEE5', '#FFD700'],
+      colors: ['var(--color-brand)', 'var(--color-pink-light)', 'var(--win-confetti)'],
       scalar: 0.9,
     })
     confetti({
@@ -67,7 +67,7 @@ function fireConfetti() {
       angle: 110,
       spread: 50,
       origin: { x: 0.9, y: 0.6 },
-      colors: ['#930018', '#D6E0FF', '#FFD700'],
+      colors: ['var(--color-brand)', 'var(--color-blue-light)', 'var(--win-confetti)'],
       scalar: 0.9,
     })
   }, 200)
@@ -104,7 +104,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
         style={{
-          backgroundColor: '#fff',
+          backgroundColor: 'var(--color-bg-primary)',
           borderRadius: 24,
           padding: '40px 28px',
           maxWidth: 360,
@@ -126,7 +126,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
             fontFamily: '"Playfair Display", Georgia, serif',
             fontSize: 28,
             fontWeight: 700,
-            color: '#930018',
+            color: 'var(--color-brand)',
             marginBottom: 20,
           }}
         >
@@ -154,7 +154,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
               fontFamily: '"Playfair Display", Georgia, serif',
               fontSize: 56,
               fontWeight: 800,
-              color: '#930018',
+              color: 'var(--color-brand)',
               lineHeight: 1,
               marginBottom: 6,
             }}
@@ -183,7 +183,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
             fontFamily: '"DM Sans", system-ui, sans-serif',
             fontSize: 15,
             lineHeight: 1.65,
-            color: '#40000F',
+            color: 'var(--color-brand-deep)',
             marginBottom: 28,
             opacity: 0.8,
           }}
@@ -194,9 +194,9 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
         {/* CTA */}
         <button
           onClick={onRestart}
-          className="w-full py-4 rounded-xl font-semibold text-white text-lg transition-all active:scale-95"
+          className="w-full py-4 rounded-xl font-semibold text-quiz-bg text-lg transition-all active:scale-95"
           style={{
-            backgroundColor: '#930018',
+            backgroundColor: 'var(--color-brand)',
             fontFamily: '"DM Sans", system-ui, sans-serif',
             fontSize: 17,
             cursor: 'pointer',

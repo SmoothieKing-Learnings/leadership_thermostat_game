@@ -117,7 +117,7 @@ export default function HistoryStack({ history, isExpanded, onToggle }) {
               position: 'fixed',
               inset: 0,
               zIndex: 200,
-              backgroundColor: '#FFF9EF',
+              backgroundColor: 'var(--color-bg-primary)',
               display: 'flex',
               flexDirection: 'column',
               pointerEvents: 'auto',
@@ -138,7 +138,7 @@ export default function HistoryStack({ history, isExpanded, onToggle }) {
                   fontFamily: '"Playfair Display", Georgia, serif',
                   fontSize: 18,
                   fontWeight: 700,
-                  color: '#930018',
+                  color: 'var(--color-brand)',
                   margin: 0,
                   lineHeight: 1.2,
                 }}>
@@ -163,7 +163,7 @@ export default function HistoryStack({ history, isExpanded, onToggle }) {
                   borderRadius: '50%',
                   border: '2px solid rgba(147,0,24,0.3)',
                   backgroundColor: 'transparent',
-                  color: '#930018',
+                  color: 'var(--color-brand)',
                   fontSize: 18,
                   fontWeight: 700,
                   cursor: 'pointer',
@@ -220,7 +220,7 @@ export default function HistoryStack({ history, isExpanded, onToggle }) {
                       fontWeight: 700,
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
-                      color: entry.type === 'environment' ? '#004E93' : '#930018',
+                      color: entry.type === 'environment' ? 'var(--gauge-cold-deep)' : 'var(--color-brand)',
                       border: `1.5px solid ${entry.type === 'environment' ? 'rgba(0,78,147,0.25)' : 'rgba(147,0,24,0.25)'}`,
                       borderRadius: 999,
                       padding: '3px 12px',
@@ -250,7 +250,7 @@ export default function HistoryStack({ history, isExpanded, onToggle }) {
                     key={i}
                     animate={{
                       width: i === activeIdx ? 16 : 5,
-                      backgroundColor: i === activeIdx ? '#930018' : 'rgba(147,0,24,0.2)',
+                      backgroundColor: i === activeIdx ? 'var(--color-brand)' : 'rgba(147,0,24,0.2)',
                     }}
                     transition={{ duration: 0.2 }}
                     style={{ height: 5, borderRadius: 99 }}

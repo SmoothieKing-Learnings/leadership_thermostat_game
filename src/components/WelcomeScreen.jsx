@@ -28,7 +28,7 @@ const CARD_STYLE = {
   WebkitBackdropFilter: 'blur(4px)',
   borderRadius: 16,
   boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)',
-  border: '1px solid #FFEDD5',
+  border: '1px solid var(--color-orange-100)',
   overflow: 'hidden',
   position: 'relative',
   display: 'flex',
@@ -88,7 +88,7 @@ export default function WelcomeScreen({ onStart }) {
                         i < tutorialStep
                           ? 'rgba(147,0,24,0.45)'
                           : i === tutorialStep
-                          ? '#930018'
+                          ? 'var(--color-brand)'
                           : 'rgba(147,0,24,0.18)',
                     }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
@@ -168,8 +168,8 @@ export default function WelcomeScreen({ onStart }) {
                   padding: '17px',
                   borderRadius: 16,
                   border: 'none',
-                  backgroundColor: '#930018',
-                  color: '#fff',
+                  backgroundColor: 'var(--color-brand)',
+                  color: 'var(--color-bg-primary)',
                   fontFamily: '"Playfair Display", Georgia, serif',
                   fontSize: 19,
                   fontWeight: 700,

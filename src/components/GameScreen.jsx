@@ -45,7 +45,7 @@ export default function GameScreen({
     <div
       style={{
         height: '100%',
-        backgroundColor: 'var(--bg-energy, #FFF9EF)',
+        backgroundColor: 'var(--bg-energy, var(--color-bg-primary))',
         transition: 'background-color 4000ms ease-in-out 800ms',
         display: 'flex',
         flexDirection: 'column',
@@ -61,7 +61,7 @@ export default function GameScreen({
           position: 'sticky',
           top: 0,
           zIndex: 30,
-          backgroundColor: 'var(--bg-energy, #FFF9EF)',
+          backgroundColor: 'var(--bg-energy, var(--color-bg-primary))',
           transition: 'background-color 4000ms ease-in-out 800ms',
           borderBottom: '1px solid rgba(147,0,24,0.1)',
           padding: '12px 16px',
@@ -95,7 +95,7 @@ export default function GameScreen({
               borderRadius: '50%',
               border: '1.5px solid rgba(147,0,24,0.25)',
               backgroundColor: 'transparent',
-              color: '#930018',
+              color: 'var(--color-brand)',
               cursor: 'pointer',
               flexShrink: 0,
             }}

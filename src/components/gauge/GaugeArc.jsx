@@ -73,13 +73,16 @@ export default function GaugeArc({ energy }) {
         aria-label={`Store Energy: ${energy}`}
       >
         <defs>
-          {/* Blue (Left) -> White (Center) -> Red (Right) */}
+          {/* Blue (Left) → Cream (Center) → Pink (Right).
+              Stop colors map 1:1 to the gauge-* and win-accent-* tokens in
+              src/index.css; SVG `stopColor` requires a literal so the values
+              are inlined here. */}
           <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"   stopColor="#AABBFF" />
-            <stop offset="42%"  stopColor="#E6ECFF" />
-            <stop offset="50%"  stopColor="#FFFFFF" />
-            <stop offset="58%"  stopColor="#FFE6E9" />
-            <stop offset="100%" stopColor="#FF667D" />
+            <stop offset="0%"   style={{ stopColor: 'var(--gauge-cold-tick)'   }} />
+            <stop offset="42%"  style={{ stopColor: 'var(--gauge-cold-light)'  }} />
+            <stop offset="50%"  style={{ stopColor: 'var(--color-bg-primary)'  }} />
+            <stop offset="58%"  style={{ stopColor: 'var(--win-accent-pale)'   }} />
+            <stop offset="100%" style={{ stopColor: 'var(--win-accent)'        }} />
           </linearGradient>
 
           {/* Mask for the center hole */}
@@ -121,14 +124,14 @@ export default function GaugeArc({ energy }) {
         <g style={{ opacity: 0.8 }}>
           <text
             x={20} y={170}
-            style={{ fontFamily: '"DM Sans", sans-serif', fontSize: 9, fontWeight: 800, fill: '#004E93', textAnchor: 'start' }}
+            style={{ fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 800, fill: 'var(--gauge-cold-deep)', textAnchor: 'start' }}
           >
             <tspan x={20} dy="0">Disengaged</tspan>
             <tspan x={20} dy="11">Deepfreeze</tspan>
           </text>
           <text
             x={260} y={170}
-            style={{ fontFamily: '"DM Sans", sans-serif', fontSize: 9, fontWeight: 800, fill: '#930018', textAnchor: 'end' }}
+            style={{ fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 800, fill: 'var(--color-brand)', textAnchor: 'end' }}
           >
             <tspan x={260} dy="0">Messy</tspan>
             <tspan x={260} dy="11">Meltdown</tspan>
@@ -145,23 +148,23 @@ export default function GaugeArc({ energy }) {
         >
           <path
             d={`
-              M ${CX - 5} ${CY} 
+              M ${CX - 5} ${CY}
               A 5 5 0 0 0 ${CX + 5} ${CY}
               L ${CX + 1.5} ${CY - R + 26}
               A 1.5 1.5 0 0 0 ${CX - 1.5} ${CY - R + 26}
               Z
             `}
-            fill="#930018"
+            style={{ fill: 'var(--color-brand)' }}
           />
         </g>
 
         {/* Semi-circular Hub Cover */}
         <path
            d={`M ${CX - 18} ${CY} A 18 18 0 0 1 ${CX + 18} ${CY} Z`}
-           fill="#FFF9EF"
+           style={{ fill: 'var(--color-bg-primary)' }}
         />
-        <circle cx={CX} cy={CY} r="6"  fill="#40000F" />
-        <circle cx={CX} cy={CY} r="2"  fill="#FFF9EF" />
+        <circle cx={CX} cy={CY} r="6" style={{ fill: 'var(--color-brand-deep)' }} />
+        <circle cx={CX} cy={CY} r="2" style={{ fill: 'var(--color-bg-primary)' }} />
       </svg>
     </motion.div>
   )

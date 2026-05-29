@@ -98,6 +98,15 @@ function readLaunchParams() {
   }
 }
 
+// Hex constants for the energy-tint lerp. The values mirror the CSS custom
+// properties defined in src/index.css (--color-bg-primary, --energy-meltdown-peak,
+// --energy-freeze-peak) but live here as JS strings because lerpColor parses
+// hex characters directly. When changing any of these, update both this block
+// and the matching :root variable in src/index.css to keep them in sync.
+const ENERGY_BG_CREAM = '#FFF9EF'              // = --color-bg-primary (design.md §2.1)
+const ENERGY_MELTDOWN_PEAK = '#FFC7CB'         // = --energy-meltdown-peak (design.md §2.10)
+const ENERGY_FREEZE_PEAK = '#C7D0F7'           // = --energy-freeze-peak  (design.md §2.10)
+
 // Interpolate between two hex colors. t = 0 returns a, t = 1 returns b.
 function lerpColor(a, b, t) {
   const tt = Math.max(0, Math.min(1, t))
@@ -112,10 +121,10 @@ function lerpColor(a, b, t) {
 // land roughly halfway between cream and the old endpoints so the temperature
 // signal is still clear without dominating the screen.
 function getEnergyBg(energy) {
-  if (energy === 0) return '#FFF9EF'
+  if (energy === 0) return ENERGY_BG_CREAM
   const t = Math.min(Math.abs(energy) / 2.5, 1)
-  if (energy > 0) return lerpColor('#FFF9EF', '#FFC7CB', t)
-  return lerpColor('#FFF9EF', '#C7D0F7', t)
+  if (energy > 0) return lerpColor(ENERGY_BG_CREAM, ENERGY_MELTDOWN_PEAK, t)
+  return lerpColor(ENERGY_BG_CREAM, ENERGY_FREEZE_PEAK, t)
 }
 
 export default function App() {
@@ -286,7 +295,7 @@ export default function App() {
             position: 'fixed',
             inset: 0,
             zIndex: 200,
-            backgroundColor: '#FFF9EF',
+            backgroundColor: 'var(--color-bg-primary)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -296,14 +305,14 @@ export default function App() {
         >
           <div style={{ maxWidth: 320 }}>
             <p style={{
-              fontFamily: '"Playfair Display", Georgia, serif',
-              fontSize: 22, fontWeight: 700, color: '#930018', marginBottom: 8,
+              fontFamily: 'var(--font-display)',
+              fontSize: 22, fontWeight: 700, color: 'var(--color-brand)', marginBottom: 8,
             }}>
               Expand for the full experience
             </p>
             <p style={{
-              fontFamily: '"DM Sans", system-ui, sans-serif',
-              fontSize: 14, lineHeight: 1.55, color: '#40000F', opacity: 0.7, margin: 0,
+              fontFamily: 'var(--font-body)',
+              fontSize: 14, lineHeight: 1.55, color: 'var(--color-brand-deep)', opacity: 0.7, margin: 0,
             }}>
               Shift Survival needs a little more vertical room. Resize the window
               (or expand the embed) to at least {MIN_PLAYABLE_HEIGHT}px tall.

@@ -52,10 +52,12 @@
   --type-header-margin-bottom: 8px;
   --gauge-min-height: 130px;
 
+  /* ─── Shared design-system tokens — mirror tailwind.config.js / design.md ─── */
   --color-bg-primary: #FFF9EF;
   --color-bg-light: #FFDEE5;
   --color-bg-soft-blue: #D6E0FF;
   --color-brand: #930018;
+  --color-brand-dark: #7a0014;          /* hover state for any brand-red surface */
   --color-brand-deep: #40000F;
   --color-brand-bright: #E31F26;
   --color-pink-light: #FFDEE5;
@@ -64,8 +66,31 @@
   --color-blue-mid: #9BB4FF;
   --color-green-light: #D0FCA1;
   --color-green-mid: #B7EB7F;
+  --color-orange-100: #FFEDD5;          /* canonical hairline border */
   --color-text-primary: #930018;
   --color-text-secondary: #40000F;
+  --color-text-muted: #999;              /* neutral disabled / hint text */
+
+  /* ─── Shift-Survival-only tokens (documented in design.md §2.10) ─── */
+  /* Energy-tint lerp endpoints (App.jsx getEnergyBg). Softer than pink-mid
+     and blue-mid because they're applied as full-screen backgrounds. */
+  --energy-meltdown-peak: #FFC7CB;
+  --energy-freeze-peak:   #C7D0F7;
+
+  /* Gauge SVG fills (gauge/GaugeArc.jsx + gauge/GaugeBar.jsx) */
+  --gauge-cold-deep:  #004E93;
+  --gauge-cold-mid:   #B8CAFE;
+  --gauge-cold-light: #E6ECFF;
+  --gauge-cold-tick:  #AABBFF;
+  --gauge-warm-deep:  #1A6B2A;
+  --gauge-warm-mid:   #C9A0A8;
+
+  /* Card / win-modal decorative tones */
+  --card-aged:        #F0EAD6;            /* aged-ivory card surface */
+  --win-accent:       #FF667D;            /* win modal accent pink */
+  --win-accent-light: #FFC4D0;
+  --win-accent-pale:  #FFE6E9;
+  --win-confetti:     #FFD700;            /* confetti gold */
 }
 
 /*

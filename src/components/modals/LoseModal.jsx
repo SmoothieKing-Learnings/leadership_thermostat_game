@@ -29,7 +29,7 @@ export default function LoseModal({ strikeBreakdown = { meltdown: 0, freeze: 0 }
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
         style={{
-          backgroundColor: '#40000F',
+          backgroundColor: 'var(--color-brand-deep)',
           borderRadius: '24px 24px 0 0',
           padding: '40px 28px 48px',
           maxWidth: 480,
@@ -51,7 +51,7 @@ export default function LoseModal({ strikeBreakdown = { meltdown: 0, freeze: 0 }
             fontFamily: '"Playfair Display", Georgia, serif',
             fontSize: 28,
             fontWeight: 700,
-            color: '#fff',
+            color: 'var(--color-bg-primary)',
             marginBottom: 12,
           }}
         >
@@ -81,7 +81,7 @@ export default function LoseModal({ strikeBreakdown = { meltdown: 0, freeze: 0 }
             fontFamily: '"DM Sans", system-ui, sans-serif',
             fontSize: 16,
             lineHeight: 1.7,
-            color: '#FFDEE5',
+            color: 'var(--color-pink-light)',
             marginBottom: 32,
           }}
         >
@@ -93,9 +93,9 @@ export default function LoseModal({ strikeBreakdown = { meltdown: 0, freeze: 0 }
         {/* CTA */}
         <button
           onClick={onRestart}
-          className="w-full py-4 rounded-xl font-semibold text-white text-lg transition-all active:scale-95"
+          className="w-full py-4 rounded-xl font-semibold text-quiz-bg text-lg transition-all active:scale-95"
           style={{
-            backgroundColor: '#930018',
+            backgroundColor: 'var(--color-brand)',
             fontFamily: '"DM Sans", system-ui, sans-serif',
             fontSize: 17,
             cursor: 'pointer',

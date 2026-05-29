@@ -2,11 +2,11 @@
 // variant: 'env' | 'choice' | 'positive' | 'negative' | 'neutral'
 
 const VARIANTS = {
-  env:      { bg: '#D6E0FF', color: '#40000F' },
-  choice:   { bg: '#FFDEE5', color: '#930018' },
-  positive: { bg: '#D0FCA1', color: '#40000F' },
-  negative: { bg: '#FFADB0', color: '#930018' },
-  neutral:  { bg: '#FFF9EF', color: '#930018' },
+  env:      { bg: 'var(--color-blue-light)', color: 'var(--color-brand-deep)' },
+  choice:   { bg: 'var(--color-pink-light)', color: 'var(--color-brand)' },
+  positive: { bg: 'var(--color-green-light)', color: 'var(--color-brand-deep)' },
+  negative: { bg: 'var(--color-pink-mid)', color: 'var(--color-brand)' },
+  neutral:  { bg: 'var(--color-bg-primary)', color: 'var(--color-brand)' },
 }
 
 export default function Pill({ children, variant = 'neutral', className = '' }) {

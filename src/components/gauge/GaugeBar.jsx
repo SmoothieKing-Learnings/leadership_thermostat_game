@@ -50,41 +50,47 @@ export default function GaugeBar({ energy }) {
       {/* Container for the bar and its markers */}
       <div className="relative">
 
-        {/* The Gradient Bar */}
+        {/* The Gradient Bar — gauge gradient mirrors GaugeArc's tokens */}
         <div
           className="w-full h-6 rounded-full relative overflow-hidden"
           style={{
-            background: 'linear-gradient(to right, #AABBFF 0%, #E6ECFF 42%, #FFFFFF 50%, #FFE6E9 58%, #FF667D 100%)',
+            background:
+              'linear-gradient(to right, ' +
+              'var(--gauge-cold-tick) 0%, ' +
+              'var(--gauge-cold-light) 42%, ' +
+              'var(--color-bg-primary) 50%, ' +
+              'var(--win-accent-pale) 58%, ' +
+              'var(--win-accent) 100%)',
             boxShadow: 'inset 0 0 0 1px rgba(64,0,15,0.1), inset 0 2px 4px rgba(64,0,15,0.06)',
             backgroundClip: 'padding-box'
           }}
         >
-          {/* Active indicator overlay (Highlighting the current energy zone) */}
-          <div 
+          {/* Active indicator overlay (highlighting the current energy zone) */}
+          <div
             className="absolute top-0 bottom-0 transition-all duration-700 ease-out"
             style={{
               left: energy >= 0 ? '50%' : `${50 + (energy / 10) * 100}%`,
               right: energy >= 0 ? `${50 - (energy / 10) * 100}%` : '50%',
-              backgroundColor: energy === 0 
-                ? 'transparent' 
+              backgroundColor: energy === 0
+                ? 'transparent'
                 : (energy > 0 ? 'rgba(147,0,24,0.22)' : 'rgba(0,78,147,0.22)'),
               // More visible edge markers at the "current" level
-              borderLeft: energy < 0 ? '2.5px solid #004E93' : 'none',
-              borderRight: energy > 0 ? '2.5px solid #930018' : 'none',
+              borderLeft: energy < 0 ? '2.5px solid var(--gauge-cold-deep)' : 'none',
+              borderRight: energy > 0 ? '2.5px solid var(--color-brand)' : 'none',
               zIndex: 5
             }}
           />
 
-          {/* Tick Marks (Overlaid on bar) */}
+          {/* Tick Marks (overlaid on bar) */}
           <div className="absolute top-0 bottom-0 left-0 right-0 flex justify-between pointer-events-none px-[1.5px]">
             {SLOTS.map((val) => (
-              <div 
+              <div
                 key={val}
                 style={{
                   width: 1,
                   height: val === 0 ? '100%' : '50%',
-                  backgroundColor: val === 0 
-                    ? '#40000F' 
+                  backgroundColor: val === 0
+                    ? 'var(--color-brand-deep)'
                     : (val > 0 ? 'rgba(147,0,24,0.12)' : 'rgba(0,78,147,0.12)'),
                   marginTop: 'auto',
                   marginBottom: 'auto'
@@ -98,10 +104,10 @@ export default function GaugeBar({ energy }) {
         <div className="flex justify-between w-full mt-3">
           <span
             style={{
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: 'var(--font-body)',
               fontSize: 9,
               fontWeight: 800,
-              color: '#004E93',
+              color: 'var(--gauge-cold-deep)',
               opacity: 0.8,
               lineHeight: 1.2
             }}
@@ -110,10 +116,10 @@ export default function GaugeBar({ energy }) {
           </span>
           <span
             style={{
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: 'var(--font-body)',
               fontSize: 9,
               fontWeight: 800,
-              color: '#930018',
+              color: 'var(--color-brand)',
               opacity: 0.8,
               textAlign: 'right',
               lineHeight: 1.2

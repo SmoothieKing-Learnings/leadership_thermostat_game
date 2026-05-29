@@ -34,7 +34,7 @@ function MiniCard({ bg, borderColor, label, title, pillText, pillColor, pillBg, 
         fontWeight: 800,
         letterSpacing: '0.12em',
         textTransform: 'uppercase',
-        color: '#930018',
+        color: 'var(--color-brand)',
         margin: 0,
         textAlign: 'center',
       }}>
@@ -46,7 +46,7 @@ function MiniCard({ bg, borderColor, label, title, pillText, pillColor, pillBg, 
         fontFamily: '"Playfair Display", Georgia, serif',
         fontSize: 10,
         fontWeight: 700,
-        color: '#40000F',
+        color: 'var(--color-brand-deep)',
         lineHeight: 1.3,
         textAlign: 'center',
         margin: '6px 0',
@@ -101,7 +101,7 @@ export default function MetaphorStep() {
         fontFamily: '"Playfair Display", Georgia, serif',
         fontSize: 26,
         fontWeight: 800,
-        color: '#930018',
+        color: 'var(--color-brand)',
         lineHeight: 1.25,
         textAlign: 'center',
         margin: '8px 0 12px',
@@ -113,7 +113,7 @@ export default function MetaphorStep() {
       <p style={{
         fontFamily: '"DM Sans", system-ui, sans-serif',
         fontSize: 13.5,
-        color: '#40000F',
+        color: 'var(--color-brand-deep)',
         lineHeight: 1.7,
         textAlign: 'left',
         marginBottom: 14,
@@ -126,7 +126,7 @@ export default function MetaphorStep() {
       <p style={{
         fontFamily: '"DM Sans", system-ui, sans-serif',
         fontSize: 13.5,
-        color: '#40000F',
+        color: 'var(--color-brand-deep)',
         lineHeight: 1.7,
         textAlign: 'left',
         marginBottom: 24,
@@ -142,44 +142,44 @@ export default function MetaphorStep() {
       <div style={{ display: 'flex', gap: 5, alignItems: 'stretch', marginBottom: 20 }}>
         {/* Blue — deep freeze move */}
         <MiniCard
-          bg="#D6E0FF"
+          bg="var(--color-blue-light)"
           borderColor="rgba(0,78,147,0.35)"
           label="Deep Freeze"
           title="Apathy, disengagement"
           pillText="Energy drops"
-          pillColor="#004E93"
-          pillBg="#fff"
+          pillColor="var(--gauge-cold-deep)"
+          pillBg="var(--color-bg-primary)"
           delay={0.05}
         />
         {/* Cream — steady / balance */}
         <MiniCard
-          bg="#FFF9EF"
+          bg="var(--color-bg-primary)"
           borderColor="rgba(147,0,24,0.35)"
           label="Steady"
           title="Calm, care, clarity"
           pillText="You set it"
-          pillColor="#930018"
-          pillBg="#FFDEE5"
+          pillColor="var(--color-brand)"
+          pillBg="var(--color-pink-light)"
           delay={0.12}
         />
         {/* Pink — meltdown move */}
         <MiniCard
-          bg="#FFDEE5"
+          bg="var(--color-pink-light)"
           borderColor="rgba(147,0,24,0.35)"
           label="Meltdown"
           title="Stress, anger, panic"
           pillText="Heat rises"
-          pillColor="#930018"
-          pillBg="#fff"
+          pillColor="var(--color-brand)"
+          pillBg="var(--color-bg-primary)"
           delay={0.19}
         />
       </div>
 
       {/* Caption rows — match legend order (Deep Freeze · Steady · Meltdown) */}
       {[
-        { dot: '#004E93', dotBg: '#D6E0FF', text: 'Show up checked-out and the team freezes and stops caring.' },
-        { dot: '#930018', dotBg: '#FFF9EF', text: 'Stay steady and you give them confidence to win the shift.' },
-        { dot: '#930018', dotBg: '#FFDEE5', text: 'Walk in tense and the whole crew rises to match it.' },
+        { dot: 'var(--gauge-cold-deep)', dotBg: 'var(--color-blue-light)', text: 'Show up checked-out and the team freezes and stops caring.' },
+        { dot: 'var(--color-brand)', dotBg: 'var(--color-bg-primary)', text: 'Stay steady and you give them confidence to win the shift.' },
+        { dot: 'var(--color-brand)', dotBg: 'var(--color-pink-light)', text: 'Walk in tense and the whole crew rises to match it.' },
       ].map(({ dot, dotBg, text }, i) => (
         <motion.div
           key={i}
@@ -205,7 +205,7 @@ export default function MetaphorStep() {
           <p style={{
             fontFamily: '"DM Sans", system-ui, sans-serif',
             fontSize: 13,
-            color: '#40000F',
+            color: 'var(--color-brand-deep)',
             lineHeight: 1.6,
             margin: 0,
             opacity: 0.8,
@@ -241,14 +241,14 @@ export default function MetaphorStep() {
             fontFamily: '"DM Sans", system-ui, sans-serif',
             fontSize: 14,
             fontWeight: 700,
-            color: '#930018',
+            color: 'var(--color-brand)',
             textAlign: 'left',
           }}>
             Why does this matter in real life?
           </span>
           <span style={{
             fontSize: 18,
-            color: '#930018',
+            color: 'var(--color-brand)',
             flexShrink: 0,
             lineHeight: 1,
             transform: accordionOpen ? 'rotate(0deg)' : 'rotate(180deg)',
@@ -267,7 +267,7 @@ export default function MetaphorStep() {
             <p style={{
               fontFamily: '"DM Sans", system-ui, sans-serif',
               fontSize: 14,
-              color: '#40000F',
+              color: 'var(--color-brand-deep)',
               lineHeight: 1.75,
               margin: '12px 0 12px',
             }}>
@@ -276,7 +276,7 @@ export default function MetaphorStep() {
             <p style={{
               fontFamily: '"DM Sans", system-ui, sans-serif',
               fontSize: 14,
-              color: '#40000F',
+              color: 'var(--color-brand-deep)',
               lineHeight: 1.75,
               margin: 0,
             }}>

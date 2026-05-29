@@ -38,8 +38,8 @@ function ShiftProgress({ round, total = 10 }) {
               height: 18,
               borderRadius: 4,
               backgroundColor:
-                status === 'done' ? '#930018' :
-                status === 'active' ? '#E31F26' :
+                status === 'done' ? 'var(--color-brand)' :
+                status === 'active' ? 'var(--color-brand-bright)' :
                 'rgba(147,0,24,0.15)',
               transition: 'background-color 350ms ease',
             }}
@@ -63,7 +63,7 @@ export default function ActionFooter({
   if (!card) return null
 
   const envImpact = card.type === 'environment' ? card.energyImpact : 0
-  const understoodColor = envImpact < 0 ? '#004E93' : '#930018'
+  const understoodColor = envImpact < 0 ? 'var(--gauge-cold-deep)' : 'var(--color-brand)'
 
   return (
     <div
@@ -76,7 +76,7 @@ export default function ActionFooter({
         marginInline: 'auto',
         zIndex: 20,
         padding: '0 16px 32px 16px',
-        backgroundColor: 'var(--bg-energy, #FFF9EF)',
+        backgroundColor: 'var(--bg-energy, var(--color-bg-primary))',
         transition: 'background-color 4000ms ease-in-out 800ms',
       }}
     >
@@ -143,9 +143,9 @@ export default function ActionFooter({
         <button
           onClick={onConfirm}
           disabled={!selectedOption}
-          className="w-full py-4 rounded-2xl font-semibold text-white transition-all active:scale-95 shadow-lg"
+          className="w-full py-4 rounded-2xl font-semibold text-quiz-bg transition-all active:scale-95 shadow-lg"
           style={{
-            backgroundColor: selectedOption ? '#930018' : '#C9A0A8',
+            backgroundColor: selectedOption ? 'var(--color-brand)' : 'var(--gauge-warm-mid)',
             fontFamily: '"Playfair Display", Georgia, serif',
             fontSize: 20,
             cursor: selectedOption ? 'pointer' : 'not-allowed',
@@ -158,7 +158,7 @@ export default function ActionFooter({
       ) : (
         <button
           onClick={onAcknowledge}
-          className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-semibold text-white transition-all active:scale-95 shadow-lg"
+          className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-semibold text-quiz-bg transition-all active:scale-95 shadow-lg"
           style={{
             backgroundColor: understoodColor,
             fontFamily: '"Playfair Display", Georgia, serif',

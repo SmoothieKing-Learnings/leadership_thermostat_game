@@ -21,14 +21,14 @@ function OptionButton({ opt, isSelected, onSelect }) {
         width: '100%',
         padding: 'var(--card-option-padding, 14px 20px)',
         borderRadius: 14,
-        border: `2px solid ${isSelected ? '#930018' : 'rgba(147,0,24,0.35)'}`,
+        border: `2px solid ${isSelected ? 'var(--color-brand)' : 'rgba(147,0,24,0.35)'}`,
         backgroundColor: isSelected ? 'rgba(147,0,24,0.06)' : 'transparent',
         textAlign: 'center',
         cursor: 'pointer',
         fontFamily: '"DM Sans", system-ui, sans-serif',
         fontSize: 'var(--card-option-fontsize, 13px)',
         fontWeight: 600,
-        color: '#930018',
+        color: 'var(--color-brand)',
         lineHeight: 1.5,
         transition: 'background-color 0.15s, border-color 0.15s',
       }}
@@ -55,7 +55,7 @@ function RevealedOption({ opt, isChosen }) {
         fontFamily: '"DM Sans", system-ui, sans-serif',
         fontSize: 'var(--revealed-option-fontsize, 12px)',
         fontWeight: 700,
-        color: '#fff',
+        color: 'var(--color-bg-primary)',
         lineHeight: 1.4,
         margin: 0,
       }}>
@@ -79,7 +79,7 @@ function RevealedOption({ opt, isChosen }) {
           fontFamily: '"DM Sans", system-ui, sans-serif',
           fontSize: 'var(--revealed-pill-fontsize, 12px)',
           fontWeight: 600,
-          color: '#fff',
+          color: 'var(--color-bg-primary)',
         }}>
           {getChoiceOutcomeLabel(opt.outcome)}
         </span>
@@ -118,7 +118,7 @@ export default function ChoiceCard({ card, selectedOption, phase, onSelectOption
           backfaceVisibility: 'hidden',
           WebkitBackfaceVisibility: 'hidden',
         }}>
-          <CardShell bg="#FFF9EF">
+          <CardShell bg="var(--color-bg-primary)">
             {/* Top: crown + type label */}
             <TypeHeader label="Scenario" subtitle="You Set the Temperature" />
 
@@ -158,8 +158,8 @@ export default function ChoiceCard({ card, selectedOption, phase, onSelectOption
           transform: 'rotateY(180deg)',
         }}>
           <div style={{
-            backgroundColor: '#930018',
-            border: '2px solid #930018',
+            backgroundColor: 'var(--color-brand)',
+            border: '2px solid var(--color-brand)',
             borderRadius: 20,
             width: '100%',
             height: '100%',
@@ -175,7 +175,7 @@ export default function ChoiceCard({ card, selectedOption, phase, onSelectOption
               fontFamily: '"Playfair Display", Georgia, serif',
               fontSize: 'var(--card-revealed-title-size, 24px)',
               fontWeight: 700,
-              color: '#fff',
+              color: 'var(--color-bg-primary)',
               lineHeight: 1.2,
               marginBottom: 'var(--card-revealed-title-mb, 20px)',
               textAlign: 'center',
