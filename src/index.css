@@ -144,6 +144,30 @@ html, body {
   flex-direction: column;
 }
 
+/* Embed-mode overrides — toggled by App.jsx via the `embed-mode` class
+ * when the game is loaded inside an iframe (Rise 360 etc). Lifts the
+ * standalone full-viewport lockdown so the browser's native cross-iframe
+ * scroll-passthrough works again and the page below in the host LMS can
+ * scroll naturally. Without this, `overflow: hidden` + `overscroll-
+ * behavior: none` traps wheel events inside the iframe even though the
+ * bridge is forwarding them via postMessage.
+ *
+ * Standalone (no embed-mode class): unaffected — game still fills the
+ * viewport, no body scroll, no iOS rubber-band overscroll.
+ */
+html.embed-mode,
+body.embed-mode {
+  height: auto;
+  overflow: visible;
+  overscroll-behavior: auto;
+  background: transparent;
+}
+
+body.embed-mode #root {
+  height: auto;
+  overflow: visible;
+}
+
 /* Gauge needle animation */
 .gauge-needle {
   transform-origin: 50% 100%;

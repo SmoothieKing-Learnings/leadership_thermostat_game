@@ -73,7 +73,7 @@ import WelcomeScreen from './components/WelcomeScreen.jsx'
 import GameScreen from './components/GameScreen.jsx'
 import WinModal from './components/modals/WinModal.jsx'
 import LoseModal from './components/modals/LoseModal.jsx'
-import { emit, onCommand, reportSize, emitComplete } from './utils/iframeBridge.js'
+import { emit, onCommand, reportSize, emitComplete, isEmbedded } from './utils/iframeBridge.js'
 import { useShortViewport } from './utils/useViewport.js'
 
 const MIN_PLAYABLE_HEIGHT = 520
@@ -203,6 +203,25 @@ export default function App() {
     return () => {
       window.removeEventListener('wheel', onWheel)
       if (frame) cancelAnimationFrame(frame)
+    }
+  }, [])
+
+  // Embed-mode detection — when loaded inside an iframe (Rise 360 etc),
+  // toggle the `embed-mode` class on <html> and <body> so index.css can
+  // lift the standalone full-viewport lockdown (`overflow: hidden` +
+  // `overscroll-behavior: none`). Without this, wheel events emitted by
+  // the bridge above DO reach the parent via postMessage, but the
+  // browser's native cross-iframe scroll passthrough is blocked by
+  // `overscroll-behavior: none`, leaving the host with a janky double-
+  // handled scroll. Mirrors the quizzes' LayoutWrapper pattern.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!isEmbedded()) return
+    document.documentElement.classList.add('embed-mode')
+    document.body.classList.add('embed-mode')
+    return () => {
+      document.documentElement.classList.remove('embed-mode')
+      document.body.classList.remove('embed-mode')
     }
   }, [])
 
