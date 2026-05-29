@@ -30,7 +30,7 @@ export default function DemoFeedbackModal({ visible, impact, body, onNext, nextL
               backgroundColor: 'var(--color-bg-primary)',
               borderRadius: 24,
               padding: '24px 28px 28px',
-              maxWidth: 340,
+              maxWidth: 360, /* shared modal width — keeps demo + win modals visually consistent */
               width: '100%',
               boxShadow: '0 8px 40px rgba(64,0,15,0.16)',
               textAlign: 'center',
