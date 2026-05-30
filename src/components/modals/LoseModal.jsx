@@ -85,8 +85,9 @@ export default function LoseModal({ strikeBreakdown = { meltdown: 0, freeze: 0 }
             marginBottom: 32,
           }}
         >
-          Some shifts just go that way. Take a breath and try again when
-          you're ready.
+          Some stretches feel like that, and plenty of managers have been
+          there. Take a breath, reset your dial, and step back in.
+          The next shift is yours.
         </p>
 
         {/* CTA */}

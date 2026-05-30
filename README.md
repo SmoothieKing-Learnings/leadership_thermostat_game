@@ -261,7 +261,7 @@ The transition uses `transition: background-color 4000ms ease-in-out 800ms` — 
 
 The lose modal opens with the headline **"Tough shifts."** followed by the strike breakdown (e.g. `2 Meltdowns · 1 Deep Freeze`) and a warm, supportive body:
 
-> *Some shifts just go that way. Take a breath and try again when you're ready.*
+> *Some stretches feel like that, and plenty of managers have been there. Take a breath, reset your dial, and step back in. The next shift is yours.*
 
 No score is shown on a loss. Strike severity is intentionally not weighted — every wrong call counts equally.
 
