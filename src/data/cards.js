@@ -489,7 +489,7 @@ export const SHIFT_DECK = [
     options: [
       {
         id: "A",
-        text: "Jump on the blenders and lead.",
+        text: "Jump in and lead.",
         energyImpact: "balance",
         outcome: "success",
         educationalMessage: "Servant leadership pulls the panic down. When you're in the trenches, they feel supported.",
@@ -508,7 +508,7 @@ export const SHIFT_DECK = [
     type: "choice",
     label: "Shift Scenario",
     title: "The Broken Blender",
-    description: "Your best blender just smoked out in a rush. You only have two left.",
+    description: "A blender just smoked out in a rush. You only have two left.",
     balanceLean: "meltdown",
     options: [
       {
