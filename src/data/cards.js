@@ -531,8 +531,8 @@ export const SHIFT_DECK = [
     id: "shift-07",
     type: "choice",
     label: "Shift Scenario",
-    title: "The \"Good Enough\" Shift Lead",
-    description: "Your Shift Lead is letting people slide on the guest greeting because they're \"busy.\"",
+    title: "The \"Good Enough\" Team Captain",
+    description: "Your Team Captain letting people slide on the guest greeting because they're \"busy.\"",
     balanceLean: "freeze",
     options: [
       {
