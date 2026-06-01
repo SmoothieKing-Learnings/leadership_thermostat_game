@@ -32,7 +32,7 @@ Paste into a Rise 360 **Embed block** (not the Custom Code Block — they're dif
 <iframe
   src="https://smoothieking-learnings.github.io/leadership_thermostat_game/?embed=1"
   width="100%"
-  height="780"
+  height="700"
   style="border:0; display:block; width:100%; min-height:520px;"
   scrolling="auto"
   title="Shift Survival"
@@ -40,14 +40,14 @@ Paste into a Rise 360 **Embed block** (not the Custom Code Block — they're dif
   allowfullscreen></iframe>
 ```
 
-**Why 780px?** It sits under the in-app `@media (max-height: 800px)` compressed-layout breakpoint, so cards fit without forcing the action footer smaller than the touch-target spec.
+**Why 700px?** It sits 50px under Articulate Rise 360's default 750px **Code Block** height cap (see §10), and the game's `CARD_STYLE` (`maxHeight: 'min(720px, calc(100% - 24px))'`) gives the round/welcome card enough room to render fully inside the 700px iframe. Bump to 720px only if you're using an Embed block (where Articulate's cap appears to be lazier) AND you want extra desktop breathing room.
 
 ### 2.2 Origin-locked, fixed height (recommended for live Rise lessons)
 
 ```html
 <iframe
   src="https://smoothieking-learnings.github.io/leadership_thermostat_game/?embed=1&parentOrigin=https%3A%2F%2Frise.articulate.com"
-  width="100%" height="780"
+  width="100%" height="700"
   style="border:0; display:block; width:100%; min-height:520px;" scrolling="auto"
   title="Shift Survival" allow="autoplay" allowfullscreen></iframe>
 ```
@@ -87,7 +87,7 @@ If your Rise plan exposes "Hide on mobile" / "Hide on desktop" toggles on the Em
 <!-- Mobile block (set "Hide on desktop" in Rise) -->
 <iframe
   src="https://smoothieking-learnings.github.io/leadership_thermostat_game/?embed=1"
-  width="100%" height="1150"
+  width="100%" height="720"
   style="border:0; display:block; width:100%; min-height:520px;" scrolling="auto"
   title="Shift Survival" allow="autoplay" allowfullscreen></iframe>
 ```
@@ -102,7 +102,7 @@ When you want scroll over the embed to flow into the Rise lesson, set `pointer-e
 <style>
   #app-wrap { position: relative; width: 100%; }
   #app-wrap iframe {
-    display: block; width: 100%; height: 780px; min-height: 520px; border: 0;
+    display: block; width: 100%; height: 700px; min-height: 520px; border: 0;
     pointer-events: none;
     transition: filter 200ms;
     filter: saturate(0.85);
@@ -124,7 +124,7 @@ When you want scroll over the embed to flow into the Rise lesson, set `pointer-e
   #app-wrap.engaged #app-overlay { opacity: 0; pointer-events: none; }
 
   @media (max-width: 520px) {
-    #app-wrap iframe { height: 90vh; max-height: 1150px; min-height: 600px; }
+    #app-wrap iframe { height: 90vh; max-height: 720px; min-height: 600px; }
   }
 </style>
 
@@ -158,6 +158,55 @@ When you want scroll over the embed to flow into the Rise lesson, set `pointer-e
 For the cleanest, most native-feeling embed: replicate the game's welcome card inside the Code Block, drop the iframe behind it with `pointer-events: none`, and post `shiftSurvival:start` when the learner clicks **Start Shift**. Pass `?autostart=1` so the iframe skips its own welcome the moment it becomes interactive.
 
 The full markup for this **Pattern C** is in section 5 of [`../leadership_style_quiz/RISE360_INTEGRATION_GUIDE.md`](../leadership_style_quiz/RISE360_INTEGRATION_GUIDE.md) — too long to inline here, but a copy-paste affair. Substitute `myApp` → `shiftSurvival` in the markup.
+
+### 2.7 Code Block — scroll-eavesdrop (no engagement gesture)
+
+The cleanest interaction model: the iframe is fully interactive immediately (no overlay, no `pointer-events: none`, no "Click to start" pill), and scroll passes through to the Rise lesson because the parent listens for the bridge's `shiftSurvival:wheel` postMessage and calls `window.scrollBy()`.
+
+**Prerequisite:** the iframe content must NOT internally scroll. If it does, wheel events are consumed by the iframe's own scroll first and never reach the bridge's emitter. Satisfied for this project by the embed-mode CSS lift in `App.jsx` + `index.css`, which removes the standalone `overflow: hidden` + `overscroll-behavior: none` lockdown so wheel events propagate naturally (see §10).
+
+```html
+<style>
+  #shift-survival-wrap { position: relative; width: 100%; }
+  #shift-survival-wrap iframe {
+    display: block; width: 100%; height: 700px; border: 0;
+  }
+  @media (max-width: 520px) {
+    #shift-survival-wrap iframe { height: 90vh; max-height: 720px; min-height: 600px; }
+  }
+</style>
+
+<div id="shift-survival-wrap">
+  <iframe
+    src="https://smoothieking-learnings.github.io/leadership_thermostat_game/?embed=1&parentOrigin=https%3A%2F%2Frise.articulate.com"
+    title="Shift Survival" allow="autoplay" allowfullscreen></iframe>
+</div>
+
+<script>
+  (function () {
+    window.addEventListener('message', function (e) {
+      var d = e.data;
+      if (!d || typeof d !== 'object') return;
+      if (d.type === 'shiftSurvival:wheel' && typeof d.deltaY === 'number') {
+        window.scrollBy({ top: d.deltaY, behavior: 'auto' });
+      }
+    });
+  })();
+</script>
+```
+
+**Trade-offs vs §2.5 / §2.6:**
+
+- ✅ No pre-engagement affordance — feels native, no extra click required
+- ✅ Wheel scroll passes through cleanly on desktop (mouse + trackpad)
+- ⚠️ Mobile touch passthrough is best-effort — the bridge only forwards `wheel` events, not `touchstart` / `touchmove`. iOS Safari and Android Chrome usually behave well when iframe content has no internal scroll, but it's not guaranteed across all OS/browser versions
+- ⚠️ Requires the iframe content to fit without internal scrolling (already satisfied — see §10)
+
+**Security note (optional):** the listener accepts messages from any origin. For tighter security in a host page you control, add an origin check at the top of the handler:
+
+```js
+if (e.origin !== 'https://smoothieking-learnings.github.io') return;
+```
 
 ---
 
@@ -278,11 +327,12 @@ GitHub Pages doesn't set restrictive `X-Frame-Options` headers, so the published
 
 ## 8. Scroll trapping inside Rise
 
-The number-one frustration with Rise embeds is that scrolling while the cursor is over the iframe doesn't scroll the Rise lesson. Three options, in order of complexity:
+The number-one frustration with Rise embeds is that scrolling while the cursor is over the iframe doesn't scroll the Rise lesson. Four options, in order of complexity:
 
 - **Plain Embed block (§2.1 / §2.2)** — accept that scroll is trapped while the cursor is over the iframe. Cheapest, fewest moving parts. Fine when the embed sits at the bottom of the lesson.
 - **Code Block + click-to-engage overlay (§2.5)** — scroll passes through until the learner clicks to engage. Reverts on win/lose so the learner can keep scrolling once the round ends. **Recommended for Shift Survival** because rounds can run 3–5 minutes and the learner often needs to scroll the rest of the lesson while playing.
 - **Themed welcome overlay (§2.6)** — same scroll-passthrough as above, but the engagement gesture *looks* like the game's own welcome card. See [`../leadership_style_quiz/RISE360_INTEGRATION_GUIDE.md`](../leadership_style_quiz/RISE360_INTEGRATION_GUIDE.md) §5 Pattern C for the full markup.
+- **Scroll-eavesdrop Code Block (§2.7)** — no engagement gesture at all; the iframe is always interactive, and the parent listens for the bridge's wheel postMessage and scrolls itself. Lightest-touch UX. Works for Shift Survival now that `App.jsx` lifts the standalone `overflow: hidden` + `overscroll-behavior: none` lockdown in embed mode (see §10). Best-effort on mobile touch (only wheel events are forwarded — not `touchstart` / `touchmove`).
 
 The bridge emits `shiftSurvival:wheel { deltaY }` on every wheel event inside the iframe as a best-effort signal for non-Rise hosts that *can* briefly toggle `pointer-events: none` based on it.
 
@@ -316,6 +366,9 @@ Deprecated attribute, no effect on wheel capture in modern browsers. Use the cli
 
 | Constraint | Implication |
 | --- | --- |
+| **Code Block height cap = 750px** | Articulate Rise 360 caps **Code Blocks** at 750px tall by default. Anything taller is clipped at the bottom. Recommended iframe height is **700px** — gives 50px headroom for Articulate's internal Code Block chrome. The game's `CARD_STYLE` (`maxHeight: 'min(720px, calc(100% - 24px))'` in `WelcomeScreen.jsx`) ensures the welcome and round cards render fully inside the 700px iframe. **Embed blocks** do not appear to share this cap. |
+| **Scroll-passthrough requires no internal iframe scroll** | The §2.5 / §2.7 patterns rely on the iframe NOT having an internal scrollbar. If the iframe content overflows its iframe height, wheel events get consumed by the iframe's own scroll before reaching the bridge or the browser's cross-iframe passthrough. The game meets this via the embed-mode CSS lift (see row below) which removes the standalone `overflow: hidden` lockdown so wheel events propagate naturally. |
+| **Standalone vs. embed-mode CSS lockdown** | Standalone: `index.css` locks `html`, `body`, and `#root` with `overflow: hidden` + `overscroll-behavior: none` for a true full-viewport game feel (no body scroll, no iOS rubber-band). In embed mode, `App.jsx` detects `isEmbedded()` and toggles an `embed-mode` class on `<html>` and `<body>`; CSS overrides under `html.embed-mode, body.embed-mode { … }` lift the lockdown so wheel events propagate to the parent. Automatic — no embedder configuration needed. |
 | **Iframe height is one fixed value** | Cannot be different per device with a single iframe. Use the dual-block pattern in §2.4 if your Rise plan exposes per-device visibility. |
 | **Rise mobile preview ≠ real mobile** | Mobile preview is a visual clip in a desktop browser. Responsive CSS won't change behavior between Rise's preview modes — only on real devices or DevTools (see §11). |
 | **Sandboxed download blocked** | Captures from inside Rise silently fail. |
@@ -383,9 +436,9 @@ Wire it in your root component using either the named exports (`emit`, `emitComp
 
 Because iframe height is a single fixed number set in Rise:
 
-- **Tall iframe (~1150px)** → mobile content fits, desktop has blank space.
-- **Short iframe (~640px)** → desktop has no blank, mobile content clips below the 520px playable height.
-- **Compromise (~780px)** → matches the in-app `max-height: 800px` compressed-layout breakpoint. Current recommendation.
+- **Tall iframe (~720px)** → mobile content fits, desktop has blank space. Hits the Articulate Code Block 750 ceiling.
+- **Short iframe (~640px)** → desktop has less blank, but risks clipping below the game's 520px `MIN_PLAYABLE_HEIGHT`.
+- **Compromise (~700px)** → 50px under the Articulate Code Block 750 cap, comfortably fits the game's card sizes. **Current recommendation.**
 
 If Rise exposes per-device block visibility for Embed blocks, two iframes (one per device) is cleaner — see §2.4.
 
