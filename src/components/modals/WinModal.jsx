@@ -123,7 +123,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
         {/* Headline */}
         <h2
           style={{
-            fontFamily: '"Playfair Display", Georgia, serif',
+            fontFamily: '"Lora", Georgia, serif',
             fontSize: 28,
             fontWeight: 700,
             color: 'var(--color-brand)',
@@ -136,7 +136,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
         {/* Shifts survived meter */}
         <div style={{ marginBottom: 20 }}>
           <p style={{
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: '0.13em',
@@ -151,9 +151,9 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.4, ease: 'easeOut' }}
             style={{
-              fontFamily: '"Playfair Display", Georgia, serif',
+              fontFamily: '"Lora", Georgia, serif',
               fontSize: 56,
-              fontWeight: 800,
+              fontWeight: 700,
               color: 'var(--color-brand)',
               lineHeight: 1,
               marginBottom: 6,
@@ -167,7 +167,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
             animate={{ opacity: 1 }}
             transition={{ delay: 1.6, duration: 0.4 }}
             style={{
-              fontFamily: '"DM Sans", system-ui, sans-serif',
+              fontFamily: '"Poppins", system-ui, sans-serif',
               fontSize: 13,
               fontWeight: 600,
               color: 'rgba(64,0,15,0.55)',
@@ -180,7 +180,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
         {/* Body */}
         <p
           style={{
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 15,
             lineHeight: 1.65,
             color: 'var(--color-brand-deep)',
@@ -197,7 +197,7 @@ export default function WinModal({ onRestart, score = 0, maxScore = 0, shiftsCom
           className="w-full py-4 rounded-xl font-semibold text-quiz-bg text-lg transition-all active:scale-95"
           style={{
             backgroundColor: 'var(--color-brand)',
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 17,
             cursor: 'pointer',
             border: 'none',

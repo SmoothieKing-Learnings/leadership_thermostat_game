@@ -54,8 +54,8 @@ Background-color tinting between cream → warm pink → cool blue is computed i
 
 | Token | Family | Usage |
 | --- | --- | --- |
-| `font-display` / `font-heading` | **Playfair Display**, Georgia, serif | Hero titles, card titles, modal headlines |
-| `font-body` | **DM Sans**, system-ui, sans-serif | All body copy, buttons, labels |
+| `font-display` / `font-heading` | **Lora**, Georgia, serif | Hero titles, card titles, modal headlines |
+| `font-body` | **Poppins**, system-ui, sans-serif | All body copy, buttons, labels |
 
 Both families are loaded from Google Fonts in [`index.html`](./index.html) and declared as `--font-display` / `--font-body` CSS custom properties in [`src/index.css`](./src/index.css).
 
@@ -81,7 +81,7 @@ Full embed snippets, sizing guidance, scroll-passthrough patterns, and Rise 360 
 | Animation | Framer Motion 11 |
 | Styling | Tailwind CSS 3 + CSS custom properties |
 | Confetti | canvas-confetti |
-| Fonts | Playfair Display (display), DM Sans (body) |
+| Fonts | Lora (display), Poppins (body) |
 | Build target | Mobile browser (480px max-width, 100dvh) |
 
 ---

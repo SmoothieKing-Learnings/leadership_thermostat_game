@@ -48,7 +48,7 @@ export default function LoseModal({ strikeBreakdown = { meltdown: 0, freeze: 0 }
         {/* Headline */}
         <h2
           style={{
-            fontFamily: '"Playfair Display", Georgia, serif',
+            fontFamily: '"Lora", Georgia, serif',
             fontSize: 28,
             fontWeight: 700,
             color: 'var(--color-bg-primary)',
@@ -62,7 +62,7 @@ export default function LoseModal({ strikeBreakdown = { meltdown: 0, freeze: 0 }
         {summary && (
           <p
             style={{
-              fontFamily: '"DM Sans", system-ui, sans-serif',
+              fontFamily: '"Poppins", system-ui, sans-serif',
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: '0.14em',
@@ -78,7 +78,7 @@ export default function LoseModal({ strikeBreakdown = { meltdown: 0, freeze: 0 }
         {/* Body */}
         <p
           style={{
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 16,
             lineHeight: 1.7,
             color: 'var(--color-pink-light)',
@@ -96,7 +96,7 @@ export default function LoseModal({ strikeBreakdown = { meltdown: 0, freeze: 0 }
           className="w-full py-4 rounded-xl font-semibold text-quiz-bg text-lg transition-all active:scale-95"
           style={{
             backgroundColor: 'var(--color-brand)',
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 17,
             cursor: 'pointer',
             border: '2px solid rgba(255,255,255,0.2)',

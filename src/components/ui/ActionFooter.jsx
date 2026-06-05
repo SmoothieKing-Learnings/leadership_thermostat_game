@@ -8,7 +8,7 @@ const LIFE_LABEL = 'Life'
 const HOP_DELAYS = [0, 3.2, 6.4]
 
 const statusLabelStyle = {
-  fontFamily: '"DM Sans", system-ui, sans-serif',
+  fontFamily: '"Poppins", system-ui, sans-serif',
   fontSize: 10,
   fontWeight: 700,
   letterSpacing: '0.16em',
@@ -146,7 +146,7 @@ export default function ActionFooter({
           className="w-full py-4 rounded-2xl font-semibold text-quiz-bg transition-all active:scale-95 shadow-lg"
           style={{
             backgroundColor: selectedOption ? 'var(--color-brand)' : 'var(--gauge-warm-mid)',
-            fontFamily: '"Playfair Display", Georgia, serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 20,
             cursor: selectedOption ? 'pointer' : 'not-allowed',
             border: 'none',
@@ -161,7 +161,7 @@ export default function ActionFooter({
           className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-semibold text-quiz-bg transition-all active:scale-95 shadow-lg"
           style={{
             backgroundColor: understoodColor,
-            fontFamily: '"Playfair Display", Georgia, serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 20,
             border: 'none',
             boxShadow: `0 4px 20px ${envImpact < 0 ? 'rgba(0,78,147,0.3)' : 'rgba(147,0,24,0.3)'}`,

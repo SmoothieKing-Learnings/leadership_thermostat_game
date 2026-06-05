@@ -135,7 +135,7 @@ export default function HistoryStack({ history, isExpanded, onToggle }) {
             }}>
               <div>
                 <p style={{
-                  fontFamily: '"Playfair Display", Georgia, serif',
+                  fontFamily: '"Lora", Georgia, serif',
                   fontSize: 18,
                   fontWeight: 700,
                   color: 'var(--color-brand)',
@@ -145,7 +145,7 @@ export default function HistoryStack({ history, isExpanded, onToggle }) {
                   Leadership Log
                 </p>
                 <p style={{
-                  fontFamily: '"DM Sans", system-ui, sans-serif',
+                  fontFamily: '"Poppins", system-ui, sans-serif',
                   fontSize: 11,
                   color: 'rgba(147,0,24,0.5)',
                   margin: 0,
@@ -215,7 +215,7 @@ export default function HistoryStack({ history, isExpanded, onToggle }) {
                     gap: 8,
                   }}>
                     <span style={{
-                      fontFamily: '"DM Sans", system-ui, sans-serif',
+                      fontFamily: '"Poppins", system-ui, sans-serif',
                       fontSize: 10,
                       fontWeight: 700,
                       letterSpacing: '0.14em',

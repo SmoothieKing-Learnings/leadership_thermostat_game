@@ -117,7 +117,7 @@ When you want scroll over the embed to flow into the Rise lesson, set `pointer-e
   #app-overlay::after {
     content: '▶  Click to play';
     background: #930018; color: #fff;
-    font-family: "DM Sans", system-ui, sans-serif; font-weight: 600; font-size: 15px;
+    font-family: "Poppins", system-ui, sans-serif; font-weight: 600; font-size: 15px;
     padding: 12px 22px; border-radius: 999px;
     box-shadow: 0 4px 14px rgba(147, 0, 24, 0.35);
   }
@@ -299,7 +299,7 @@ All interactive elements have visible focus indicators so the keyboard path is u
 
 ## 6. CSP / framing requirements
 
-This project loads **Playfair Display** + **DM Sans** from Google Fonts at runtime. If the host page enforces a strict Content-Security-Policy, allow:
+This project loads **Lora** + **Poppins** from Google Fonts at runtime. If the host page enforces a strict Content-Security-Policy, allow:
 
 ```
 font-src  https://fonts.gstatic.com;

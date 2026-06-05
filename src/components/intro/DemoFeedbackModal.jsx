@@ -39,7 +39,7 @@ export default function DemoFeedbackModal({ visible, impact, body, onNext, nextL
             {/* Tutorial tag */}
             <p
               style={{
-                fontFamily: '"DM Sans", system-ui, sans-serif',
+                fontFamily: '"Poppins", system-ui, sans-serif',
                 fontSize: 11,
                 fontWeight: 700,
                 letterSpacing: '0.18em',
@@ -64,7 +64,7 @@ export default function DemoFeedbackModal({ visible, impact, body, onNext, nextL
             >
               <span
                 style={{
-                  fontFamily: '"DM Sans", system-ui, sans-serif',
+                  fontFamily: '"Poppins", system-ui, sans-serif',
                   fontSize: 14,
                   fontWeight: 700,
                   color: 'var(--color-brand)',
@@ -78,7 +78,7 @@ export default function DemoFeedbackModal({ visible, impact, body, onNext, nextL
             {/* Body */}
             <p
               style={{
-                fontFamily: '"DM Sans", system-ui, sans-serif',
+                fontFamily: '"Poppins", system-ui, sans-serif',
                 fontSize: 15,
                 lineHeight: 1.7,
                 color: 'var(--color-brand-deep)',
@@ -99,7 +99,7 @@ export default function DemoFeedbackModal({ visible, impact, body, onNext, nextL
                 border: 'none',
                 backgroundColor: 'var(--color-brand)',
                 color: 'var(--color-bg-primary)',
-                fontFamily: '"Playfair Display", Georgia, serif',
+                fontFamily: '"Lora", Georgia, serif',
                 fontSize: 18,
                 fontWeight: 700,
                 cursor: 'pointer',

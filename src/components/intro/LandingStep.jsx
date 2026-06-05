@@ -31,10 +31,10 @@ export default function LandingStep({ onStart, onTutorial }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.45 }}
         style={{
-          fontFamily: '"Playfair Display", Georgia, serif',
+          fontFamily: '"Lora", Georgia, serif',
           fontSize: 36, /* unified hero size across all four projects */
-          fontWeight: 800,
-          color: 'var(--color-brand)',
+          fontWeight: 700,
+          color: 'var(--color-brand-deep)',
           lineHeight: 1.1,
           marginBottom: 16,
         }}
@@ -62,7 +62,7 @@ export default function LandingStep({ onStart, onTutorial }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.38, duration: 0.4 }}
         style={{
-          fontFamily: '"DM Sans", system-ui, sans-serif',
+          fontFamily: '"Poppins", system-ui, sans-serif',
           fontSize: 13,
           color: 'var(--color-brand-deep)',
           lineHeight: 1.65,
@@ -93,7 +93,7 @@ export default function LandingStep({ onStart, onTutorial }) {
             border: 'none',
             background: 'transparent',
             color: 'var(--color-brand)',
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 15,
             fontWeight: 700,
             cursor: 'pointer',
@@ -111,7 +111,7 @@ export default function LandingStep({ onStart, onTutorial }) {
             border: 'none',
             backgroundColor: 'var(--color-brand)',
             color: 'var(--color-bg-primary)',
-            fontFamily: '"Playfair Display", Georgia, serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 19,
             fontWeight: 700,
             cursor: 'pointer',

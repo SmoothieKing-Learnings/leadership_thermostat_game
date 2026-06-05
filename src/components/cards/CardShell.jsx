@@ -28,7 +28,7 @@ export function TypeHeader({ label, subtitle }) {
         }}
       />
       <p style={{
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         fontSize: 12,
         fontWeight: 700,
         letterSpacing: '0.2em',
@@ -40,7 +40,7 @@ export function TypeHeader({ label, subtitle }) {
         {label}
       </p>
       <p style={{
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         fontSize: 11,
         fontWeight: 500,
         letterSpacing: '0.06em',
@@ -59,7 +59,7 @@ export function TypeHeader({ label, subtitle }) {
 export function CardTitle({ children, color = 'var(--color-brand)', size }) {
   return (
     <h2 style={{
-      fontFamily: '"Playfair Display", Georgia, serif',
+      fontFamily: '"Lora", Georgia, serif',
       fontSize: size ?? 'var(--card-title-size, 30px)',
       fontWeight: 700,
       color,
@@ -78,7 +78,7 @@ export function CardTitle({ children, color = 'var(--color-brand)', size }) {
 export function CardDescription({ children, color = 'var(--color-brand)', opacity = 0.78 }) {
   return (
     <p style={{
-      fontFamily: '"DM Sans", system-ui, sans-serif',
+      fontFamily: '"Poppins", system-ui, sans-serif',
       fontSize: 'var(--card-desc-size, 12px)',
       lineHeight: 1.5,
       color,
@@ -108,7 +108,7 @@ export function ImpactPill({ children, bgColor = 'transparent', color = 'var(--c
       flexShrink: 0,
     }}>
       <span style={{
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         fontSize: 16,
         fontWeight: 700,
         color,

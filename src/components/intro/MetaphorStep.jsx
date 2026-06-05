@@ -29,7 +29,7 @@ function MiniCard({ bg, borderColor, label, title, pillText, pillColor, pillBg, 
     >
       {/* Concept label — the key takeaway */}
       <p style={{
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         fontSize: 13,
         fontWeight: 800,
         letterSpacing: '0.12em',
@@ -43,7 +43,7 @@ function MiniCard({ bg, borderColor, label, title, pillText, pillColor, pillBg, 
 
       {/* Detail title */}
       <p style={{
-        fontFamily: '"Playfair Display", Georgia, serif',
+        fontFamily: '"Lora", Georgia, serif',
         fontSize: 10,
         fontWeight: 700,
         color: 'var(--color-brand-deep)',
@@ -66,7 +66,7 @@ function MiniCard({ bg, borderColor, label, title, pillText, pillColor, pillBg, 
         borderRadius: 99,
         padding: '3px 9px',
         fontSize: 8,
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         fontWeight: 700,
         whiteSpace: 'nowrap',
       }}>
@@ -98,9 +98,9 @@ export default function MetaphorStep() {
 
       {/* Headline */}
       <h2 style={{
-        fontFamily: '"Playfair Display", Georgia, serif',
+        fontFamily: '"Lora", Georgia, serif',
         fontSize: 26,
-        fontWeight: 800,
+        fontWeight: 700,
         color: 'var(--color-brand)',
         lineHeight: 1.25,
         textAlign: 'center',
@@ -111,7 +111,7 @@ export default function MetaphorStep() {
 
       {/* Body — moved from welcome landing so the tutorial leads with how the team responds */}
       <p style={{
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         fontSize: 13.5,
         color: 'var(--color-brand-deep)',
         lineHeight: 1.7,
@@ -124,7 +124,7 @@ export default function MetaphorStep() {
         If you're disengaged or "checked out," the team will freeze and stop caring.
       </p>
       <p style={{
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         fontSize: 13.5,
         color: 'var(--color-brand-deep)',
         lineHeight: 1.7,
@@ -203,7 +203,7 @@ export default function MetaphorStep() {
             marginTop: 4,
           }} />
           <p style={{
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 13,
             color: 'var(--color-brand-deep)',
             lineHeight: 1.6,
@@ -238,7 +238,7 @@ export default function MetaphorStep() {
           }}
         >
           <span style={{
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 14,
             fontWeight: 700,
             color: 'var(--color-brand)',
@@ -265,7 +265,7 @@ export default function MetaphorStep() {
             borderTop: '1px solid rgba(147,0,24,0.12)',
           }}>
             <p style={{
-              fontFamily: '"DM Sans", system-ui, sans-serif',
+              fontFamily: '"Poppins", system-ui, sans-serif',
               fontSize: 14,
               color: 'var(--color-brand-deep)',
               lineHeight: 1.75,
@@ -274,7 +274,7 @@ export default function MetaphorStep() {
               Emotions move through teams the way temperature moves through a room: quietly and automatically. When a manager walks in tense, stress hormones in the brain spike across the team within minutes. Things start to slip. People pull back.
             </p>
             <p style={{
-              fontFamily: '"DM Sans", system-ui, sans-serif',
+              fontFamily: '"Poppins", system-ui, sans-serif',
               fontSize: 14,
               color: 'var(--color-brand-deep)',
               lineHeight: 1.75,

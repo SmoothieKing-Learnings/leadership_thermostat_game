@@ -17,12 +17,14 @@ const TOTAL_STEPS = 4
 const CARD_STYLE = {
   width: '100%',
   maxWidth: 448,
-  minHeight: 480, /* universal floor matching the quiz LayoutWrapper */
-  maxHeight: 'min(720px, calc(100% - 24px))', /* safety cap so tall tutorial steps trigger internal scroll instead of clipping */
-  /* No `height: 100%` — the card sizes to content like the quiz cards, with the
-     480px floor and the 720px ceiling. Short landings hug their content
-     (~500px) instead of filling the viewport, which is what made the game
-     card render taller than the quiz cards. */
+  height: 640, /* matches the quiz WelcomeScreen + QuizScreen h-[640px] rule —
+                  keeps the iframe content stack identical across all four
+                  projects (640px screen + 16px outer p-2 = 656px iframe
+                  content, fits inside the 700px recommended iframe + the
+                  750px Articulate Code Block cap; see IFRAME_EMBED.md §10).
+                  Tall intro steps (RulesStep especially) trigger internal
+                  scroll via the scrollRef wrapper below — that capability is
+                  intentional and unchanged. */
   backgroundColor: 'rgba(255, 255, 255, 0.5)',
   backdropFilter: 'blur(4px)',
   WebkitBackdropFilter: 'blur(4px)',
@@ -59,7 +61,8 @@ export default function WelcomeScreen({ onStart }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '12px 12px',
+        padding: '8px 8px', /* matches the quiz LayoutWrapper's embed-mode p-2 — 8px top + 8px bottom = 16px,
+                                so the total iframe content stack matches: 640px card + 16px page padding = 656px */
         boxSizing: 'border-box',
       }}
     >
@@ -105,7 +108,7 @@ export default function WelcomeScreen({ onStart }) {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                fontFamily: '"DM Sans", system-ui, sans-serif',
+                fontFamily: '"Poppins", system-ui, sans-serif',
                 fontSize: 13,
                 color: 'rgba(147,0,24,0.5)',
                 fontWeight: 600,
@@ -170,7 +173,7 @@ export default function WelcomeScreen({ onStart }) {
                   border: 'none',
                   backgroundColor: 'var(--color-brand)',
                   color: 'var(--color-bg-primary)',
-                  fontFamily: '"Playfair Display", Georgia, serif',
+                  fontFamily: '"Poppins", system-ui, sans-serif',
                   fontSize: 19,
                   fontWeight: 700,
                   cursor: 'pointer',

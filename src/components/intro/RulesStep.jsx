@@ -52,7 +52,7 @@ export default function RulesStep() {
       >
         <p
           style={{
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: '0.14em',
@@ -65,9 +65,9 @@ export default function RulesStep() {
         </p>
         <h2
           style={{
-            fontFamily: '"Playfair Display", Georgia, serif',
+            fontFamily: '"Lora", Georgia, serif',
             fontSize: 30,
-            fontWeight: 800,
+            fontWeight: 700,
             color: 'var(--color-bg-primary)',
             lineHeight: 1.2,
             marginBottom: 12,
@@ -77,7 +77,7 @@ export default function RulesStep() {
         </h2>
         <p
           style={{
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 14,
             color: 'rgba(255,222,229,0.9)',
             lineHeight: 1.7,
@@ -92,7 +92,7 @@ export default function RulesStep() {
       {/* Rules label */}
       <p
         style={{
-          fontFamily: '"DM Sans", system-ui, sans-serif',
+          fontFamily: '"Poppins", system-ui, sans-serif',
           fontSize: 11,
           fontWeight: 700,
           letterSpacing: '0.12em',
@@ -129,9 +129,9 @@ export default function RulesStep() {
               {/* Large decorative number */}
               <span
                 style={{
-                  fontFamily: '"Playfair Display", Georgia, serif',
+                  fontFamily: '"Lora", Georgia, serif',
                   fontSize: 34,
-                  fontWeight: 800,
+                  fontWeight: 700,
                   color: rule.color,
                   lineHeight: 1,
                   opacity: 0.22,
@@ -148,7 +148,7 @@ export default function RulesStep() {
               <div style={{ flex: 1 }}>
                 <p
                   style={{
-                    fontFamily: '"DM Sans", system-ui, sans-serif',
+                    fontFamily: '"Poppins", system-ui, sans-serif',
                     fontSize: 14,
                     fontWeight: 700,
                     color: 'var(--color-brand-deep)',
@@ -160,7 +160,7 @@ export default function RulesStep() {
                 </p>
                 <p
                   style={{
-                    fontFamily: '"DM Sans", system-ui, sans-serif',
+                    fontFamily: '"Poppins", system-ui, sans-serif',
                     fontSize: 13,
                     color: 'rgba(64,0,15,0.65)',
                     lineHeight: 1.65,
@@ -175,7 +175,7 @@ export default function RulesStep() {
                       <li
                         key={b.label}
                         style={{
-                          fontFamily: '"DM Sans", system-ui, sans-serif',
+                          fontFamily: '"Poppins", system-ui, sans-serif',
                           fontSize: 13,
                           color: 'rgba(64,0,15,0.65)',
                           lineHeight: 1.55,
@@ -207,7 +207,7 @@ export default function RulesStep() {
       >
         <p
           style={{
-            fontFamily: '"DM Sans", system-ui, sans-serif',
+            fontFamily: '"Poppins", system-ui, sans-serif',
             fontSize: 13,
             color: 'var(--color-brand-deep)',
             lineHeight: 1.65,
@@ -223,7 +223,7 @@ export default function RulesStep() {
       {/* Section teaser */}
       <p
         style={{
-          fontFamily: '"DM Sans", system-ui, sans-serif',
+          fontFamily: '"Poppins", system-ui, sans-serif',
           fontSize: 11,
           fontWeight: 700,
           letterSpacing: '0.14em',

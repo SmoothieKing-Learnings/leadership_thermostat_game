@@ -18,7 +18,7 @@ export default function Pill({ children, variant = 'neutral', className = '' }) 
         backgroundColor: bg,
         color,
         borderRadius: '999px',
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         letterSpacing: '0.08em',
         whiteSpace: 'nowrap',
       }}

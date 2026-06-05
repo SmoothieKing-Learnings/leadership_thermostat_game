@@ -95,7 +95,7 @@ export default function GaugeBar({ energy }) {
         <div className="flex justify-between w-full mt-3">
           <span
             style={{
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: '"Poppins", sans-serif',
               fontSize: 9,
               fontWeight: 800,
               color: 'var(--gauge-cold-deep)',
@@ -107,7 +107,7 @@ export default function GaugeBar({ energy }) {
           </span>
           <span
             style={{
-              fontFamily: '"DM Sans", sans-serif',
+              fontFamily: '"Poppins", sans-serif',
               fontSize: 9,
               fontWeight: 800,
               color: 'var(--color-brand)',

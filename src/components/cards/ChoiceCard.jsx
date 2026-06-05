@@ -25,7 +25,7 @@ function OptionButton({ opt, isSelected, onSelect }) {
         backgroundColor: isSelected ? 'rgba(147,0,24,0.06)' : 'transparent',
         textAlign: 'center',
         cursor: 'pointer',
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         fontSize: 'var(--card-option-fontsize, 13px)',
         fontWeight: 600,
         color: 'var(--color-brand)',
@@ -52,7 +52,7 @@ function RevealedOption({ opt, isChosen }) {
       textAlign: 'center',
     }}>
       <p style={{
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         fontSize: 'var(--revealed-option-fontsize, 12px)',
         fontWeight: 700,
         color: 'var(--color-bg-primary)',
@@ -62,7 +62,7 @@ function RevealedOption({ opt, isChosen }) {
         "{opt.text}"
       </p>
       <p style={{
-        fontFamily: '"DM Sans", system-ui, sans-serif',
+        fontFamily: '"Poppins", system-ui, sans-serif',
         fontSize: 'var(--revealed-message-fontsize, 11px)',
         color: 'rgba(255,222,229,0.9)',
         lineHeight: 1.5,
@@ -76,7 +76,7 @@ function RevealedOption({ opt, isChosen }) {
           border: '1.5px solid rgba(255,255,255,0.5)',
           borderRadius: 999,
           padding: 'var(--revealed-pill-padding, 4px 14px)',
-          fontFamily: '"DM Sans", system-ui, sans-serif',
+          fontFamily: '"Poppins", system-ui, sans-serif',
           fontSize: 'var(--revealed-pill-fontsize, 12px)',
           fontWeight: 600,
           color: 'var(--color-bg-primary)',
@@ -172,7 +172,7 @@ export default function ChoiceCard({ card, selectedOption, phase, onSelectOption
             boxShadow: CARD_SHADOW,
           }}>
             <h2 style={{
-              fontFamily: '"Playfair Display", Georgia, serif',
+              fontFamily: '"Lora", Georgia, serif',
               fontSize: 'var(--card-revealed-title-size, 24px)',
               fontWeight: 700,
               color: 'var(--color-bg-primary)',

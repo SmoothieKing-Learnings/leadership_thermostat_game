@@ -66,7 +66,7 @@ export default function EnvDemoStep({ onNext, startEnergy = 0 }) {
       {/* Step badge */}
       <p
         style={{
-          fontFamily: '"DM Sans", system-ui, sans-serif',
+          fontFamily: '"Poppins", system-ui, sans-serif',
           fontSize: 11,
           fontWeight: 700,
           letterSpacing: '0.11em',
@@ -85,7 +85,7 @@ export default function EnvDemoStep({ onNext, startEnergy = 0 }) {
       {/* Context line */}
       <p
         style={{
-          fontFamily: '"DM Sans", system-ui, sans-serif',
+          fontFamily: '"Poppins", system-ui, sans-serif',
           fontSize: 13,
           color: 'rgba(64,0,15,0.55)',
           textAlign: 'center',
@@ -125,7 +125,7 @@ export default function EnvDemoStep({ onNext, startEnergy = 0 }) {
             border: 'none',
             backgroundColor: 'var(--color-brand)',
             color: 'var(--color-bg-primary)',
-            fontFamily: '"Playfair Display", Georgia, serif',
+            fontFamily: '"Lora", Georgia, serif',
             fontSize: 18,
             fontWeight: 700,
             cursor: understood ? 'default' : 'pointer',
