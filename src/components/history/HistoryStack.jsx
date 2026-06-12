@@ -62,12 +62,19 @@ export default function HistoryStack({ history, isExpanded, onToggle }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute inset-0 flex items-start justify-center"
-            style={{ zIndex: 1, paddingTop: 'var(--card-area-pt)' }}
+            style={{
+              zIndex: 1,
+              paddingTop: 'var(--card-area-pt)',
+              // Match the active card's footer reservation so the deck behind it
+              // fills the same vertical area instead of a shorter fixed height.
+              paddingBottom: 'calc(var(--footer-height) + 8px)',
+            }}
           >
             <div style={{
               position: 'relative',
               width: 'calc(100% - 2 * var(--card-area-px))',
-              height: 'var(--card-height)',
+              height: '100%',
+              maxHeight: 'var(--card-max-height, 500px)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

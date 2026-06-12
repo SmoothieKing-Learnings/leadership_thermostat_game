@@ -16,8 +16,19 @@
    */
   --card-height: clamp(320px, 46dvh, 500px);
 
-  /* Footer height token — used to pad content so it never hides behind the fixed footer */
-  --footer-height: 120px;
+  /*
+   * --card-max-height: upper bound for the ACTIVE card when it fills the
+   * available card-area height (see GameScreen card stack). Short screens fall
+   * below this so the card simply uses all available space; tall screens are
+   * capped here so the card doesn't over-stretch. History mini-cards keep using
+   * --card-height above.
+   */
+  --card-max-height: 500px;
+
+  /* Footer height token — used to pad content so it never hides behind the fixed
+     footer. This is only a fallback: ActionFooter measures its real rendered
+     height at runtime and overrides this on <html> via ResizeObserver. */
+  --footer-height: 150px;
 
   /*
    * Card area positioning tokens.
@@ -118,7 +129,7 @@
     --type-header-crown-size: 16px;
     --type-header-margin-bottom: 4px;
     --gauge-min-height: 100px;
-    --footer-height: 112px;
+    --card-area-pt: 0px;   /* reclaim the 16px gap above the card on short screens */
   }
 }
 

@@ -1,3 +1,4 @@
+import { useRef, useLayoutEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useDocumentVisible } from '../../utils/useViewport.js'
 import heartIcon from '../../assets/SMOOTHIEKING_HEART.svg'
@@ -60,6 +61,23 @@ export default function ActionFooter({
   onAcknowledge,
 }) {
   const documentVisible = useDocumentVisible()
+
+  // Publish the footer's TRUE rendered height to --footer-height so the card
+  // area reserves the right amount of space (the footer's height varies with
+  // font loading and content, so a hardcoded token under-reserves and the card
+  // clips behind it). Runs before paint and stays in sync via ResizeObserver.
+  const rootRef = useRef(null)
+  useLayoutEffect(() => {
+    const el = rootRef.current
+    if (!el) return
+    const publish = () =>
+      document.documentElement.style.setProperty('--footer-height', `${el.offsetHeight}px`)
+    publish()
+    const ro = new ResizeObserver(publish)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
   if (!card) return null
 
   const envImpact = card.type === 'environment' ? card.energyImpact : 0
@@ -67,6 +85,7 @@ export default function ActionFooter({
 
   return (
     <div
+      ref={rootRef}
       style={{
         position: 'fixed',
         bottom: 0,

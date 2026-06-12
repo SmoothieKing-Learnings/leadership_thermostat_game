@@ -32,7 +32,10 @@
       "Bash(git checkout *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(npx vite *)",
+      "Bash(node node_modules/vite/bin/vite.js build)",
+      "Bash(command -v volta fnm)"
     ]
   }
 }

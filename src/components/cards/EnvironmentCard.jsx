@@ -30,9 +30,11 @@ export default function EnvironmentCard({ card }) {
       initial={{ opacity: 0, y: 28 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', damping: 22, stiffness: 110 }}
-      style={{ width: '100%' }}
+      // Fill the available card-area height (capped) so content has the most
+      // room before any internal scroll — mirrors ChoiceCard.
+      style={{ width: '100%', flex: 1, minHeight: 0, maxHeight: 'var(--card-max-height, 500px)', display: 'flex', flexDirection: 'column' }}
     >
-      <CardShell bg={bg}>
+      <CardShell bg={bg} style={{ height: '100%' }}>
         {/* Top: crown + type label */}
         <TypeHeader label="Environment" subtitle="Out of Your Control" />
 
