@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import GaugeArc from '../gauge/GaugeArc'
+import ResponsiveGauge from '../gauge/ResponsiveGauge'
 import ChoiceCard from '../cards/ChoiceCard'
 import DemoFeedbackModal from './DemoFeedbackModal'
 
@@ -88,8 +88,8 @@ export default function ChoiceDemoStep({ onNext }) {
         Demo · Shift 1 — Your Move
       </p>
 
-      {/* Gauge — starts at 0 */}
-      <GaugeArc energy={energy} />
+      {/* Gauge — starts at 0; bar on short screens, arc on tall (matches game) */}
+      <ResponsiveGauge energy={energy} />
 
       {/* Context line */}
       <p
@@ -114,6 +114,7 @@ export default function ChoiceDemoStep({ onNext }) {
           selectedOption={selectedOption}
           phase={phase}
           onSelectOption={isRevealed ? () => {} : setSelectedOption}
+          compact
         />
         <DemoFeedbackModal
           visible={showModal}

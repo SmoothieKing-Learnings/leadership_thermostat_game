@@ -96,10 +96,26 @@ function RevealedOption({ opt, isChosen }) {
   )
 }
 
+// Compact typography/spacing tokens — mirror the `@media (max-height: 800px)`
+// block in index.css. Applied inline when `compact` is set so the fixed-size
+// intro card always uses the space-saving sizes regardless of viewport height
+// (CSS media queries can't see the card's own box, only the viewport).
+const COMPACT_VARS = {
+  '--card-title-size': '22px',
+  '--card-desc-size': '15px',
+  '--card-padding': '14px 16px',
+  '--card-option-padding': '11px 16px',
+  '--card-option-fontsize': '13px',
+  '--card-option-gap': '7px',
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
-export default function ChoiceCard({ card, selectedOption, phase, onSelectOption }) {
+export default function ChoiceCard({ card, selectedOption, phase, onSelectOption, compact = false }) {
   const isRevealed = phase === 'revealed' || phase === 'animating'
-  const isShort = useShortViewport(800)
+  // `compact` forces the space-saving layout (no type header, options fill) even
+  // on tall screens — used inside the fixed-size intro card so the demo never
+  // overflows. In the game it's driven purely by viewport height.
+  const isShort = compact || useShortViewport(800)
 
   return (
     <div style={{
@@ -111,6 +127,7 @@ export default function ChoiceCard({ card, selectedOption, phase, onSelectOption
       // so the tallest of the front/back faces has the most room before scroll.
       height: '100%',
       maxHeight: 'var(--card-max-height, 500px)',
+      ...(compact ? COMPACT_VARS : {}),
     }}>
       <motion.div
         initial={false}

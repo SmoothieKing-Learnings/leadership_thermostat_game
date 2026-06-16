@@ -5,8 +5,9 @@ import MetaphorStep from './intro/MetaphorStep'
 import ChoiceDemoStep from './intro/ChoiceDemoStep'
 import RulesStep from './intro/RulesStep'
 
-// Steps that manage their own action button (no container Next button)
-const SELF_NAVIGATING = new Set([0, 2])
+// Steps that manage their own action button (no container Next button).
+// 0 = Landing, 2 = ChoiceDemo, 3 = Rules (pages through its rules + Let's Blend!)
+const SELF_NAVIGATING = new Set([0, 2, 3])
 
 const TOTAL_STEPS = 4
 
@@ -144,7 +145,7 @@ export default function WelcomeScreen({ onStart }) {
               {step === 0 && <LandingStep onStart={onStart} onTutorial={goNext} />}
               {step === 1 && <MetaphorStep />}
               {step === 2 && <ChoiceDemoStep onNext={goNext} />}
-              {step === 3 && <RulesStep />}
+              {step === 3 && <RulesStep onNext={goNext} />}
             </motion.div>
           </AnimatePresence>
         </div>
