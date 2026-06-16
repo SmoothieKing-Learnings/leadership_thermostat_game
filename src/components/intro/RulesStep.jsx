@@ -1,5 +1,38 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useDocumentVisible } from '../../utils/useViewport.js'
+import heartIcon from '../../assets/SMOOTHIEKING_HEART.svg'
+
+// Three lives hearts that hop in a wave — reuses the exact keyframes/easing of
+// the in-game lives hearts (ActionFooter), with a tighter stagger and shorter
+// repeat so the hop is clearly visible while reading the rule.
+const HEART_HOP_DELAYS = [0, 0.18, 0.36]
+
+function HoppingHearts() {
+  const visible = useDocumentVisible()
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 18 }}>
+      {[0, 1, 2].map((i) => (
+        <motion.img
+          key={i}
+          src={heartIcon}
+          alt=""
+          draggable={false}
+          animate={visible ? { y: [0, -7, 0, -2, 0] } : { y: 0 }}
+          transition={!visible ? { duration: 0 } : {
+            duration: 0.75,
+            times: [0, 0.42, 0.66, 0.84, 1],
+            ease: ['easeOut', 'easeIn', 'easeOut', 'easeIn'],
+            repeat: Infinity,
+            repeatDelay: 2.2,
+            delay: HEART_HOP_DELAYS[i],
+          }}
+          style={{ width: 30, height: 28, transformOrigin: 'bottom center', userSelect: 'none' }}
+        />
+      ))}
+    </div>
+  )
+}
 
 const RULES = [
   {
@@ -31,6 +64,7 @@ const RULES = [
     title: 'Three Strikes and Our Culture is Lost',
     body: 'You have 3 lives (hearts) before it’s game over. If you make three "Meltdown" or "Deep Freeze" moves within the 10 shifts, the thermostat breaks and the game will be over. Team members will quit, reviews tank, and sales plummet.',
     color: 'var(--color-brand-deep)',
+    hearts: true,
   },
 ]
 
@@ -234,6 +268,7 @@ export default function RulesStep({ onNext }) {
                   ))}
                 </ul>
               )}
+              {rule.hearts && <HoppingHearts />}
             </div>
           </motion.div>
         </AnimatePresence>

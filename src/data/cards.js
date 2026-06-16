@@ -451,7 +451,7 @@ export const SHIFT_DECK = [
         text: "Interrupt and set a standard for respect.",
         energyImpact: "balance",
         outcome: "success",
-        educationalMessage: "You injected a \"stern but kind\" boundary. Clear is caring, and you keep the energy professional.",
+        educationalMessage: "You injected a \"stern but kind\" boundary. Being clear is caring, and you keep the energy professional.",
       },
     ],
   },
