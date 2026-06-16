@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import ResponsiveGauge from '../gauge/ResponsiveGauge'
+import GaugeBar from '../gauge/GaugeBar'
 import ChoiceCard from '../cards/ChoiceCard'
 import DemoFeedbackModal from './DemoFeedbackModal'
 
@@ -88,8 +88,9 @@ export default function ChoiceDemoStep({ onNext }) {
         Demo · Shift 1 — Your Move
       </p>
 
-      {/* Gauge — starts at 0; bar on short screens, arc on tall (matches game) */}
-      <ResponsiveGauge energy={energy} />
+      {/* Gauge — compact bar so the fixed intro card has room for the scenario
+          and its revealed consequence at any screen size */}
+      <GaugeBar energy={energy} />
 
       {/* Context line */}
       <p

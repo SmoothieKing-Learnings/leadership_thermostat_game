@@ -101,12 +101,25 @@ function RevealedOption({ opt, isChosen }) {
 // intro card always uses the space-saving sizes regardless of viewport height
 // (CSS media queries can't see the card's own box, only the viewport).
 const COMPACT_VARS = {
+  // Front (reading) face
   '--card-title-size': '22px',
   '--card-desc-size': '15px',
   '--card-padding': '14px 16px',
   '--card-option-padding': '11px 16px',
   '--card-option-fontsize': '13px',
   '--card-option-gap': '7px',
+  // Back (revealed) face — keeps the consequence view from overflowing the
+  // fixed intro card on tall screens, where the @media query doesn't apply.
+  '--card-revealed-title-size': '17px',
+  '--card-revealed-padding': '14px 14px',
+  '--card-revealed-title-mb': '8px',
+  '--card-revealed-gap': '7px',
+  '--revealed-option-padding': '9px 12px',
+  '--revealed-option-gap': '4px',
+  '--revealed-option-fontsize': '11px',
+  '--revealed-message-fontsize': '10.5px',
+  '--revealed-pill-padding': '3px 10px',
+  '--revealed-pill-fontsize': '10px',
 }
 
 // ── Main component ────────────────────────────────────────────────────────────

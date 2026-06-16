@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import ResponsiveGauge from '../gauge/ResponsiveGauge'
+import GaugeBar from '../gauge/GaugeBar'
 import EnvironmentCard from '../cards/EnvironmentCard'
 import DemoFeedbackModal from './DemoFeedbackModal'
 
@@ -79,8 +79,8 @@ export default function EnvDemoStep({ onNext, startEnergy = 0 }) {
         Demo · Round 2 — Environment Card {cardIdx + 1}/{MOCK_ENV_CARDS.length}
       </p>
 
-      {/* Gauge — inherits energy from choice demo; bar on short, arc on tall */}
-      <ResponsiveGauge energy={energy} />
+      {/* Gauge — compact bar so the fixed intro card has room for the card */}
+      <GaugeBar energy={energy} />
 
       {/* Context line */}
       <p
